@@ -7,9 +7,16 @@ import { useState, useEffect } from 'react';
 import styles from './dashboard.module.css';
 import { motion } from 'framer-motion';
 
+interface DashboardData {
+  weeklyHours: { data: number[]; labels: string[] } | null;
+  monthlyComparison: { data: number[]; labels: string[] } | null;
+  punchHistory: boolean[] | null;
+  overtimeBank: { data: number[]; labels: string[] } | null;
+}
+
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
-  const [dashboardData, setDashboardData] = useState({
+  const [dashboardData] = useState<DashboardData>({
     weeklyHours: null,
     monthlyComparison: null,
     punchHistory: null,

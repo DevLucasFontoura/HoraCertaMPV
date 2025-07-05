@@ -5,6 +5,7 @@ import styles from './registro.module.css';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { CONSTANTES } from '../common/constantes';
+import Link from 'next/link';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -29,7 +30,7 @@ const Register = () => {
         // Redireciona para BemVindo
         window.location.href = '/bemvindo';
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro no registro:', error);
     } finally {
       setLoading(false);
@@ -38,10 +39,10 @@ const Register = () => {
 
   return (
     <div className={styles.container}>
-      <a href="/" className={styles.backButton}>
+      <Link href="/" className={styles.backButton}>
         <AiOutlineArrowLeft size={20} />
         <span>{CONSTANTES.TEXT_VOLTAR}</span>
-      </a>
+      </Link>
       
       <div className={styles.gradient} />
       <motion.div
@@ -106,9 +107,9 @@ const Register = () => {
 
         <p className={styles.footer}>
           {CONSTANTES.TXT_REGISTRO_FOOTER}
-          <a href="/login" className={styles.link}>
+          <Link href="/login" className={styles.link}>
             {CONSTANTES.TXT_REGISTRO_JA_TENHO_UMA_CONTA}
-          </a>
+          </Link>
         </p>
       </motion.div>
     </div>

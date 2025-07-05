@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 
 export default function Page() {
-  redirect("/Home");
-  return null;
+  try {
+    redirect("/Home");
+  } catch (error) {
+    console.error("Erro no redirecionamento:", error);
+    return null;
+  }
 }

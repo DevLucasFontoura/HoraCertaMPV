@@ -141,7 +141,7 @@ const TimeRecordItem = ({ record }: TimeRecordItemProps) => {
 
 const DayRecordGroup = ({ day, records }: DayGroup) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const totalHours = records.reduce((acc, record) => acc + 8, 0);
+  const totalHours = records.reduce((acc) => acc + 8, 0);
 
   return (
     <div className={styles.dayGroup}>
@@ -177,7 +177,7 @@ const MonthlyRecordGroup = ({ month, days }: MonthGroup) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const totalRecords = days.reduce((acc, day) => acc + day.records.length, 0);
   const totalHours = days.reduce((acc, day) => 
-    acc + day.records.reduce((sum, record) => sum + 8, 0), 0
+    acc + day.records.reduce((sum) => sum + 8, 0), 0
   );
 
   return (
@@ -218,7 +218,11 @@ const MonthlyRecordGroup = ({ month, days }: MonthGroup) => {
 export default function ReportsScreen() {
   const [loading, setLoading] = useState(true);
   const [reports, setReports] = useState<TimeRecord[]>([]);
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<{
+    totalHours: number | null;
+    dailyAverage: number | null;
+    workedDays: number | null;
+  }>({
     totalHours: null,
     dailyAverage: null,
     workedDays: null

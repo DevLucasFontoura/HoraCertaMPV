@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CONSTANTES } from '../common/constantes';
 import styles from './comoFunciona.module.css';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const ComoFunciona = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -56,10 +57,10 @@ const ComoFunciona = () => {
                     closed: {}
                   }}
                 >
-                  <a className={styles.mobileNavLink} href="/recursos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</a>
-                  <a className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</a>
-                  <a className={styles.mobileNavLink} href="/" onClick={toggleMenu}>{CONSTANTES.TITULO_HOME}</a>
-                  <a className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</a>  
+                  <Link className={styles.mobileNavLink} href="/recursos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</Link>
+                  <Link className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</Link>
+                  <Link className={styles.mobileNavLink} href="/" onClick={toggleMenu}>{CONSTANTES.TITULO_HOME}</Link>
+                  <Link className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</Link>  
                 </motion.div>
               </motion.div>
             </>
@@ -133,8 +134,8 @@ const ComoFunciona = () => {
           {CONSTANTES.SUBTITULO_PRONTO_PARA_COMECAR}
         </p>
         <div className={styles.ctaButtons}>
-          <a className={styles.primaryButton} href="/registro">{CONSTANTES.BOTAO_CADASTRAR_GRATUITAMENTE}</a>
-          <a className={styles.secondaryButton} href="/precos">{CONSTANTES.BOTAO_VER_PLANOS}</a>
+          <Link className={styles.primaryButton} href="/registro">{CONSTANTES.BOTAO_CADASTRAR_GRATUITAMENTE}</Link>
+          <Link className={styles.secondaryButton} href="/precos">{CONSTANTES.BOTAO_VER_PLANOS}</Link>
         </div>
       </section>
     </div>

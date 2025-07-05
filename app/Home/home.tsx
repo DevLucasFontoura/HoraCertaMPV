@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CONSTANTES } from '../common/constantes';
 import DesktopMenu from '../components/PublicMenu/DesktopMenu';
 import styles from './home.module.css';
+import Link from 'next/link';
 
 const LandingPage = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -58,10 +59,10 @@ const LandingPage = () => {
                     closed: {}
                   }}
                 >
-                  <a className={styles.mobileNavLink} href="/recursos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</a>
-                  <a className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</a>
-                  <a className={styles.mobileNavLink} href="/como-funciona" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</a>
-                  <a className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</a>
+                  <Link className={styles.mobileNavLink} href="/recursos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</Link>
+                  <Link className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</Link>
+                  <Link className={styles.mobileNavLink} href="/como-funciona" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</Link>
+                  <Link className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</Link>
                 </motion.div>
               </motion.div>
             </>
@@ -80,8 +81,8 @@ const LandingPage = () => {
           <h1 className={styles.heroTitle}>{CONSTANTES.TITULO_PRINCIPAL}</h1>
           <p className={styles.heroSubtitle}>{CONSTANTES.SUBTITULO_PRINCIPAL}</p>
           <div className={styles.buttonGroup}>
-            <a className={styles.primaryButton} href="/registro">{CONSTANTES.BOTAO_COMECAR}</a>
-            <a className={styles.secondaryButton} href="/login">{CONSTANTES.BOTAO_LOGIN}</a>
+            <Link className={styles.primaryButton} href="/registro">{CONSTANTES.BOTAO_COMECAR}</Link>
+            <Link className={styles.secondaryButton} href="/login">{CONSTANTES.BOTAO_LOGIN}</Link>
           </div>
         </motion.div>
       </div>

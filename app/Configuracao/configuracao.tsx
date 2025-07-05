@@ -1,7 +1,7 @@
 import { FaUser, FaBell, FaClock, FaCalendar, FaBook, FaQuestionCircle, FaHeadset, FaLock, FaInfoCircle, FaCog } from 'react-icons/fa';
 // import React, { useEffect } from 'react';
 import BottomNav from '../components/Menu/menu';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import styles from './configuracao.module.css';
 import { motion } from 'framer-motion';
 import { CONSTANTES } from '../common/constantes';
@@ -16,8 +16,15 @@ import { CONSTANTES } from '../common/constantes';
 //   };
 // }
 
+interface SettingOption {
+  title: string;
+  icon: React.ReactNode;
+  description: string;
+  onPress: () => void;
+}
+
 export default function SettingsScreen() {
-  const navigate = useNavigate();
+  const router = useRouter();
 //   const [userSettings, setUserSettings] = useState<UserSettings>({
 //     notifications: false,
 //     emailReports: false,
@@ -47,7 +54,7 @@ export default function SettingsScreen() {
         title: CONSTANTES.TITULO_CONFIGURACAO_PERFIL,
         icon: <FaUser />,
         description: CONSTANTES.SUBTITULO_CONFIGURACAO_PERFIL,
-        onPress: () => navigate(CONSTANTES.CAMINHO_CONFIGURACAO_PERFIL)
+        onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_PERFIL)
       }
     ],
     preferences: [
@@ -55,19 +62,19 @@ export default function SettingsScreen() {
         title: CONSTANTES.TITULO_CONFIGURACAO_NOTIFICACOES,
         icon: <FaBell />,
         description: CONSTANTES.SUBTITULO_CONFIGURACAO_NOTIFICACOES,
-        onPress: () => navigate(CONSTANTES.CAMINHO_CONFIGURACAO_NOTIFICACOES)
+        onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_NOTIFICACOES)
       },
       {
         title: CONSTANTES.TITULO_CONFIGURACAO_JORNADA,
         icon: <FaClock />,
         description: CONSTANTES.SUBTITULO_CONFIGURACAO_JORNADA,
-        onPress: () => navigate(CONSTANTES.CAMINHO_CONFIGURACAO_JORNADA)
+        onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_JORNADA)
       },
       {
         title: CONSTANTES.TITULO_CONFIGURACAO_FERIADOS,
         icon: <FaCalendar />,
         description: CONSTANTES.SUBTITULO_CONFIGURACAO_FERIADOS,
-        onPress: () => navigate(CONSTANTES.CAMINHO_CONFIGURACAO_FERIADOS)
+        onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_FERIADOS)
       }
     ],
     help: [
@@ -75,19 +82,19 @@ export default function SettingsScreen() {
         title: CONSTANTES.TITULO_CONFIGURACAO_TUTORIAL,
         icon: <FaBook />,
         description: CONSTANTES.SUBTITULO_CONFIGURACAO_TUTORIAL,
-        onPress: () => navigate(CONSTANTES.CAMINHO_CONFIGURACAO_TUTORIAL)
+        onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_TUTORIAL)
       },
       {
         title: CONSTANTES.TITULO_CONFIGURACAO_PERGUNTAS,
         icon: <FaQuestionCircle />,
         description: CONSTANTES.SUBTITULO_CONFIGURACAO_PERGUNTAS,
-        onPress: () => navigate(CONSTANTES.CAMINHO_CONFIGURACAO_PERGUNTAS)
+        onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_PERGUNTAS)
       },
       {
         title: CONSTANTES.TITULO_CONFIGURACAO_SUPORTE,
         icon: <FaHeadset />,
         description: CONSTANTES.SUBTITULO_CONFIGURACAO_SUPORTE,
-        onPress: () => navigate(CONSTANTES.CAMINHO_CONFIGURACAO_SUPORTE)
+        onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_SUPORTE)
       }
     ],
     about: [
@@ -95,20 +102,20 @@ export default function SettingsScreen() {
         title: CONSTANTES.TITULO_CONFIGURACAO_POLITICA,
         icon: <FaLock />,
         description: CONSTANTES.SUBTITULO_CONFIGURACAO_POLITICA,
-        onPress: () => navigate(CONSTANTES.CAMINHO_CONFIGURACAO_POLITICA)
+        onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_POLITICA)
       },
       {
         title: CONSTANTES.TITULO_CONFIGURACAO_SOBRE,
         icon: <FaInfoCircle />,
         description: CONSTANTES.SUBTITULO_CONFIGURACAO_SOBRE,
-        onPress: () => navigate(CONSTANTES.CAMINHO_CONFIGURACAO_SOBRE)
+        onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_SOBRE)
       }
     ]
   };
 
   const handleLogout = () => {
     // Mock logout functionality
-    navigate(CONSTANTES.CAMINHO_CONFIGURACAO_SAIR);
+    router.push(CONSTANTES.CAMINHO_CONFIGURACAO_SAIR);
   };
 
   const handleDeleteAccount = () => {
@@ -116,7 +123,7 @@ export default function SettingsScreen() {
     console.log('Delete account clicked');
   };
 
-  const renderSection = (title: string, icon: React.ReactNode, options: any[]) => (
+  const renderSection = (title: string, icon: React.ReactNode, options: SettingOption[]) => (
     <motion.section 
       className={styles.section}
       initial={{ opacity: 0, y: 20 }}

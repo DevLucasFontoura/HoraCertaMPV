@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CONSTANTES } from '../common/constantes';
 import styles from './recursos.module.css';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const FeaturesPage = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -54,10 +55,10 @@ const FeaturesPage = () => {
                     closed: {}
                   }}
                 >
-                  <a className={styles.mobileNavLink} href="/como-funciona" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</a>
-                  <a className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</a>
-                  <a className={styles.mobileNavLink} href="/" onClick={toggleMenu}>{CONSTANTES.HOME}</a>
-                  <a className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</a>
+                  <Link className={styles.mobileNavLink} href="/como-funciona" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</Link>
+                  <Link className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</Link>
+                  <Link className={styles.mobileNavLink} href="/" onClick={toggleMenu}>{CONSTANTES.HOME}</Link>
+                  <Link className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</Link>
                 </motion.div>
               </motion.div>
             </>
@@ -217,8 +218,8 @@ const FeaturesPage = () => {
         <h2 className={styles.ctaTitle}>{CONSTANTES.TITULO_PRONTO_PARA_COMECAR}</h2>
         <p className={styles.ctaDescription}>{CONSTANTES.SUBTITULO_PRONTO_PARA_COMECAR}</p>
         <div className={styles.ctaButtons}>
-          <a className={styles.primaryButton} href="/registro">{CONSTANTES.BOTAO_CADASTRAR_GRATUITAMENTE}</a>
-          <a className={styles.secondaryButton} href="/precos">{CONSTANTES.BOTAO_VER_PLANOS}</a>
+          <Link className={styles.primaryButton} href="/registro">{CONSTANTES.BOTAO_CADASTRAR_GRATUITAMENTE}</Link>
+          <Link className={styles.secondaryButton} href="/precos">{CONSTANTES.BOTAO_VER_PLANOS}</Link>
         </div>
       </section>
     </div>

@@ -5,6 +5,7 @@ import { CONSTANTES } from '../common/constantes';
 import styles from './login.module.css';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -31,7 +32,7 @@ const Login = () => {
       } else {
         setError('Preencha todos os campos');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao fazer login:', error);
       setError('Erro ao fazer login. Tente novamente');
     } finally {
@@ -41,10 +42,10 @@ const Login = () => {
 
   return (
     <div className={styles.container}>
-      <a href="/" className={styles.backButton}>
+      <Link href="/" className={styles.backButton}>
         <AiOutlineArrowLeft size={20} />
         <span>{CONSTANTES.TEXT_VOLTAR}</span>
-      </a>
+      </Link>
       
       <div className={styles.gradient} />
       <motion.div
@@ -101,9 +102,9 @@ const Login = () => {
 
         <p className={styles.footer}>
           {CONSTANTES.TEXT_AINDA_NAO_TEM_CONTA}
-          <a href="/registro" className={styles.link}>
+          <Link href="/registro" className={styles.link}>
             {CONSTANTES.TEXT_CRIAR_CONTA_GRATUITA}
-          </a>
+          </Link>
         </p>
       </motion.div>
     </div>

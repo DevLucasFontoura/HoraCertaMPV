@@ -1,9 +1,10 @@
+"use client";
+
 import { AiOutlineCheckCircle, AiOutlineInfoCircle, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import DesktopMenu from '../components/PublicMenu/DesktopMenu';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CONSTANTES } from '../common/constantes';
 import styles from './precos.module.css';
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 const Precos = () => {
@@ -56,10 +57,10 @@ const Precos = () => {
                     closed: {}
                   }}
                 >
-                  <Link className={styles.mobileNavLink} to={CONSTANTES.COMO_FUNCIONA} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</Link>
-                  <Link className={styles.mobileNavLink} to={CONSTANTES.RECURSOS} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</Link>
-                  <Link className={styles.mobileNavLink} to={CONSTANTES.HOME} onClick={toggleMenu}>{CONSTANTES.TITULO_HOME}</Link>
-                  <Link className={styles.mobilePrimaryButton} to={CONSTANTES.REGISTRO} onClick={toggleMenu}>{CONSTANTES.BOTAO_CADASTRAR_GRATUITAMENTE}</Link>
+                  <a className={styles.mobileNavLink} href="/como-funciona" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</a>
+                  <a className={styles.mobileNavLink} href="/recursos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</a>
+                  <a className={styles.mobileNavLink} href="/" onClick={toggleMenu}>{CONSTANTES.TITULO_HOME}</a>
+                  <a className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>{CONSTANTES.BOTAO_CADASTRAR_GRATUITAMENTE}</a>
                 </motion.div>
               </motion.div>
             </>
@@ -88,7 +89,7 @@ const Precos = () => {
             </li>
             <li className={styles.planFeature}><AiOutlineCheckCircle /> {CONSTANTES.CARD_PRECOS_01_ITEM_03}</li>
           </ul>
-          <Link className={styles.primaryButton} to={CONSTANTES.REGISTRO}>{CONSTANTES.TITULO_BOTAO_COMECAR}</Link>
+          <a className={styles.primaryButton} href="/registro">{CONSTANTES.TITULO_BOTAO_COMECAR}</a>
         </div>
 
         <div className={styles.pricingCard}>
@@ -108,7 +109,7 @@ const Precos = () => {
             <li className={styles.planFeature}><AiOutlineCheckCircle /> {CONSTANTES.CARD_PRECOS_02_ITEM_02}</li>
             <li className={styles.planFeature}><AiOutlineCheckCircle /> {CONSTANTES.CARD_PRECOS_02_ITEM_03}</li>
           </ul>
-          <Link className={styles.primaryButton} to={CONSTANTES.REGISTRO}>{CONSTANTES.TITULO_BOTAO_COMECAR}</Link>
+          <a className={styles.primaryButton} href="/registro">{CONSTANTES.TITULO_BOTAO_COMECAR}</a>
         </div>
 
         <div className={styles.pricingCard}>

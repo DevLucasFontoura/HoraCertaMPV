@@ -1,51 +1,36 @@
+"use client";
+
 import { AiOutlineClockCircle, AiOutlineArrowLeft } from 'react-icons/ai';
-import { useNavigate, Link } from 'react-router-dom';
 import styles from './registro.module.css';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { CONSTANTES } from '../common/constantes';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../../services/firebaseConfig';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
     try {
-      // 1. Cria o usuário no Authentication
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // 2. Cria o documento do usuário no Firestore
-      await setDoc(doc(db, 'users', user.uid), {
-        name,
-        email,
-        createdAt: new Date().toISOString(),
-        settings: {
-          notifications: true,
-          workHours: 8,
-        }
-      });
-
-      // 3. Salva o token
-      const token = await user.getIdToken();
-      localStorage.setItem('token', token);
-      localStorage.setItem('userEmail', email);
-
-      // 4. Redireciona para BemVindo ao invés de Home
-      navigate(CONSTANTES.ROUTE_BEM_VINDO);
-      
+      // Simulação de registro (sem backend por enquanto)
+      if (name && email && password) {
+        // Simula delay de registro
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Simula registro bem-sucedido
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userName', name);
+        
+        // Redireciona para BemVindo
+        window.location.href = '/bemvindo';
+      }
     } catch (error: any) {
       console.error('Erro no registro:', error);
-      // ... tratamento de erros ...
     } finally {
       setLoading(false);
     }
@@ -53,10 +38,10 @@ const Register = () => {
 
   return (
     <div className={styles.container}>
-      <Link to={CONSTANTES.ROUTE_HOME} className={styles.backButton}>
+      <a href="/" className={styles.backButton}>
         <AiOutlineArrowLeft size={20} />
         <span>{CONSTANTES.TEXT_VOLTAR}</span>
-      </Link>
+      </a>
       
       <div className={styles.gradient} />
       <motion.div
@@ -121,9 +106,9 @@ const Register = () => {
 
         <p className={styles.footer}>
           {CONSTANTES.TXT_REGISTRO_FOOTER}
-          <Link to={CONSTANTES.ROUTE_LOGIN} className={styles.link}>
+          <a href="/login" className={styles.link}>
             {CONSTANTES.TXT_REGISTRO_JA_TENHO_UMA_CONTA}
-          </Link>
+          </a>
         </p>
       </motion.div>
     </div>

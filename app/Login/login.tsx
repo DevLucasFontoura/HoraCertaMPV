@@ -1,8 +1,7 @@
+"use client";
+
 import { AiOutlineClockCircle, AiOutlineArrowLeft } from 'react-icons/ai';
-import { useNavigate, Link } from 'react-router-dom';
 import { CONSTANTES } from '../common/constantes';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../services/firebaseConfig';
 import styles from './login.module.css';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
@@ -12,7 +11,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,54 +18,33 @@ const Login = () => {
     setError('');
     
     try {
-      // Tenta fazer login com Firebase
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      
-      // Se chegou aqui, login foi bem sucedido
-      const token = await userCredential.user.getIdToken();
-      
-      // Salva o token no localStorage
-      localStorage.setItem('token', token);
-      
-      // Salva o email do usuário
-      localStorage.setItem('userEmail', email);
-      
-      // Redireciona para BemVindo ao invés de Home
-      navigate(CONSTANTES.ROUTE_BEM_VINDO);
+      // Simulação de login (sem backend por enquanto)
+      if (email && password) {
+        // Simula delay de login
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Simula login bem-sucedido
+        localStorage.setItem('userEmail', email);
+        
+        // Redireciona para BemVindo
+        window.location.href = '/bemvindo';
+      } else {
+        setError('Preencha todos os campos');
+      }
     } catch (error: any) {
       console.error('Erro ao fazer login:', error);
-      
-      // Tratamento de erros específicos do Firebase
-      switch (error.code) {
-        case 'auth/user-not-found':
-          setError('Usuário não encontrado');
-          break;
-        case 'auth/wrong-password':
-          setError('Senha incorreta');
-          break;
-        case 'auth/invalid-email':
-          setError('Email inválido');
-          break;
-        case 'auth/user-disabled':
-          setError('Usuário desativado');
-          break;
-        case 'auth/too-many-requests':
-          setError('Muitas tentativas. Tente novamente mais tarde');
-          break;
-        default:
-          setError('Erro ao fazer login. Tente novamente');
-      }
-      
+      setError('Erro ao fazer login. Tente novamente');
+    } finally {
       setLoading(false);
     }
   };
 
   return (
     <div className={styles.container}>
-      <Link to={CONSTANTES.HOME} className={styles.backButton}>
+      <a href="/" className={styles.backButton}>
         <AiOutlineArrowLeft size={20} />
         <span>{CONSTANTES.TEXT_VOLTAR}</span>
-      </Link>
+      </a>
       
       <div className={styles.gradient} />
       <motion.div
@@ -124,9 +101,9 @@ const Login = () => {
 
         <p className={styles.footer}>
           {CONSTANTES.TEXT_AINDA_NAO_TEM_CONTA}
-          <Link to={CONSTANTES.REGISTRO} className={styles.link}>
+          <a href="/registro" className={styles.link}>
             {CONSTANTES.TEXT_CRIAR_CONTA_GRATUITA}
-          </Link>
+          </a>
         </p>
       </motion.div>
     </div>

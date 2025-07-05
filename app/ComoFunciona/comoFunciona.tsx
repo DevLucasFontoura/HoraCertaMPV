@@ -1,9 +1,10 @@
+"use client";
+
 import { AiOutlineClockCircle, AiOutlineCheckCircle, AiOutlineFileText, AiOutlineBarChart, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import DesktopMenu from '../components/PublicMenu/DesktopMenu';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CONSTANTES } from '../common/constantes';
 import styles from './comoFunciona.module.css';
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 const ComoFunciona = () => {
@@ -55,10 +56,10 @@ const ComoFunciona = () => {
                     closed: {}
                   }}
                 >
-                  <Link className={styles.mobileNavLink} to={CONSTANTES.RECURSOS} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</Link>
-                  <Link className={styles.mobileNavLink} to={CONSTANTES.PRECOS} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</Link>
-                  <Link className={styles.mobileNavLink} to={CONSTANTES.HOME} onClick={toggleMenu}>{CONSTANTES.TITULO_HOME}</Link>
-                  <Link className={styles.mobilePrimaryButton} to={CONSTANTES.REGISTRO} onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</Link>  
+                  <a className={styles.mobileNavLink} href="/recursos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</a>
+                  <a className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</a>
+                  <a className={styles.mobileNavLink} href="/" onClick={toggleMenu}>{CONSTANTES.TITULO_HOME}</a>
+                  <a className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</a>  
                 </motion.div>
               </motion.div>
             </>
@@ -132,8 +133,8 @@ const ComoFunciona = () => {
           {CONSTANTES.SUBTITULO_PRONTO_PARA_COMECAR}
         </p>
         <div className={styles.ctaButtons}>
-          <Link className={styles.primaryButton} to={CONSTANTES.REGISTRO}>{CONSTANTES.BOTAO_CADASTRAR_GRATUITAMENTE}</Link>
-          <Link className={styles.secondaryButton} to={CONSTANTES.PRECOS}>{CONSTANTES.BOTAO_VER_PLANOS}</Link>
+          <a className={styles.primaryButton} href="/registro">{CONSTANTES.BOTAO_CADASTRAR_GRATUITAMENTE}</a>
+          <a className={styles.secondaryButton} href="/precos">{CONSTANTES.BOTAO_VER_PLANOS}</a>
         </div>
       </section>
     </div>

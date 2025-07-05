@@ -58,7 +58,7 @@ const LandingPage = () => {
                     closed: {}
                   }}
                 >
-                  <a className={styles.mobileNavLink} href="/Recursos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</a>
+                  <a className={styles.mobileNavLink} href="/recursos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</a>
                   <a className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</a>
                   <a className={styles.mobileNavLink} href="/como-funciona" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</a>
                   <a className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</a>

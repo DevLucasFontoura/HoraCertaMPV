@@ -1,0 +1,251 @@
+.containerWrapper {
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    position: relative;
+    padding-bottom: 70px;
+}
+
+.backgroundIcon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.container {
+    padding: 24px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.backButton {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s;
+}
+
+.backButton:hover {
+    color: #333;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    color: #666;
+    margin: 4px 0 0 0;
+}
+
+.section {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+}
+
+.addHolidayContainer {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.dateInput {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    transition: all 0.2s;
+}
+
+.dateInput:focus {
+    outline: none;
+    border-color: #4B7BF5;
+    box-shadow: 0 0 0 2px rgba(75, 123, 245, 0.1);
+}
+
+.addButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: #4B7BF5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.addButton:hover {
+    background-color: #3960c8;
+}
+
+.holidayList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.holidayCard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 16px;
+    border-radius: 12px;
+    transition: transform 0.2s;
+}
+
+.holidayCard:hover {
+    transform: translateX(4px);
+}
+
+.holidayInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.holidayDate {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.holidayStatus {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.deleteButton {
+    background: none;
+    border: none;
+    padding: 8px;
+    color: #dc3545;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.deleteButton:hover {
+    color: #c82333;
+}
+
+.helpButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    background: none;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    color: #666;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.helpButton:hover {
+    background-color: #f8f9fa;
+    border-color: #666;
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.modalTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    padding: 8px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.closeButton:hover {
+    color: #333;
+}
+
+.modalBody {
+    padding: 24px;
+}
+
+.helpSection {
+    margin-bottom: 24px;
+}
+
+.helpSection:last-child {
+    margin-bottom: 0;
+}
+
+.helpSection h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 8px 0;
+}
+
+.helpSection p {
+    font-size: 0.875rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}

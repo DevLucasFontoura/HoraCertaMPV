@@ -1,0 +1,58 @@
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navLink {
+  color: #666666;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: #111111;
+}
+
+.primaryButton {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #111111;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.primaryButton:hover {
+  background-color: #000000;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .navLinks {
+    display: none;
+  }
+}
+
+.desktopMenuWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.5rem;
+  width: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: #1e293b;
+  text-decoration: none;
+  white-space: nowrap;
+} 

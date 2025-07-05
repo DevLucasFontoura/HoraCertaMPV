@@ -1,0 +1,149 @@
+.containerWrapper {
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    position: relative;
+    padding-bottom: 70px;
+  }
+  
+  .backgroundIcon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  
+  .container {
+    padding: 24px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .backButton {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s;
+  }
+  
+  .backButton:hover {
+    color: #333;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+  
+  .subtitle {
+    font-size: 0.875rem;
+    color: #666;
+    margin: 4px 0 0 0;
+  }
+  
+  .section {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+  }
+  
+  .fieldContainer {
+    margin-bottom: 20px;
+  }
+  
+  .fieldContainer:last-child {
+    margin-bottom: 0;
+  }
+  
+  .labelContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .fieldIcon {
+    color: #666;
+    font-size: 1rem;
+  }
+  
+  .label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #666;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    transition: all 0.2s;
+  }
+  
+  .input:focus {
+    outline: none;
+    border-color: #4B7BF5;
+    box-shadow: 0 0 0 2px rgba(75, 123, 245, 0.1);
+  }
+  
+  .inputDisabled {
+    background-color: #f5f5f5;
+    color: #666;
+    cursor: not-allowed;
+  }
+  
+  .actionButton {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4B7BF5;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .actionButton:hover {
+    background-color: #3960c8;
+  }
+  
+  .saveButton {
+    background-color: #34c759;
+  }
+  
+  .saveButton:hover {
+    background-color: #2da84c;
+  }
+
+  .loadingState,
+  .errorState {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    font-size: 1rem;
+    color: #666666;
+  }
+
+  .errorState {
+    color: #dc2626;
+  }

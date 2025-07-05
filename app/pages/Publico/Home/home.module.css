@@ -1,0 +1,343 @@
+.container {
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111111;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navLink {
+  color: #666666;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: #111111;
+}
+
+.hero {
+  text-align: center;
+  padding: 4rem 5% 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.gradient {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(238,174,202,0.2) 0%, rgba(148,187,233,0.1) 100%);
+  z-index: -1;
+  border-radius: 50%;
+}
+
+.heroTitle {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: #666666;
+  margin-bottom: 2rem;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.primaryButton {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #111111;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.primaryButton:hover {
+  background-color: #000000;
+  transform: translateY(-1px);
+}
+
+.secondaryButton {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: white;
+  color: #111111;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid #eaeaea;
+  transition: all 0.2s ease;
+}
+
+.secondaryButton:hover {
+  background-color: #f5f5f5;
+}
+
+.features {
+  padding: 4rem 5%;
+  background-color: #f8f9ff;
+}
+
+.sectionTitle {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.sectionSubtitle {
+  text-align: center;
+  font-size: 1.25rem;
+  color: #666666;
+  margin-bottom: 3rem;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featureCard {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.featureIcon {
+  color: #4CAF50;
+  background: #f0f9f0;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.enterpriseSection {
+  padding: 4rem 5%;
+}
+
+.enterpriseContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+}
+
+.enterpriseImage {
+  font-size: 6rem;
+}
+
+.comingSoonBadge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #f0f9f0;
+  color: #4CAF50;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+/* Menu Mobile */
+.mobileMenuButton {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #111111;
+  padding: 0.5rem;
+}
+
+.mobileMenuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  background: white;
+  padding: 2rem;
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileNavLink {
+  display: block;
+  color: #666666;
+  text-decoration: none;
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #eaeaea;
+  transition: color 0.2s ease;
+}
+
+.mobileNavLink:hover {
+  color: #111111;
+}
+
+.mobilePrimaryButton {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #111111;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.mobilePrimaryButton:hover {
+  background-color: #000000;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .mobileMenuButton {
+    display: block;
+  }
+
+  .navLinks {
+    display: none;
+  }
+
+  .hero {
+    padding: 2rem 1rem;
+    text-align: left;
+  }
+
+  .gradient {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    border-radius: 0;
+  }
+
+  .heroTitle {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    align-items: stretch;
+    margin-right: 7px;
+    margin-left: 7px;
+    text-align: center;
+  }
+
+  .features {
+    padding: 2rem 1rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.75rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .featureCard {
+    padding: 1rem;
+  }
+
+  .enterpriseSection {
+    padding: 2rem 1rem;
+  }
+
+  .enterpriseContent {
+    flex-direction: column;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .enterpriseImage {
+    font-size: 4rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .heroTitle {
+    font-size: 1.75rem;
+  }
+
+  .featureCard {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}

@@ -1,0 +1,57 @@
+.dialog {
+    border-radius: 12px;
+}
+
+.dialogTitle {
+    font-size: 1.5rem;
+    padding: 24px 24px 0;
+}
+
+.modalText {
+    margin: 1rem 0;
+    color: #666666;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.timePicker {
+    margin: 1rem 0;
+}
+
+.timeInput {
+    font-size: 1.5rem !important;
+    padding: 12px !important;
+    background-color: #f8f8f8;
+    border-radius: 8px !important;
+}
+
+.timeInput input {
+    font-size: 1.5rem;
+    padding: 8px !important;
+}
+
+.timeIcon {
+    color: #666666;
+    font-size: 1.5rem !important;
+}
+
+.dialogActions {
+    padding: 16px 24px;
+    gap: 12px;
+}
+
+.cancelButton {
+    color: #666666 !important;
+    font-weight: 500 !important;
+}
+
+.confirmButton {
+    background-color: #1976d2 !important;
+    padding: 8px 24px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+}
+
+.confirmButton:hover {
+    background-color: #1565c0 !important;
+}

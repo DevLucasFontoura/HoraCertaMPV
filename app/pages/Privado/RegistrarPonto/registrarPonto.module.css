@@ -1,0 +1,241 @@
+.timeDisplay {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.timeValue {
+    font-size: 3rem;
+    font-weight: 600;
+    color: #111111;
+    font-variant-numeric: tabular-nums;
+}
+
+.timeDate {
+    color: #666666;
+    margin-top: 0.5rem;
+}
+
+.buttonGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.simplifiedGrid {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.simplifiedGrid .timeButton {
+    flex: 0 1 calc(50% - 0.5rem);
+}
+
+@media (max-width: 768px) {
+    .buttonGrid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+    
+    /* Mantém o layout flex mesmo no mobile para o modo simplificado */
+    .simplifiedGrid {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.timeButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    border: none;
+    background: #f8f8f8;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 120px;
+}
+
+.timeButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background: #f5f5f5;
+}
+
+.timeButton:not(:disabled):hover {
+    background: #f0f0f0;
+}
+
+.buttonIcon {
+    font-size: 1.8rem;
+    color: #666666;
+}
+
+.buttonLabel {
+    font-size: 1rem;
+    color: #666666;
+}
+
+.historySection {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #eaeaea;
+    margin-bottom: 80px;
+}
+
+.historyTitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #111111;
+    margin-bottom: 1rem;
+}
+
+.timelineContainer {
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.timelineWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.errorMessage {
+    background: #FFE4E6;
+    border: 1px solid #EF4444;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #EF4444;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.successMessage {
+    background: #F0FDF4;
+    border: 1px solid #10B981;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #10B981;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.timelineItem {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.timelineDot {
+    width: 12px;
+    height: 12px;
+    background-color: #111111;
+    border-radius: 50%;
+    position: relative;
+}
+
+.timelineDot::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 12px;
+    bottom: -24px;
+    width: 2px;
+    background-color: #eaeaea;
+    transform: translateX(-50%);
+}
+
+.timelineItem:last-child .timelineDot::after {
+    display: none;
+}
+
+.timelineContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.timelineTime {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111111;
+}
+
+.timelineLabel {
+    font-size: 0.875rem;
+    color: #666666;
+}
+
+.pageContainer {
+    min-height: 100vh;
+    background-color: #ffffff;
+    padding-bottom: 5rem;
+}
+
+.bottomNav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    z-index: 100;
+}
+
+.pageHeader {
+    background-color: #111111;
+    padding: 2rem;
+    padding-top: 3rem;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.pageHeader > div {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pageTitle {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    margin-bottom: 0.5rem;
+}
+
+.pageSubtitle {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .pageHeader {
+        padding: 1.5rem;
+        padding-top: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+.modeSwitch {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: #666666;
+    font-size: 0.9rem;
+}

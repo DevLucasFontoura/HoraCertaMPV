@@ -1,0 +1,389 @@
+.container {
+  min-height: 100vh;
+  background-color: #ffffff;
+  padding-bottom: 80px;
+}
+
+.header {
+  background-color: #111111;
+  padding: 2rem;
+  padding-top: 3rem;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.header > div {
+  max-width: 970px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.welcomeContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.welcomeHeader {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.welcomeText {
+  font-size: 1.8rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.nameText {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.dateText {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin: 0;
+  margin-bottom: 1.5rem;
+}
+
+.content {
+  position: relative;
+  margin-top: -2rem;
+  padding: 0 1.5rem;
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.statsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  margin-top: -32px;
+}
+
+.statsCard {
+  flex: 1;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.statsCard:hover {
+  transform: translateY(-2px);
+}
+
+.statsHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.workCard .dot {
+  background-color: #22C55E;
+}
+
+.balanceCard .dot {
+  background-color: #3B82F6;
+}
+
+.statsLabel {
+  font-size: 1rem;
+  color: #666666;
+}
+
+.statsValue {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #111111;
+  margin-bottom: 0.25rem;
+}
+
+.statsSubtext {
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+.insightCard {
+  background: #F8FAFC;
+  padding: 1.25rem;
+  border-radius: 16px;
+  border: 1px solid #E2E8F0;
+  margin-bottom: 2rem;
+}
+
+.insightText {
+  font-size: 0.875rem;
+  color: #334155;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 1.25rem;
+}
+
+.timeCard {
+  background: white;
+  padding: 1.75rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.dateRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.extraHours {
+  color: #22C55E;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.timelineRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
+.timeBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.timeLabel {
+  font-size: 0.875rem;
+  color: #666666;
+  margin-bottom: 0.5rem;
+}
+
+.timeValue {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #111111;
+}
+
+.separator {
+  display: none;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+.totalLabel {
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+.totalValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111111;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1.5rem;
+    padding-top: 2.5rem;
+  }
+  
+  .header > div {
+    padding: 0 1rem;
+  }
+
+  .header::after {
+    bottom: -1.5rem;
+    height: 3rem;
+  }
+
+  .content {
+    padding: 0 1rem;
+    margin-top: -1.5rem;
+  }
+
+  .statsContainer {
+    gap: 1rem;
+  }
+
+  .timelineRow {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .timeBlock {
+    flex: 1;
+    min-width: 40%;
+  }
+
+  .separator {
+    display: none;
+  }
+
+  .dateText {
+    margin-bottom: 1rem;
+  }
+
+  .welcomeContainer {
+    gap: 0.25rem;
+  }
+
+  .welcomeHeader {
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: baseline;
+  }
+
+  .welcomeText {
+    font-size: 1.5rem;
+  }
+
+  .nameText {
+    font-size: 1.3rem;
+  }
+
+  .dateText {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .statsContainer {
+    flex-direction: column;
+  }
+
+  .statsCard {
+    width: 100%;
+    max-width: none;
+  }
+
+  .timeBlock {
+    min-width: auto;
+    flex: 0 0 auto;
+    padding: 0 0.5rem;
+  }
+
+  .separator {
+    display: block;
+  }
+
+  .statsValue {
+    font-size: 1.75rem;
+  }
+
+  .timelineRow {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .container {
+    padding-bottom: 100px;
+  }
+
+  .content {
+    padding-bottom: 100px;
+  }
+
+  .timelineRow {
+    gap: 0.75rem;
+  }
+  
+  .timeBlock {
+    padding: 0.75rem 0;
+  }
+  
+  .timeValue {
+    font-size: 1.125rem;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .header {
+    padding: 1.5rem;
+    padding-top: 2.5rem;
+  }
+
+  .content {
+    padding: 0 1rem;
+    margin-top: -1.5rem;
+  }
+
+  .statsContainer {
+    margin-top: -24px;
+    gap: 12px;
+  }
+
+  .statsCard {
+    padding: 1.25rem;
+  }
+
+  .welcomeText {
+    font-size: 1.5rem;
+  }
+
+  .nameText {
+    font-size: 1.2rem;
+  }
+
+  .statsValue {
+    font-size: 2.25rem;
+  }
+
+  .statsLabel {
+    font-size: 0.875rem;
+  }
+
+  .statsSubtext {
+    font-size: 0.75rem;
+  }
+}
+
+.emptyState {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.emptyText {
+    color: #666666;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.statsValue.empty {
+    color: #999999;
+}

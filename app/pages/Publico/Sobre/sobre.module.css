@@ -1,0 +1,548 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: #333;
+  padding-top: 96px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 5%;
+  background: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.mobileMenuButton {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.mobileMenuOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.mobileMenu {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 80%;
+  max-width: 300px;
+  background: white;
+  padding: 2rem;
+  z-index: 1001;
+}
+
+.mobileNavLink {
+  display: none;
+  color: #64748b;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.75rem 0;
+  transition: color 0.2s ease;
+}
+
+.mobileNavLink:hover {
+  color: #1e293b;
+}
+
+.mobilePrimaryButton {
+  display: none;
+  background: #2563eb;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.mobilePrimaryButton:hover {
+  background: #1d4ed8;
+}
+
+.hero {
+  text-align: center;
+  padding: 2.5rem 0 1.5rem;
+  background: #ffffff;
+  border-radius: 1.5rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.logoIcon {
+  color: #2563eb;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  color: #1e293b;
+  margin: 0;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #1e293b;
+  max-width: 900px;
+  margin: 0 auto;
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.heroStats {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  margin-top: 3rem;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statNumber {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.statLabel {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sectionRow {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  margin-bottom: 4rem;
+  justify-content: center;
+}
+
+.sectionRowReverse {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  margin-bottom: 4rem;
+  flex-direction: row-reverse;
+  justify-content: center;
+}
+
+.sectionImage {
+  width: 100%;
+  max-width: 520px;
+  height: 340px;
+  object-fit: cover;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  flex-shrink: 0;
+}
+
+.sectionText {
+  flex: 1;
+  min-width: 260px;
+  text-align: left;
+}
+
+.cardImage {
+  width: 100%;
+  max-width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 0.75rem;
+  margin: 0 auto 1rem auto;
+  display: block;
+}
+
+.cardImageLarge {
+  width: 100%;
+  max-width: 220px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 1rem;
+  margin: 0 auto 1.5rem auto;
+  display: block;
+}
+
+.mission, .history, .team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.values {
+  margin-bottom: 4rem;
+  padding: 0 1rem;
+}
+
+.valueGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.valueCard {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.valueCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+.valueCard h3 {
+  color: #1e293b;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.valueCard p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.differenceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.differenceCard {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.differenceCard h3 {
+  color: #1e293b;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.differenceCard p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.history {
+  margin-bottom: 4rem;
+  padding: 2rem;
+  background: #f8fafc;
+  border-radius: 1rem;
+}
+
+.history h2 {
+  font-size: 2rem;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.history p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: #475569;
+}
+
+.difference {
+  margin-bottom: 4rem;
+  padding: 0 1rem;
+}
+
+.difference h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #1e293b;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.differenceList {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.differenceList li {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.differenceList strong {
+  display: block;
+  font-size: 1.25rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.differenceList p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.team {
+  text-align: center;
+  padding: 2rem;
+  background: #f8fafc;
+  border-radius: 1rem;
+}
+
+.team h2 {
+  font-size: 2rem;
+  color: #1e293b;
+  margin-bottom: 3.5rem;
+  font-weight: 600;
+}
+
+.team p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 2rem auto 0;
+  color: #475569;
+}
+
+.differenceGridTextOnly {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.differenceTextCard {
+  background: #fff;
+  padding: 2.5rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: box-shadow 0.2s;
+}
+
+.differenceTextCard strong {
+  font-size: 1.3rem;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.differenceTextCard p {
+  color: #64748b;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.differenceTextCard:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.values h2,
+.difference h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #1e293b;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.equipeTitulo {
+  margin-bottom: 3.5rem;
+}
+
+.sectionDivider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 3rem 0;
+  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .navbar {
+    padding: 1rem;
+  }
+
+  .mobileMenuButton {
+    display: block;
+  }
+
+  .mobileMenuOverlay {
+    display: block;
+  }
+
+  .mobileMenu {
+    display: block;
+  }
+
+  .mobileNavLink {
+    display: block;
+  }
+
+  .mobilePrimaryButton {
+    display: block;
+  }
+
+  .hero {
+    padding: 1.5rem 0 1rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .sectionImage {
+    height: 160px;
+    max-width: 100%;
+  }
+
+  .cardImage {
+    height: 60px;
+    max-width: 80px;
+  }
+
+  .mission, .history, .team {
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .differenceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .valueGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroStats {
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .statNumber {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .sectionRow, .sectionRowReverse {
+    flex-direction: column !important;
+    gap: 1.5rem;
+    text-align: center;
+  }
+  .sectionImage {
+    max-width: 100%;
+    height: 200px;
+  }
+  .sectionText {
+    text-align: center;
+  }
+  .cardImageLarge {
+    max-width: 100%;
+    height: 120px;
+  }
+  .differenceGridTextOnly {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+  .differenceTextCard {
+    padding: 2rem 1rem;
+  }
+} 

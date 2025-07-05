@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import BottomNav from '../../components/Menu/menu';
+import BottomNav from '../../../components/Menu/menu';
 import styles from './bemvindo.module.css';
 import { motion } from 'framer-motion';
 

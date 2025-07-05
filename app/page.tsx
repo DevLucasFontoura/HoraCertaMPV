@@ -1,4 +1,4 @@
-import LandingPage from './pages/Publico/Home/home';
+import LandingPage from './pages/Home/home';
 
 export default function Home() {
   return <LandingPage />;

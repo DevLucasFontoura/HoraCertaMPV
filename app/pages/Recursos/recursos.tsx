@@ -1,9 +1,10 @@
+"use client";
+
 import { AiOutlineClockCircle, AiOutlineEdit, AiOutlineFileText, AiOutlineMobile, AiOutlineSafety, AiOutlineTeam, AiOutlineBarChart, AiOutlineCloud, AiOutlineNotification, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import DesktopMenu from '../../components/PublicMenu/DesktopMenu';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CONSTANTES } from '../../common/constantes';
 import styles from './recursos.module.css';
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 const FeaturesPage = () => {
@@ -53,10 +54,10 @@ const FeaturesPage = () => {
                     closed: {}
                   }}
                 >
-                  <Link className={styles.mobileNavLink} to={CONSTANTES.COMO_FUNCIONA} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</Link>
-                  <Link className={styles.mobileNavLink} to={CONSTANTES.PRECOS} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</Link>
-                  <Link className={styles.mobileNavLink} to={CONSTANTES.HOME} onClick={toggleMenu}>{CONSTANTES.HOME}</Link>
-                  <Link className={styles.mobilePrimaryButton} to={CONSTANTES.REGISTRO} onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</Link>
+                  <a className={styles.mobileNavLink} href="/como-funciona" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</a>
+                  <a className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</a>
+                  <a className={styles.mobileNavLink} href="/" onClick={toggleMenu}>{CONSTANTES.HOME}</a>
+                  <a className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</a>
                 </motion.div>
               </motion.div>
             </>
@@ -216,8 +217,8 @@ const FeaturesPage = () => {
         <h2 className={styles.ctaTitle}>{CONSTANTES.TITULO_PRONTO_PARA_COMECAR}</h2>
         <p className={styles.ctaDescription}>{CONSTANTES.SUBTITULO_PRONTO_PARA_COMECAR}</p>
         <div className={styles.ctaButtons}>
-          <Link className={styles.primaryButton} to={CONSTANTES.REGISTRO}>{CONSTANTES.BOTAO_CADASTRAR_GRATUITAMENTE}</Link>
-          <Link className={styles.secondaryButton} to={CONSTANTES.PRECOS}>{CONSTANTES.BOTAO_VER_PLANOS}</Link>
+          <a className={styles.primaryButton} href="/registro">{CONSTANTES.BOTAO_CADASTRAR_GRATUITAMENTE}</a>
+          <a className={styles.secondaryButton} href="/precos">{CONSTANTES.BOTAO_VER_PLANOS}</a>
         </div>
       </section>
     </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import HabitTracker from '../components/HabitTracker/HabitTracker';
 import BarChart from '../components/Graficos/graficoDeBarras';
 import LineChart from '../components/Graficos/graficoDeLinha';

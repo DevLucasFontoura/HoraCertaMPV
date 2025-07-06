@@ -41,7 +41,7 @@ const Register = () => {
         localStorage.setItem('userUid', userCredential.user.uid);
         
         // Redireciona para BemVindo
-        window.location.href = '/bemvindo';
+        window.location.href = CONSTANTES.ROUTE_BEM_VINDO;
       }
     } catch (error: unknown) {
       console.error('Erro no registro:', error);

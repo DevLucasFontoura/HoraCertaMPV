@@ -1,3 +1,5 @@
+"use client";
+
 import { FiClock, FiCalendar, FiFileText, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { IoStatsChartOutline } from 'react-icons/io5'
 import BottomNav from '../components/Menu/menu';

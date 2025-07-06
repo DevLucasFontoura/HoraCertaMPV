@@ -4,51 +4,10 @@ import { useEffect, useState } from 'react';
 import BottomNav from '../components/Menu/menu';
 import styles from './bemvindo.module.css';
 import { motion } from 'framer-motion';
-
-interface UserData {
-  name: string;
-  email: string;
-  settings: {
-    notifications: {
-      email: boolean;
-      push: boolean;
-    };
-    workHours: {
-      daily: number;
-      weekly: number;
-    };
-  };
-  createdAt: string;
-}
+import { useAuth } from '../hooks/useAuth';
 
 const BemVindo = () => {
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Simular carregamento de dados
-    const mockUserData: UserData = {
-      name: 'João Silva',
-      email: 'joao@exemplo.com',
-      settings: {
-        notifications: {
-          email: true,
-          push: true,
-        },
-        workHours: {
-          daily: 8,
-          weekly: 40,
-        },
-      },
-      createdAt: new Date().toISOString(),
-    };
-
-    // Simular delay de carregamento
-    setTimeout(() => {
-      setUserData(mockUserData);
-      setLoading(false);
-    }, 1000);
-  }, []);
+  const { user, userData, loading } = useAuth();
 
   const formatDate = () => {
     return new Date().toLocaleDateString('pt-BR', { 
@@ -100,7 +59,7 @@ const BemVindo = () => {
               <span className={styles.statsLabel}>Horas Trabalhadas</span>
             </div>
             <div className={styles.statsValue}>
-              {loading ? '--:--' : formatWorkHours(userData?.settings?.workHours?.daily || 0)}
+              {loading ? '--:--' : formatWorkHours(userData?.workHours || 0)}
             </div>
             <div className={styles.statsSubtext}>Hoje</div>
           </motion.div>

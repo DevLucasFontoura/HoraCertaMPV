@@ -1,7 +1,7 @@
 import { FaArrowLeft, FaClock, FaChartBar, FaEdit, FaTachometerAlt } from 'react-icons/fa';
-import { CONSTANTES } from '../../../common/constantes';
-import BottomNav from '../../../components/Menu/menu';
-import { useNavigate } from 'react-router-dom';
+import { CONSTANTES } from '../common/constantes';
+import BottomNav from '../components/Menu/menu';
+import { useRouter } from 'next/navigation';
 import styles from './tutorial.module.css';
 import { motion } from 'framer-motion';
 
@@ -13,7 +13,7 @@ const tutorialSteps = [
 ];
 
 export default function TutorialScreen() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   return (
     <div className={styles.containerWrapper}>
@@ -29,7 +29,7 @@ export default function TutorialScreen() {
         <div className={styles.header}>
           <button 
             className={styles.backButton}
-            onClick={() => navigate(CONSTANTES.ROUTE_CONFIGURACAO)}
+            onClick={() => router.push(CONSTANTES.ROUTE_CONFIGURACAO)}
           >
             <FaArrowLeft size={20} />
           </button>

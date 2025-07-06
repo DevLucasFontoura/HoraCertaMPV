@@ -1,7 +1,9 @@
+'use client';
+
 import { FaCalendar, FaArrowLeft, FaPlus, FaTrash, FaQuestionCircle, FaTimes } from 'react-icons/fa';
-import { CONSTANTES } from '../../../common/constantes';
-import BottomNav from '../../../components/Menu/menu';
-import { useNavigate } from 'react-router-dom';
+import { CONSTANTES } from '../common/constantes';
+import BottomNav from '../components/Menu/menu';
+import { useRouter } from 'next/navigation';
 import styles from './feriados.module.css';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -12,7 +14,7 @@ interface Holiday {
 }
 
 export default function HolidayScreen() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [holidays, setHolidays] = useState<Holiday[]>([]);
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>('');
@@ -49,7 +51,7 @@ export default function HolidayScreen() {
         <div className={styles.header}>
           <button 
             className={styles.backButton}
-            onClick={() => navigate(CONSTANTES.ROUTE_CONFIGURACAO)}
+            onClick={() => router.push(CONSTANTES.ROUTE_CONFIGURACAO)}
           >
             <FaArrowLeft size={20} />
           </button>

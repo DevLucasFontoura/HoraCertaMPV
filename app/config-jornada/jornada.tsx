@@ -1,13 +1,13 @@
-import { CONSTANTES } from '../../../common/constantes';
-import BottomNav from '../../../components/Menu/menu';
+import { CONSTANTES } from '../common/constantes';
+import BottomNav from '../components/Menu/menu';
 import { FaClock, FaArrowLeft } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import styles from './jornada.module.css';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
 export default function WorkScheduleScreen() {
-  const navigate = useNavigate();
+  const router = useRouter();
   
   // Função para criar uma data base com apenas horas e minutos
   const createTimeDate = (hours: number, minutes: number) => {
@@ -38,7 +38,7 @@ export default function WorkScheduleScreen() {
 
   const handleSave = () => {
     // Implementar lógica de salvamento
-    navigate(CONSTANTES.ROUTE_CONFIGURACAO);
+    router.push(CONSTANTES.ROUTE_CONFIGURACAO);
   };
 
   return (
@@ -55,7 +55,7 @@ export default function WorkScheduleScreen() {
         <div className={styles.header}>
           <button 
             className={styles.backButton}
-            onClick={() => navigate(CONSTANTES.ROUTE_CONFIGURACAO)}
+            onClick={() => router.push(CONSTANTES.ROUTE_CONFIGURACAO)}
           >
             <FaArrowLeft size={20} />
           </button>

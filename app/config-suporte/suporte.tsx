@@ -1,7 +1,7 @@
 import { FaArrowLeft, FaClock, FaEnvelope, FaQuestionCircle } from 'react-icons/fa';
-import { CONSTANTES } from '../../../common/constantes';
-import BottomNav from '../../../components/Menu/menu';
-import { useNavigate } from 'react-router-dom';
+import { CONSTANTES } from '../common/constantes';
+import BottomNav from '../components/Menu/menu';
+import { useRouter } from 'next/navigation';
 import styles from './suporte.module.css';
 import { motion } from 'framer-motion';
 import React from 'react';
@@ -22,13 +22,13 @@ const supportItems: SupportItem[] = [
 ];
 
 export default function SupportScreen() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   const handleItemClick = (item: SupportItem) => {
     if (item.isEmail) {
       window.location.href = `mailto:${CONSTANTES.EMAIL_SUPORTE}`;
     } else if (item.path) {
-      navigate(item.path);
+      router.push(item.path);
     }
   };
 
@@ -46,7 +46,7 @@ export default function SupportScreen() {
         <div className={styles.header}>
           <button 
             className={styles.backButton}
-            onClick={() => navigate(CONSTANTES.ROUTE_CONFIGURACAO)}
+            onClick={() => router.push(CONSTANTES.ROUTE_CONFIGURACAO)}
           >
             <FaArrowLeft size={20} />
           </button>

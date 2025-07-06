@@ -1,9 +1,9 @@
 
 import { FaArrowLeft, FaChevronDown } from 'react-icons/fa';
-import { CONSTANTES } from '../../../common/constantes';
-import BottomNav from '../../../components/Menu/menu';
+import { CONSTANTES } from '../common/constantes';
+import BottomNav from '../components/Menu/menu';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import styles from './perguntas.module.css';
 import { useState } from 'react';
 
@@ -62,7 +62,7 @@ const AccordionItem = ({ item, isOpen, onPress }: AccordionItemProps) => {
 };
 
 export default function FAQScreen() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleAccordion = (index: number) => {
@@ -83,7 +83,7 @@ export default function FAQScreen() {
         <div className={styles.header}>
           <button 
             className={styles.backButton}
-            onClick={() => navigate(CONSTANTES.ROUTE_CONFIGURACAO)}
+            onClick={() => router.push(CONSTANTES.ROUTE_CONFIGURACAO)}
           >
             <FaArrowLeft size={20} />
           </button>

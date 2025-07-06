@@ -1,7 +1,7 @@
 import { FaArrowLeft, FaDatabase, FaChartArea, FaShieldAlt, FaUsers, FaCloud, FaUser } from 'react-icons/fa';
-import { CONSTANTES } from '../../../common/constantes';
-import BottomNav from '../../../components/Menu/menu';
-import { useNavigate } from 'react-router-dom';
+import { CONSTANTES } from '../common/constantes';
+import BottomNav from '../components/Menu/menu';
+import { useRouter } from 'next/navigation';
 import styles from './politica.module.css';
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -22,7 +22,7 @@ const policySections: PolicySection[] = [
 ];
 
 export default function PrivacyPolicyScreen() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -42,7 +42,7 @@ export default function PrivacyPolicyScreen() {
         <div className={styles.header}>
           <button 
             className={styles.backButton}
-            onClick={() => navigate(CONSTANTES.ROUTE_CONFIGURACAO)}
+            onClick={() => router.push(CONSTANTES.ROUTE_CONFIGURACAO)}
           >
             <FaArrowLeft size={20} />
           </button>

@@ -1,7 +1,7 @@
 import { FaArrowLeft, FaClock, FaChartBar, FaUsers } from 'react-icons/fa';
-import { CONSTANTES } from '../../../common/constantes';
-import BottomNav from '../../../components/Menu/menu';
-import { useNavigate } from 'react-router-dom';
+import { CONSTANTES } from '../common/constantes';
+import BottomNav from '../components/Menu/menu';
+import { useRouter } from 'next/navigation';
 import styles from './sobre.module.css';
 import { motion } from 'framer-motion';
 import React from 'react';
@@ -19,7 +19,7 @@ const aboutSections: AboutSection[] = [
 ];
 
 export default function AboutScreen() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   return (
     <div className={styles.containerWrapper}>
@@ -35,7 +35,7 @@ export default function AboutScreen() {
         <div className={styles.header}>
           <button 
             className={styles.backButton}
-            onClick={() => navigate(CONSTANTES.ROUTE_CONFIGURACAO)}
+            onClick={() => router.push(CONSTANTES.ROUTE_CONFIGURACAO)}
           >
             <FaArrowLeft size={20} />
           </button>

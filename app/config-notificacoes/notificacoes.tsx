@@ -1,13 +1,15 @@
-import { CONSTANTES } from '../../../common/constantes';
-import BottomNav from '../../../components/Menu/menu';
+'use client';
+
+import { CONSTANTES } from '../common/constantes';
+import BottomNav from '../components/Menu/menu';
 import { FaBell, FaArrowLeft } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import styles from './notificacoes.module.css';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 export default function NotificationsScreen() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [pointReminder, setPointReminder] = useState(false);
   const [emailNotifications] = useState(false);
 
@@ -29,7 +31,7 @@ export default function NotificationsScreen() {
         <div className={styles.header}>
           <button 
             className={styles.backButton}
-            onClick={() => navigate(CONSTANTES.ROUTE_CONFIGURACAO)}
+            onClick={() => router.push(CONSTANTES.ROUTE_CONFIGURACAO)}
           >
             <FaArrowLeft size={20} />
           </button>

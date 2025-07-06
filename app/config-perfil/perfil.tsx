@@ -1,11 +1,12 @@
+'use client';
+
 import { FaUser, FaEnvelope, FaArrowLeft } from 'react-icons/fa';
-import { CONSTANTES } from '../../../common/constantes';
-import BottomNav from '../../../components/Menu/menu';
-import { useNavigate } from 'react-router-dom';
+import { CONSTANTES } from '../common/constantes';
+import BottomNav from '../components/Menu/menu';
+import { useRouter } from 'next/navigation';
 import styles from './perfil.module.css';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import api from '../../../../services/api';
 
 interface UserData {
   name: string;
@@ -23,39 +24,20 @@ interface UserData {
 }
 
 export default function ProfileScreen() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserData>({
-    name: '',
-    email: '',
+    name: 'João Silva',
+    email: 'joao@exemplo.com',
   });
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await api.get<UserData>('/users/profile');
-        setUserData(response.data);
-        setError(null);
-      } catch (error) {
-        console.error('Erro ao buscar dados do usuário:', error);
-        setError('Erro ao carregar dados do usuário');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, []);
 
   const handleSave = async () => {
     try {
       setLoading(true);
-      await api.put('/users/profile', {
-        name: userData.name,
-        email: userData.email,
-      });
+      // Simular salvamento
+      await new Promise(resolve => setTimeout(resolve, 1000));
       setIsEditing(false);
       setError(null);
     } catch (error) {
@@ -98,7 +80,7 @@ export default function ProfileScreen() {
         <div className={styles.header}>
           <button 
             className={styles.backButton}
-            onClick={() => navigate(CONSTANTES.ROUTE_CONFIGURACAO)}
+            onClick={() => router.push(CONSTANTES.ROUTE_CONFIGURACAO)}
           >
             <FaArrowLeft size={20} />
           </button>

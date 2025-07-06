@@ -6,6 +6,7 @@ import styles from './login.module.css';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Link from 'next/link';
+import { AuthService } from '../services/authService';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -19,22 +20,47 @@ const Login = () => {
     setError('');
     
     try {
-      // Simulação de login (sem backend por enquanto)
       if (email && password) {
-        // Simula delay de login
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Fazer login no Firebase
+        const userCredential = await AuthService.loginUser(email, password);
         
-        // Simula login bem-sucedido
-        localStorage.setItem('userEmail', email);
+        // Buscar dados do usuário no Firestore
+        const userData = await AuthService.getUserData(userCredential.user.uid);
         
-        // Redireciona para BemVindo
-        window.location.href = '/bemvindo';
+        if (userData) {
+          // Salva dados do usuário no localStorage para compatibilidade
+          localStorage.setItem('userEmail', userData.email);
+          localStorage.setItem('userName', userData.name);
+          localStorage.setItem('userData', JSON.stringify(userData));
+          localStorage.setItem('userUid', userCredential.user.uid);
+          
+          // Redireciona para BemVindo
+          window.location.href = '/bemvindo';
+        } else {
+          setError('Dados do usuário não encontrados. Tente novamente.');
+        }
       } else {
         setError('Preencha todos os campos');
       }
     } catch (error: unknown) {
       console.error('Erro ao fazer login:', error);
-      setError('Erro ao fazer login. Tente novamente');
+      
+      // Tratamento de erros específicos do Firebase
+      if (error instanceof Error) {
+        if (error.message.includes('auth/user-not-found')) {
+          setError('Usuário não encontrado. Verifique seu email.');
+        } else if (error.message.includes('auth/wrong-password')) {
+          setError('Senha incorreta. Tente novamente.');
+        } else if (error.message.includes('auth/invalid-email')) {
+          setError('Email inválido. Verifique o formato.');
+        } else if (error.message.includes('auth/too-many-requests')) {
+          setError('Muitas tentativas. Tente novamente em alguns minutos.');
+        } else {
+          setError('Erro ao fazer login. Tente novamente.');
+        }
+      } else {
+        setError('Erro inesperado. Tente novamente.');
+      }
     } finally {
       setLoading(false);
     }

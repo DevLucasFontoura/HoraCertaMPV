@@ -1,3 +1,5 @@
+"use client";
+
 import { FaUser, FaBell, FaClock, FaCalendar, FaBook, FaQuestionCircle, FaHeadset, FaLock, FaInfoCircle, FaCog } from 'react-icons/fa';
 // import React, { useEffect } from 'react';
 import BottomNav from '../components/Menu/menu';

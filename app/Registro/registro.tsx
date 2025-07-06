@@ -6,32 +6,60 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { CONSTANTES } from '../common/constantes';
 import Link from 'next/link';
+import { AuthService, UserData } from '../services/authService';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
     
     try {
-      // Simulação de registro (sem backend por enquanto)
       if (name && email && password) {
-        // Simula delay de registro
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Cria objeto com dados completos do usuário
+        const userData: UserData = {
+          createdAt: new Date().toISOString(),
+          email: email,
+          name: name,
+          workHours: 8,
+          plan: 'free'
+        };
         
-        // Simula registro bem-sucedido
+        // Registrar usuário no Firebase
+        const userCredential = await AuthService.registerUser(email, password, userData);
+        
+        // Salva dados do usuário no localStorage para compatibilidade
         localStorage.setItem('userEmail', email);
         localStorage.setItem('userName', name);
+        localStorage.setItem('userData', JSON.stringify(userData));
+        localStorage.setItem('userUid', userCredential.user.uid);
         
         // Redireciona para BemVindo
         window.location.href = '/bemvindo';
       }
     } catch (error: unknown) {
       console.error('Erro no registro:', error);
+      
+      // Tratamento de erros específicos do Firebase
+      if (error instanceof Error) {
+        if (error.message.includes('auth/email-already-in-use')) {
+          setError('Este email já está cadastrado. Tente fazer login.');
+        } else if (error.message.includes('auth/weak-password')) {
+          setError('A senha deve ter pelo menos 6 caracteres.');
+        } else if (error.message.includes('auth/invalid-email')) {
+          setError('Email inválido. Verifique o formato.');
+        } else {
+          setError('Erro ao criar conta. Tente novamente.');
+        }
+      } else {
+        setError('Erro inesperado. Tente novamente.');
+      }
     } finally {
       setLoading(false);
     }
@@ -58,6 +86,12 @@ const Register = () => {
         
         <h1 className={styles.title}>{CONSTANTES.TITULO_REGISTRO}</h1>
         <p className={styles.subtitle}>{CONSTANTES.SUBTITULO_REGISTRO}</p>
+
+        {error && (
+          <div className={styles.errorMessage}>
+            {error}
+          </div>
+        )}
 
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
@@ -93,6 +127,7 @@ const Register = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder={CONSTANTES.TXT_REGISTRO_PLACEHOLDER_SENHA}
               required
+              minLength={6}
             />
           </div>
 

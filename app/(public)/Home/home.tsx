@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { AiOutlineClockCircle, AiOutlineEdit, AiOutlineFileText, AiOutlineMobile, AiOutlineSafety, AiOutlineTeam, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
+import { AiOutlineClockCircle, AiOutlineEdit, AiOutlineFileText, AiOutlineMobile, AiOutlineSafety, AiOutlineTeam, AiOutlineMenu, AiOutlineClose, AiOutlineArrowRight, AiOutlineStar, AiOutlineCheck, AiOutlineVideoCamera } from 'react-icons/ai';
 import AnimatedClock from '../../components/AnimatedClock/AnimatedClock';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CONSTANTES } from '../../common/constantes';
@@ -13,9 +13,74 @@ const LandingPage = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMenu = () => {
-    console.log('Menu clicked, current state:', isMobileMenuOpen);
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  const features = [
+    {
+      icon: <AiOutlineClockCircle size={24} />,
+      title: CONSTANTES.CARD_RECURSOS_01_TITULO,
+      description: CONSTANTES.CARD_RECURSOS_01_SUBTITULO
+    },
+    {
+      icon: <AiOutlineEdit size={24} />,
+      title: CONSTANTES.CARD_RECURSOS_02_TITULO,
+      description: CONSTANTES.CARD_RECURSOS_02_SUBTITULO
+    },
+    {
+      icon: <AiOutlineFileText size={24} />,
+      title: CONSTANTES.CARD_RECURSOS_03_TITULO,
+      description: CONSTANTES.CARD_RECURSOS_03_SUBTITULO
+    },
+    {
+      icon: <AiOutlineMobile size={24} />,
+      title: CONSTANTES.CARD_RECURSOS_04_TITULO,
+      description: CONSTANTES.CARD_RECURSOS_04_SUBTITULO
+    },
+    {
+      icon: <AiOutlineSafety size={24} />,
+      title: CONSTANTES.CARD_RECURSOS_05_TITULO,
+      description: CONSTANTES.CARD_RECURSOS_05_SUBTITULO
+    },
+    {
+      icon: <AiOutlineTeam size={24} />,
+      title: CONSTANTES.CARD_RECURSOS_06_TITULO,
+      description: CONSTANTES.CARD_RECURSOS_06_SUBTITULO
+    }
+  ];
+
+  const benefits = [
+    "Registro automático de ponto",
+    "Relatórios detalhados",
+    "Acesso em tempo real",
+    "Interface intuitiva",
+    "Suporte 24/7",
+    "Conformidade legal"
+  ];
+
+  const testimonials = [
+    {
+      name: "Maria Silva",
+      role: "Desenvolvedora",
+      company: "Freelancer",
+      text: "O Hora Certa me ajudou a organizar melhor meus horários de trabalho. Agora tenho controle total do meu tempo.",
+      rating: 5
+    },
+    {
+      name: "João Santos",
+      role: "Consultor",
+      company: "Autônomo",
+      text: "Simples, eficiente e confiável. Perfeito para quem trabalha por conta própria e precisa registrar suas horas.",
+      rating: 5
+    },
+    {
+      name: "Ana Costa",
+      role: "Designer",
+      company: "Remoto",
+      text: "A melhor ferramenta que encontrei para controlar meu ponto. Interface limpa e fácil de usar.",
+      rating: 5
+    }
+  ];
 
   return (
     <div className={styles.container}>
@@ -26,10 +91,32 @@ const LandingPage = () => {
         <motion.button 
           className={styles.mobileMenuButton}
           onClick={toggleMenu}
-          animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
-          transition={{ duration: 0.2 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          {isMobileMenuOpen ? <AiOutlineClose size={24} /> : <AiOutlineMenu size={24} />}
+          <AnimatePresence mode="wait">
+            {isMobileMenuOpen ? (
+              <motion.div
+                key="close"
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <AiOutlineClose size={24} />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="menu"
+                initial={{ rotate: 90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: -90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <AiOutlineMenu size={24} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.button>
 
         <AnimatePresence>
@@ -47,7 +134,7 @@ const LandingPage = () => {
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
-                transition={{ type: 'tween', duration: 0.3 }}
+                transition={{ type: 'tween', duration: 0.3, ease: 'easeOut' }}
               >
                 <motion.div
                   initial="closed"
@@ -59,10 +146,38 @@ const LandingPage = () => {
                     closed: {}
                   }}
                 >
-                  <Link className={styles.mobileNavLink} href="/recursos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</Link>
-                  <Link className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</Link>
-                  <Link className={styles.mobileNavLink} href="/como-funciona" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</Link>
-                  <Link className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</Link>
+                  <motion.div variants={{
+                    closed: { opacity: 0, y: 20 },
+                    open: { opacity: 1, y: 0 }
+                  }}>
+                    <Link className={styles.mobileNavLink} href="/recursos" onClick={toggleMenu}>
+                      {CONSTANTES.TITULO_MENU_RECURSOS}
+                    </Link>
+                  </motion.div>
+                  <motion.div variants={{
+                    closed: { opacity: 0, y: 20 },
+                    open: { opacity: 1, y: 0 }
+                  }}>
+                    <Link className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>
+                      {CONSTANTES.TITULO_MENU_PRECOS}
+                    </Link>
+                  </motion.div>
+                  <motion.div variants={{
+                    closed: { opacity: 0, y: 20 },
+                    open: { opacity: 1, y: 0 }
+                  }}>
+                    <Link className={styles.mobileNavLink} href="/como-funciona" onClick={toggleMenu}>
+                      {CONSTANTES.TITULO_MENU_COMO_FUNCIONA}
+                    </Link>
+                  </motion.div>
+                  <motion.div variants={{
+                    closed: { opacity: 0, y: 20 },
+                    open: { opacity: 1, y: 0 }
+                  }}>
+                    <Link className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>
+                      {CONSTANTES.BOTAO_COMECAR}
+                    </Link>
+                  </motion.div>
                 </motion.div>
               </motion.div>
             </>
@@ -74,84 +189,231 @@ const LandingPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
         >
-          <AnimatedClock />
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <AnimatedClock />
+          </motion.div>
           <div className={styles.gradient} />
-          <h1 className={styles.heroTitle}>{CONSTANTES.TITULO_PRINCIPAL}</h1>
-          <p className={styles.heroSubtitle}>{CONSTANTES.SUBTITULO_PRINCIPAL}</p>
-          <div className={styles.buttonGroup}>
-            <Link className={styles.primaryButton} href="/registro">{CONSTANTES.BOTAO_COMECAR}</Link>
-            <Link className={styles.secondaryButton} href="/login">{CONSTANTES.BOTAO_LOGIN}</Link>
-          </div>
+          <motion.h1 
+            className={styles.heroTitle}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            {CONSTANTES.TITULO_PRINCIPAL}
+          </motion.h1>
+          <motion.p 
+            className={styles.heroSubtitle}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            {CONSTANTES.SUBTITULO_PRINCIPAL}
+          </motion.p>
+          <motion.div 
+            className={styles.buttonGroup}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+          >
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link className={styles.primaryButton} href="/registro">
+                {CONSTANTES.BOTAO_COMECAR}
+                <AiOutlineArrowRight size={16} style={{ marginLeft: '8px' }} />
+              </Link>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link className={styles.secondaryButton} href="/login">
+                {CONSTANTES.BOTAO_LOGIN}
+              </Link>
+            </motion.div>
+          </motion.div>
         </motion.div>
       </div>
 
       <section className={styles.features} id="recursos">
-        <h2 className={styles.sectionTitle}>{CONSTANTES.TITULO_RECURSOS}</h2>
-        <p className={styles.sectionSubtitle}>{CONSTANTES.SUBTITULO_RECURSOS}</p>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <h2 className={styles.sectionTitle}>{CONSTANTES.TITULO_RECURSOS}</h2>
+          <p className={styles.sectionSubtitle}>{CONSTANTES.SUBTITULO_RECURSOS}</p>
+        </motion.div>
         
         <div className={styles.featureGrid}>
-          <div className={styles.featureCard}>
-            <div className={styles.featureIcon}><AiOutlineClockCircle size={28} /></div>
-            <div>
-              <h3>{CONSTANTES.CARD_RECURSOS_01_TITULO}</h3>
-              <p>{CONSTANTES.CARD_RECURSOS_01_SUBTITULO}</p>
-            </div>
-          </div>
-
-          <div className={styles.featureCard}>
-            <div className={styles.featureIcon}><AiOutlineEdit size={28} /></div>
-            <div>
-              <h3>{CONSTANTES.CARD_RECURSOS_02_TITULO}</h3>
-              <p>{CONSTANTES.CARD_RECURSOS_02_SUBTITULO}</p>
-            </div>
-          </div>
-
-          <div className={styles.featureCard}>
-            <div className={styles.featureIcon}><AiOutlineFileText size={28} /></div>
-            <div>
-              <h3>{CONSTANTES.CARD_RECURSOS_03_TITULO}</h3>
-              <p>{CONSTANTES.CARD_RECURSOS_03_SUBTITULO}</p>
-            </div>
-          </div>
-
-          <div className={styles.featureCard}>
-            <div className={styles.featureIcon}><AiOutlineMobile size={28} /></div>
-            <div>
-              <h3>{CONSTANTES.CARD_RECURSOS_04_TITULO}</h3>
-              <p>{CONSTANTES.CARD_RECURSOS_04_SUBTITULO}</p>
-            </div>
-          </div>
-
-          <div className={styles.featureCard}>
-            <div className={styles.featureIcon}><AiOutlineSafety size={28} /></div>
-            <div>
-              <h3>{CONSTANTES.CARD_RECURSOS_05_TITULO}</h3>
-              <p>{CONSTANTES.CARD_RECURSOS_05_SUBTITULO}</p>
-            </div>
-          </div>
-
-          <div className={styles.featureCard}>
-            <div className={styles.featureIcon}><AiOutlineTeam size={28} /></div>
-            <div>
-              <h3>{CONSTANTES.CARD_RECURSOS_06_TITULO}</h3>
-              <p>{CONSTANTES.CARD_RECURSOS_06_SUBTITULO}</p>
-            </div>
-          </div>
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              className={styles.featureCard}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              whileHover={{ y: -4 }}
+            >
+              <div className={styles.featureIcon}>
+                {feature.icon}
+              </div>
+              <div>
+                <h3>{feature.title}</h3>
+                <p>{feature.description}</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* <section className={styles.enterpriseSection}>
-        <div className={styles.enterpriseContent}>
-          <div>
-            <h2 className={styles.sectionTitle}>{CONSTANTES.TITULO_EMPRESA}</h2>
-            <p className={styles.sectionSubtitle}>{CONSTANTES.SUBTITULO_EMPRESA}</p>
-            <span className={styles.comingSoonBadge}>{CONSTANTES.COMING_SOON}</span>
-          </div>
-          <div className={styles.enterpriseImage}>{CONSTANTES.ICONE_EMPRESA}</div>
+      {/* How It Works Section */}
+      <section className={styles.howItWorks}>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <h2 className={styles.sectionTitle}>Como Funciona</h2>
+          <p className={styles.sectionSubtitle}>Em apenas 3 passos simples, você estará registrando ponto de forma eficiente</p>
+        </motion.div>
+
+        <div className={styles.stepsContainer}>
+          <motion.div
+            className={styles.step}
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            <div className={styles.stepNumber}>1</div>
+            <h3>Cadastre-se</h3>
+            <p>Crie sua conta gratuitamente em menos de 2 minutos</p>
+          </motion.div>
+
+          <motion.div
+            className={styles.step}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <div className={styles.stepNumber}>2</div>
+            <h3>Configure</h3>
+            <p>Personalize seus horários de trabalho e preferências</p>
+          </motion.div>
+
+          <motion.div
+            className={styles.step}
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <div className={styles.stepNumber}>3</div>
+            <h3>Use</h3>
+            <p>Comece a registrar seu ponto e acompanhar suas horas trabalhadas</p>
+          </motion.div>
         </div>
-      </section> */}
+      </section>
+
+      {/* Benefits Section */}
+      <section className={styles.benefits}>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <h2 className={styles.sectionTitle}>Por que escolher o Hora Certa?</h2>
+          <p className={styles.sectionSubtitle}>Descubra os benefícios que fazem a diferença no seu dia a dia</p>
+        </motion.div>
+
+        <div className={styles.benefitsGrid}>
+          {benefits.map((benefit, index) => (
+            <motion.div
+              key={index}
+              className={styles.benefitItem}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <AiOutlineCheck size={20} className={styles.checkIcon} />
+              <span>{benefit}</span>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className={styles.testimonials}>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <h2 className={styles.sectionTitle}>O que nossos usuários dizem</h2>
+          <p className={styles.sectionSubtitle}>Depoimentos de quem já transformou sua gestão de tempo</p>
+        </motion.div>
+
+        <div className={styles.testimonialsGrid}>
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={index}
+              className={styles.testimonialCard}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
+              viewport={{ once: true }}
+            >
+              <div className={styles.stars}>
+                {[...Array(testimonial.rating)].map((_, i) => (
+                  <AiOutlineStar key={i} size={16} className={styles.star} />
+                ))}
+              </div>
+              <p className={styles.testimonialText}>"{testimonial.text}"</p>
+              <div className={styles.testimonialAuthor}>
+                <strong>{testimonial.name}</strong>
+                <span>{testimonial.role} • {testimonial.company}</span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className={styles.ctaSection}>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className={styles.ctaContent}
+        >
+          <h2>Pronto para organizar seu tempo?</h2>
+          <p>Junte-se a outros profissionais que já confiam no Hora Certa</p>
+          <div className={styles.ctaButtons}>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link className={styles.primaryButton} href="/registro">
+                Começar Agora - Grátis
+                <AiOutlineArrowRight size={16} style={{ marginLeft: '8px' }} />
+              </Link>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link className={styles.secondaryButton} href="/como-funciona">
+                <AiOutlineVideoCamera size={16} style={{ marginRight: '8px' }} />
+                Ver Demo
+              </Link>
+            </motion.div>
+          </div>
+        </motion.div>
+      </section>
     </div>
   );
 };

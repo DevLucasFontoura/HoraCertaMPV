@@ -1,9 +1,9 @@
 "use client";
 
 import { AiOutlineCheckCircle, AiOutlineInfoCircle, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
-import DesktopMenu from '../components/PublicMenu/DesktopMenu';
+import DesktopMenu from '../../components/PublicMenu/DesktopMenu';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CONSTANTES } from '../common/constantes';
+import { CONSTANTES } from '../../common/constantes';
 import styles from './precos.module.css';
 import { useState } from 'react';
 import Link from 'next/link';

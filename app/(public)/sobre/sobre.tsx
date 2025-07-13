@@ -1,8 +1,10 @@
-import MenuPublic from '../components/PublicMenu/DesktopMenu';
+"use client";
+
+import MenuPublic from '../../components/PublicMenu/DesktopMenu';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CONSTANTES } from '../common/constantes';
-import { Link } from 'react-router-dom';
+import { CONSTANTES } from '../../common/constantes';
+import Link from 'next/link';
 import styles from './sobre.module.css';
 import { useState } from 'react';
 
@@ -53,10 +55,10 @@ const Sobre = () => {
                     closed: {}
                   }}
                 >
-                  <Link className={styles.mobileNavLink} to={CONSTANTES.RECURSOS} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</Link>
-                  <Link className={styles.mobileNavLink} to={CONSTANTES.PRECOS} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</Link>
-                  <Link className={styles.mobileNavLink} to={CONSTANTES.COMO_FUNCIONA} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</Link>
-                  <Link className={styles.mobilePrimaryButton} to={CONSTANTES.REGISTRO} onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</Link>
+                  <Link className={styles.mobileNavLink} href={CONSTANTES.RECURSOS} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</Link>
+                  <Link className={styles.mobileNavLink} href={CONSTANTES.PRECOS} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_PRECOS}</Link>
+                  <Link className={styles.mobileNavLink} href={CONSTANTES.COMO_FUNCIONA} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</Link>
+                  <Link className={styles.mobilePrimaryButton} href={CONSTANTES.REGISTRO} onClick={toggleMenu}>{CONSTANTES.BOTAO_COMECAR}</Link>
                 </motion.div>
               </motion.div>
             </>

@@ -4,9 +4,9 @@ import { AiOutlineClockCircle, AiOutlineArrowLeft } from 'react-icons/ai';
 import styles from './registro.module.css';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { CONSTANTES } from '../common/constantes';
+import { CONSTANTES } from '../../common/constantes';
 import Link from 'next/link';
-import { AuthService, UserData } from '../services/authService';
+import { AuthService, UserData } from '../../services/authService';
 
 const Register = () => {
   const [name, setName] = useState('');

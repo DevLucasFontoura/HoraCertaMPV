@@ -1,9 +1,9 @@
 "use client";
 
 import { AiOutlineClockCircle, AiOutlineCheckCircle, AiOutlineFileText, AiOutlineBarChart, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
-import DesktopMenu from '../components/PublicMenu/DesktopMenu';
+import DesktopMenu from '../../components/PublicMenu/DesktopMenu';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CONSTANTES } from '../common/constantes';
+import { CONSTANTES } from '../../common/constantes';
 import styles from './comoFunciona.module.css';
 import { useState } from 'react';
 import Link from 'next/link';

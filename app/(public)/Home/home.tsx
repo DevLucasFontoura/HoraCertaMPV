@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { AiOutlineClockCircle, AiOutlineEdit, AiOutlineFileText, AiOutlineMobile, AiOutlineSafety, AiOutlineTeam, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
-import AnimatedClock from '../components/AnimatedClock/AnimatedClock';
+import AnimatedClock from '../../components/AnimatedClock/AnimatedClock';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CONSTANTES } from '../common/constantes';
-import DesktopMenu from '../components/PublicMenu/DesktopMenu';
+import { CONSTANTES } from '../../common/constantes';
+import DesktopMenu from '../../components/PublicMenu/DesktopMenu';
 import styles from './home.module.css';
 import Link from 'next/link';
 

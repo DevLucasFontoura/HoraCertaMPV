@@ -1,13 +1,14 @@
+"use client";
+
 import { AiOutlineCoffee, AiOutlineLogin, AiOutlineLogout } from 'react-icons/ai';
-import PageTransition from '../components/PageTransition/pageTransition';
-import pageStyles from '../../styles/PageStyles.module.css';
-import { CONSTANTES } from '../common/constantes';
-import BottomNav from '../components/Menu/menu';
+import PageTransition from '../../components/PageTransition/pageTransition';
+import { CONSTANTES } from '../../common/constantes';
+import BottomNav from '../../components/Menu/menu';
 import styles from './registrarPonto.module.css';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Switch } from '@mui/material';
-import TimeConfirmationModal from '../components/PopUpConfirmacao/popUpConfirmacao';
+import TimeConfirmationModal from '../../components/PopUpConfirmacao/popUpConfirmacao';
 
 interface TimeState {
   hours: string;
@@ -27,7 +28,7 @@ const timeDisplayVariants = {
     opacity: 1, 
     scale: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       duration: 0.5
     }
   }
@@ -121,7 +122,7 @@ export default function RegistrarPonto() {
           <p className={styles.pageSubtitle}>{CONSTANTES.SUBTITULO_REGISTRO_DE_PONTO}</p>
         </div>
 
-        <div className={pageStyles.card}>
+        <div className={styles.mainCard}>
           <motion.div 
             className={styles.timeDisplay}
             initial="hidden"

@@ -6,16 +6,21 @@ import { CONSTANTES } from '../../common/constantes';
 import { FiPlusCircle } from 'react-icons/fi';
 import styles from './menu.module.css';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const BottomNav = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const isActive = (path: string) => {
     if (path === '/') {
       return pathname === '/';
     }
     return pathname?.startsWith(path);
+  };
+
+  const handleAddButtonClick = () => {
+    router.push('/registrar-ponto');
   };
 
   return (
@@ -30,7 +35,7 @@ const BottomNav = () => {
           <AiOutlineDashboard size={24} /> 
           <span>{CONSTANTES.TITULO_MENU_DASHBOARD}</span>
         </Link>
-        <button className={styles.addButton}> 
+        <button className={styles.addButton} onClick={handleAddButtonClick}> 
           <FiPlusCircle size={32} />
         </button>
         <Link href="/relatorios" className={isActive('/relatorios') ? styles.active : ''}> 
@@ -54,7 +59,7 @@ const BottomNav = () => {
             <AiOutlineDashboard size={24} /> 
             <span>{CONSTANTES.TITULO_MENU_DASHBOARD}</span>
           </Link>
-          <button className={styles.addButton}> 
+          <button className={styles.addButton} onClick={handleAddButtonClick}> 
             <FiPlusCircle size={32} /> 
           </button>
           <Link href="/relatorios" className={isActive('/relatorios') ? styles.active : ''}> 

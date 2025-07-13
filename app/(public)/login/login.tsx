@@ -1,12 +1,12 @@
 "use client";
 
 import { AiOutlineClockCircle, AiOutlineArrowLeft } from 'react-icons/ai';
-import { CONSTANTES } from '../common/constantes';
+import { CONSTANTES } from '../../common/constantes';
 import styles from './login.module.css';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Link from 'next/link';
-import { AuthService } from '../services/authService';
+import { AuthService } from '../../services/authService';
 
 const Login = () => {
   const [email, setEmail] = useState('');

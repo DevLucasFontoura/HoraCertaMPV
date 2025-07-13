@@ -114,6 +114,14 @@
   margin-bottom: 0.25rem;
 }
 
+.statsValue.positive {
+  color: #22C55E;
+}
+
+.statsValue.negative {
+  color: #EF4444;
+}
+
 .statsSubtext {
   font-size: 0.875rem;
   color: #666666;

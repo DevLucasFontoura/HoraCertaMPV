@@ -46,6 +46,169 @@
   margin-bottom: 4rem;
 }
 
+/* Status do dia atual */
+.todayStatus {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.statusHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.statusTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111111;
+  margin: 0;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.statusText {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.statusIconWorking {
+  color: #22C55E;
+  width: 20px;
+  height: 20px;
+}
+
+.statusIconLunch {
+  color: #F59E0B;
+  width: 20px;
+  height: 20px;
+}
+
+.statusIconFinished {
+  color: #3B82F6;
+  width: 20px;
+  height: 20px;
+}
+
+.statusIconNotStarted {
+  color: #6B7280;
+  width: 20px;
+  height: 20px;
+}
+
+.statusDetails {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.statusItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.statusLabel {
+  font-size: 0.875rem;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.statusValue {
+  font-size: 0.875rem;
+  color: #111111;
+  font-weight: 600;
+}
+
+.onTime {
+  color: #22C55E;
+}
+
+.late {
+  color: #EF4444;
+}
+
+/* Estatísticas semanais */
+.weeklyStats {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.statCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.statCard:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.statIcon {
+  width: 24px;
+  height: 24px;
+  color: #111111;
+  flex-shrink: 0;
+}
+
+.statContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: #6B7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .grid {
   display: flex;
   flex-direction: column;
@@ -170,6 +333,14 @@
   .section {
     width: 100%;
   }
+
+  .statusDetails {
+    grid-template-columns: 1fr;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
@@ -208,5 +379,29 @@
 
   .emptyState {
     min-height: 200px;
+  }
+
+  .todayStatus,
+  .weeklyStats {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .statusHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statCard {
+    padding: 1rem;
+  }
+
+  .statValue {
+    font-size: 1.25rem;
   }
 } 

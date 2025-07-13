@@ -1,0 +1,71 @@
+[debug] [2025-07-13T21:07:14.089Z] ----------------------------------------------------------------------
+[debug] [2025-07-13T21:07:14.090Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
+[debug] [2025-07-13T21:07:14.090Z] CLI Version:   14.10.1
+[debug] [2025-07-13T21:07:14.090Z] Platform:      darwin
+[debug] [2025-07-13T21:07:14.090Z] Node Version:  v22.11.0
+[debug] [2025-07-13T21:07:14.091Z] Time:          Sun Jul 13 2025 18:07:14 GMT-0300 (Brasilia Standard Time)
+[debug] [2025-07-13T21:07:14.091Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-13T21:07:14.186Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-13T21:07:14.186Z] > authorizing via signed-in user (horacerta25112024@gmail.com)
+[debug] [2025-07-13T21:07:14.187Z] [iam] checking project horacertaweb for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-07-13T21:07:14.187Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:14.187Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:14.187Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/horacertaweb:testIamPermissions [none]
+[debug] [2025-07-13T21:07:14.187Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/horacertaweb:testIamPermissions x-goog-quota-user=projects/horacertaweb
+[debug] [2025-07-13T21:07:14.187Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/horacertaweb:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-07-13T21:07:15.376Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/horacertaweb:testIamPermissions 200
+[debug] [2025-07-13T21:07:15.377Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/horacertaweb:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-07-13T21:07:15.377Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:15.377Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:15.377Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/horacertaweb [none]
+[debug] [2025-07-13T21:07:15.886Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/horacertaweb 200
+[debug] [2025-07-13T21:07:15.886Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/horacertaweb {"projectId":"horacertaweb","projectNumber":"858799087768","displayName":"HoraCerta","name":"projects/horacertaweb","resources":{"hostingSite":"horacertaweb"},"state":"ACTIVE","etag":"1_0ff05025-6319-4021-81ee-a2128450f0d2"}
+[info] 
+[info] === Deploying to 'horacertaweb'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2025-07-13T21:07:15.890Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:15.890Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:15.890Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/horacertaweb/versions [none]
+[debug] [2025-07-13T21:07:15.890Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/horacertaweb/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2025-07-13T21:07:17.209Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/horacertaweb/versions 200
+[debug] [2025-07-13T21:07:17.209Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/horacertaweb/versions {"name":"projects/858799087768/sites/horacertaweb/versions/4de4a3fbece1dbd8","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[horacertaweb]: beginning deploy... 
+[info] i  hosting[horacertaweb]: found 6 files in public 
+[debug] [2025-07-13T21:07:17.227Z] [hosting] uploading with 200 concurrency
+[debug] [2025-07-13T21:07:17.228Z] [hosting] hash cache [cHVibGlj] not populated
+[debug] [2025-07-13T21:07:17.235Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.235Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.236Z] [hosting] hash cache [cHVibGlj] stored for 6 files
+[debug] [2025-07-13T21:07:17.236Z] [hosting][hash queue][FINAL] {"max":4,"min":3,"avg":3.6666666666666665,"active":0,"complete":6,"success":6,"errored":0,"retried":0,"total":6,"elapsed":6}
+[debug] [2025-07-13T21:07:17.236Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/858799087768/sites/horacertaweb/versions/4de4a3fbece1dbd8:populateFiles [none]
+[debug] [2025-07-13T21:07:17.236Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/858799087768/sites/horacertaweb/versions/4de4a3fbece1dbd8:populateFiles {"files":{"/index.html":"60fa73eeaf2603e82640ce0acf6bbbe6c585be08991f95f721e5d4c1c010a2a5","/window.svg":"bf07bc7ddc1ae03e7936a9347de10e85cf9a0e51f99bd8293b2a8eeca6463b49","/next.svg":"7b16665552cb47db34db342505d6d340caaf5813ca2cba1df3536ed67ea33f64","/vercel.svg":"ffb3d6634c37da9451d60557ed0e6e513e2889672e0bf202d2558062062a048a","/file.svg":"cb6477bad43c44ba222b8cddfa7e4fe646b19ec7449646e8c2a426354faa630e","/globe.svg":"914fe1f576f68698d9e329ea8ec6c542d8d5f150af08f1a360d188fed7597c23"}}
+[debug] [2025-07-13T21:07:17.518Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/858799087768/sites/horacertaweb/versions/4de4a3fbece1dbd8:populateFiles 200
+[debug] [2025-07-13T21:07:17.518Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/858799087768/sites/horacertaweb/versions/4de4a3fbece1dbd8:populateFiles {"uploadRequiredHashes":["60fa73eeaf2603e82640ce0acf6bbbe6c585be08991f95f721e5d4c1c010a2a5","bf07bc7ddc1ae03e7936a9347de10e85cf9a0e51f99bd8293b2a8eeca6463b49","7b16665552cb47db34db342505d6d340caaf5813ca2cba1df3536ed67ea33f64","ffb3d6634c37da9451d60557ed0e6e513e2889672e0bf202d2558062062a048a","cb6477bad43c44ba222b8cddfa7e4fe646b19ec7449646e8c2a426354faa630e","914fe1f576f68698d9e329ea8ec6c542d8d5f150af08f1a360d188fed7597c23"],"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files"}
+[debug] [2025-07-13T21:07:17.519Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.520Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.520Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.520Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.520Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.520Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.520Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.520Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.520Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.520Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.521Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.521Z] Checked if tokens are valid: true, expires at: 1752444382058
+[debug] [2025-07-13T21:07:17.521Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files/60fa73eeaf2603e82640ce0acf6bbbe6c585be08991f95f721e5d4c1c010a2a5 [none]
+[debug] [2025-07-13T21:07:17.521Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files/60fa73eeaf2603e82640ce0acf6bbbe6c585be08991f95f721e5d4c1c010a2a5 [stream]
+[debug] [2025-07-13T21:07:17.522Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files/bf07bc7ddc1ae03e7936a9347de10e85cf9a0e51f99bd8293b2a8eeca6463b49 [none]
+[debug] [2025-07-13T21:07:17.523Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files/bf07bc7ddc1ae03e7936a9347de10e85cf9a0e51f99bd8293b2a8eeca6463b49 [stream]
+[debug] [2025-07-13T21:07:17.524Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files/7b16665552cb47db34db342505d6d340caaf5813ca2cba1df3536ed67ea33f64 [none]
+[debug] [2025-07-13T21:07:17.524Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files/7b16665552cb47db34db342505d6d340caaf5813ca2cba1df3536ed67ea33f64 [stream]
+[debug] [2025-07-13T21:07:17.525Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files/ffb3d6634c37da9451d60557ed0e6e513e2889672e0bf202d2558062062a048a [none]
+[debug] [2025-07-13T21:07:17.525Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files/ffb3d6634c37da9451d60557ed0e6e513e2889672e0bf202d2558062062a048a [stream]
+[debug] [2025-07-13T21:07:17.526Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files/cb6477bad43c44ba222b8cddfa7e4fe646b19ec7449646e8c2a426354faa630e [none]
+[debug] [2025-07-13T21:07:17.526Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files/cb6477bad43c44ba222b8cddfa7e4fe646b19ec7449646e8c2a426354faa630e [stream]
+[debug] [2025-07-13T21:07:17.528Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files/914fe1f576f68698d9e329ea8ec6c542d8d5f150af08f1a360d188fed7597c23 [none]
+[debug] [2025-07-13T21:07:17.528Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/horacertaweb/versions/4de4a3fbece1dbd8/files/914fe1f576f68698d9e329ea8ec6c542d8d5f150af08f1a360d188fed7597c23 [stream]
+[debug] [2025-07-13T21:07:17.529Z] [hosting][populate queue][FINAL] {"max":286,"min":286,"avg":286,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":294}
+[debug] [2025-07-13T21:07:17.529Z] [hosting] uploads queued: 6

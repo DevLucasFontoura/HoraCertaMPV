@@ -14,7 +14,7 @@ interface Holiday {
 }
 
 export default function HolidayScreen() {
-  const navigate = useRouter();
+  const router = useRouter();
   const [holidays, setHolidays] = useState<Holiday[]>([]);
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>('');

@@ -1,5 +1,6 @@
 "use client";
 
+import TimeConfirmationModal from '../../components/PopUpConfirmacao/popUpConfirmacao';
 import { AiOutlineCoffee, AiOutlineLogin, AiOutlineLogout } from 'react-icons/ai';
 import PageTransition from '../../components/PageTransition/pageTransition';
 import { CONSTANTES } from '../../common/constantes';
@@ -8,7 +9,6 @@ import styles from './registrarPonto.module.css';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Switch } from '@mui/material';
-import TimeConfirmationModal from '../../components/PopUpConfirmacao/popUpConfirmacao';
 
 interface TimeState {
   hours: string;

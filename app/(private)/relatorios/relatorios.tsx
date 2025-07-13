@@ -7,6 +7,8 @@ import styles from './relatorios.module.css';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { registroService, DayRecord } from '../../services/registroService';
+import { TimeCalculationService, WorkTimeConfig } from '../../services/timeCalculationService';
+import { useAuth } from '../../hooks/useAuth';
 
 interface ProcessedTimeRecord {
   id: string;
@@ -34,14 +36,7 @@ interface MonthGroup {
 
 // Função utilitária para formatar horas
 const formatHours = (totalHours: number): string => {
-  const hours = Math.floor(totalHours);
-  const minutes = Math.round((totalHours - hours) * 60);
-  
-  if (minutes === 0) {
-    return `${hours}h`;
-  } else {
-    return `${hours}h${minutes.toString().padStart(2, '0')}m`;
-  }
+  return TimeCalculationService.formatHours(totalHours);
 };
 
 const StatsCard = ({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) => {
@@ -255,6 +250,7 @@ const MonthlyRecordGroup = ({ month, days }: MonthGroup) => {
 };
 
 export default function ReportsScreen() {
+  const { userData } = useAuth();
   const [loading, setLoading] = useState(true);
   const [allReports, setAllReports] = useState<ProcessedTimeRecord[]>([]);
   const [reports, setReports] = useState<ProcessedTimeRecord[]>([]);
@@ -270,6 +266,11 @@ export default function ReportsScreen() {
     workedDays: null
   });
 
+  // Obter configuração de jornada do usuário
+  const getWorkTimeConfig = (): WorkTimeConfig => {
+    return TimeCalculationService.getWorkTimeConfig(userData);
+  };
+
   // Função para converter dados do Firebase para o formato da interface
   const processDayRecord = (dayRecord: DayRecord): ProcessedTimeRecord => {
     const records = dayRecord.records;
@@ -278,34 +279,13 @@ export default function ReportsScreen() {
     const lunchReturn = records.find(r => r.type === 'lunchReturn')?.time || '';
     const exit = records.find(r => r.type === 'exit')?.time || '';
     
-    // Calcular total de horas trabalhadas
+    // Calcular total de horas trabalhadas usando o novo serviço
     let total = '';
-    if (entry && exit) {
-      const entryTime = new Date(`2000-01-01T${entry}:00`);
-      const exitTime = new Date(`2000-01-01T${exit}:00`);
-      
-      // Calcular tempo total (saída - entrada)
-      const totalMs = exitTime.getTime() - entryTime.getTime();
-      let totalHours = totalMs / (1000 * 60 * 60);
-      
-      // Subtrair horário de almoço se existir
-      if (lunchOut && lunchReturn) {
-        const lunchOutTime = new Date(`2000-01-01T${lunchOut}:00`);
-        const lunchReturnTime = new Date(`2000-01-01T${lunchReturn}:00`);
-        const lunchMs = lunchReturnTime.getTime() - lunchOutTime.getTime();
-        const lunchHours = lunchMs / (1000 * 60 * 60);
-        totalHours -= lunchHours;
-      }
-      
-      // Formatar resultado
-      const hours = Math.floor(totalHours);
-      const minutes = Math.round((totalHours - hours) * 60);
-      
-      if (minutes === 0) {
-        total = `${hours}h`;
-      } else {
-        total = `${hours}h${minutes.toString().padStart(2, '0')}m`;
-      }
+    const config = getWorkTimeConfig();
+    const workTime = TimeCalculationService.calculateWorkTime(records, config);
+    
+    if (workTime.isComplete) {
+      total = TimeCalculationService.formatHours(workTime.workedHours);
     }
 
     // Converter data corretamente (formato YYYY-MM-DD para DD/MM/YYYY)
@@ -359,30 +339,27 @@ export default function ReportsScreen() {
     
     setReports(filteredRecords);
     
-    // Calcular estatísticas
-    const totalHours = filteredRecords.reduce((acc, record) => {
-      // Parsear formato "8h19m" ou "8h"
-      const totalStr = record.total;
-      if (!totalStr) return acc;
-      
-      const hoursMatch = totalStr.match(/(\d+)h/);
-      const minutesMatch = totalStr.match(/(\d+)m/);
-      
-      const hours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
-      const minutes = minutesMatch ? parseInt(minutesMatch[1]) : 0;
-      
-      return acc + hours + (minutes / 60);
-    }, 0);
+    // Calcular estatísticas usando o novo serviço
+    const config = getWorkTimeConfig();
     
-    const workedDays = filteredRecords.length;
-    const dailyAverage = workedDays > 0 ? totalHours / workedDays : 0;
+    // Buscar registros originais do período selecionado
+    const getMonthRecords = async () => {
+      try {
+        const monthRecords = await registroService.getRegistrosDoMes(selectedYear, selectedMonth);
+        const monthlyStats = TimeCalculationService.calculateMonthlyStats(monthRecords, config);
+        
+        setStats({
+          totalHours: monthlyStats.totalWorkedHours,
+          dailyAverage: monthlyStats.averageDailyHours,
+          workedDays: monthlyStats.completeDays
+        });
+      } catch (error) {
+        console.error('Erro ao calcular estatísticas:', error);
+      }
+    };
     
-    setStats({
-      totalHours: Math.round(totalHours * 10) / 10,
-      dailyAverage: Math.round(dailyAverage * 10) / 10,
-      workedDays
-    });
-  }, [allReports, selectedMonth, selectedYear]);
+    getMonthRecords();
+  }, [allReports, selectedMonth, selectedYear, userData]);
 
   // Função para agrupar registros por mês e dia
   const groupRecords = (records: ProcessedTimeRecord[]): MonthGroup[] => {

@@ -28,6 +28,7 @@ const Register = () => {
           email: email,
           name: name,
           workHours: 8,
+          lunchHours: 1,
           plan: 'free'
         };
         

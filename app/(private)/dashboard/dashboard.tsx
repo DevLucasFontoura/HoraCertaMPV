@@ -9,6 +9,8 @@ import { useState, useEffect } from 'react';
 import styles from './dashboard.module.css';
 import { motion } from 'framer-motion';
 import { registroService, DayRecord, TimeRecord } from '../../services/registroService';
+import { TimeCalculationService, WorkTimeConfig } from '../../services/timeCalculationService';
+import { useAuth } from '../../hooks/useAuth';
 import { FiClock, FiCalendar, FiTrendingUp, FiAlertCircle, FiCheckCircle } from 'react-icons/fi';
 
 interface DashboardData {
@@ -34,6 +36,7 @@ interface WeeklyStats {
 }
 
 const Dashboard = () => {
+  const { userData } = useAuth();
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState<DashboardData>({
     weeklyHours: null,
@@ -55,11 +58,16 @@ const Dashboard = () => {
     overtimeHours: 0
   });
 
+  // Obter configuração de jornada do usuário
+  const getWorkTimeConfig = (): WorkTimeConfig => {
+    return TimeCalculationService.getWorkTimeConfig(userData);
+  };
 
   // Função para calcular status atual do dia
   const calculateTodayStatus = (records: TimeRecord[]): TodayStatus => {
     const types = records.map(r => r.type);
     const lastRecord = records[records.length - 1];
+    const config = getWorkTimeConfig();
     
     let currentStatus: 'working' | 'lunch' | 'finished' | 'not_started' = 'not_started';
     let nextAction = 'Registrar entrada';
@@ -81,28 +89,9 @@ const Dashboard = () => {
       }
     }
 
-    // Calcular horas trabalhadas hoje
-    let totalHoursToday = 0;
-    if (types.includes('entry') && types.includes('exit')) {
-      const entry = records.find(r => r.type === 'entry');
-      const exit = records.find(r => r.type === 'exit');
-      const lunchOut = records.find(r => r.type === 'lunchOut');
-      const lunchReturn = records.find(r => r.type === 'lunchReturn');
-      
-      if (entry && exit) {
-        const entryTime = new Date(`2000-01-01T${entry.time}:00`);
-        const exitTime = new Date(`2000-01-01T${exit.time}:00`);
-        totalHoursToday = (exitTime.getTime() - entryTime.getTime()) / (1000 * 60 * 60);
-        
-        // Subtrair horário de almoço
-        if (lunchOut && lunchReturn) {
-          const lunchOutTime = new Date(`2000-01-01T${lunchOut.time}:00`);
-          const lunchReturnTime = new Date(`2000-01-01T${lunchReturn.time}:00`);
-          const lunchHours = (lunchReturnTime.getTime() - lunchOutTime.getTime()) / (1000 * 60 * 60);
-          totalHoursToday -= lunchHours;
-        }
-      }
-    }
+    // Calcular horas trabalhadas hoje usando o novo serviço
+    const workTime = TimeCalculationService.calculateWorkTime(records, config);
+    const totalHoursToday = workTime.workedHours;
 
     // Verificar se está no horário (entrada antes das 9h)
     const entryRecord = records.find(r => r.type === 'entry');
@@ -112,7 +101,7 @@ const Dashboard = () => {
     return {
       currentStatus,
       nextAction,
-      totalHoursToday: Math.round(totalHoursToday * 10) / 10,
+      totalHoursToday,
       lastPunch: lastRecord ? lastRecord.time : '',
       isOnTime
     };
@@ -120,79 +109,26 @@ const Dashboard = () => {
 
   // Função para calcular estatísticas semanais
   const calculateWeeklyStats = (weekRecords: DayRecord[]): WeeklyStats => {
-    let totalHours = 0;
-    let workedDays = 0;
-    let overtimeHours = 0;
-    
-    weekRecords.forEach(day => {
-      const types = day.records.map(r => r.type);
-      if (types.includes('entry') && types.includes('exit')) {
-        workedDays++;
-        
-        const entry = day.records.find(r => r.type === 'entry');
-        const exit = day.records.find(r => r.type === 'exit');
-        const lunchOut = day.records.find(r => r.type === 'lunchOut');
-        const lunchReturn = day.records.find(r => r.type === 'lunchReturn');
-        
-        if (entry && exit) {
-          const entryTime = new Date(`2000-01-01T${entry.time}:00`);
-          const exitTime = new Date(`2000-01-01T${exit.time}:00`);
-          let dayHours = (exitTime.getTime() - entryTime.getTime()) / (1000 * 60 * 60);
-          
-          // Subtrair horário de almoço
-          if (lunchOut && lunchReturn) {
-            const lunchOutTime = new Date(`2000-01-01T${lunchOut.time}:00`);
-            const lunchReturnTime = new Date(`2000-01-01T${lunchReturn.time}:00`);
-            const lunchHours = (lunchReturnTime.getTime() - lunchOutTime.getTime()) / (1000 * 60 * 60);
-            dayHours -= lunchHours;
-          }
-          
-          totalHours += dayHours;
-          
-          // Calcular horas extras (acima de 8h)
-          if (dayHours > 8) {
-            overtimeHours += dayHours - 8;
-          }
-        }
-      }
-    });
+    const config = getWorkTimeConfig();
+    const monthlyStats = TimeCalculationService.calculateMonthlyStats(weekRecords, config);
     
     return {
-      totalHours: Math.round(totalHours * 10) / 10,
-      averageHours: workedDays > 0 ? Math.round((totalHours / workedDays) * 10) / 10 : 0,
-      workedDays,
-      overtimeHours: Math.round(overtimeHours * 10) / 10
+      totalHours: monthlyStats.totalWorkedHours,
+      averageHours: monthlyStats.averageDailyHours,
+      workedDays: monthlyStats.completeDays,
+      overtimeHours: monthlyStats.totalOvertimeHours
     };
   };
 
   // Função para gerar dados dos gráficos
   const generateChartData = (records: DayRecord[]) => {
+    const config = getWorkTimeConfig();
+    
     // Dados semanais (últimos 7 dias)
     const last7Days = records.slice(0, 7).reverse();
     const weeklyData = last7Days.map(day => {
-      const types = day.records.map(r => r.type);
-      if (types.includes('entry') && types.includes('exit')) {
-        const entry = day.records.find(r => r.type === 'entry');
-        const exit = day.records.find(r => r.type === 'exit');
-        const lunchOut = day.records.find(r => r.type === 'lunchOut');
-        const lunchReturn = day.records.find(r => r.type === 'lunchReturn');
-        
-        if (entry && exit) {
-          const entryTime = new Date(`2000-01-01T${entry.time}:00`);
-          const exitTime = new Date(`2000-01-01T${exit.time}:00`);
-          let dayHours = (exitTime.getTime() - entryTime.getTime()) / (1000 * 60 * 60);
-          
-          if (lunchOut && lunchReturn) {
-            const lunchOutTime = new Date(`2000-01-01T${lunchOut.time}:00`);
-            const lunchReturnTime = new Date(`2000-01-01T${lunchReturn.time}:00`);
-            const lunchHours = (lunchReturnTime.getTime() - lunchOutTime.getTime()) / (1000 * 60 * 60);
-            dayHours -= lunchHours;
-          }
-          
-          return Math.round(dayHours * 10) / 10;
-        }
-      }
-      return 0;
+      const workTime = TimeCalculationService.calculateWorkTime(day.records, config);
+      return workTime.workedHours;
     });
     
     const weeklyLabels = last7Days.map(day => {
@@ -286,9 +222,7 @@ const Dashboard = () => {
   };
 
   const formatHours = (hours: number): string => {
-    const h = Math.floor(hours);
-    const m = Math.round((hours - h) * 60);
-    return m === 0 ? `${h}h` : `${h}h${m.toString().padStart(2, '0')}m`;
+    return TimeCalculationService.formatHours(hours);
   };
 
   return (

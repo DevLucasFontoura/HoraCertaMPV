@@ -6,38 +6,37 @@ import BottomNav from '../../../../components/Menu/menu';
 import { useRouter } from 'next/navigation';
 import styles from './perfil.module.css';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-
-interface UserData {
-  name: string;
-  email: string;
-  settings?: {
-    notifications: {
-      email: boolean;
-      push: boolean;
-    };
-    workHours: {
-      daily: number;
-      weekly: number;
-    };
-  };
-}
+import { useState, useEffect } from 'react';
+import { useAuth } from '../../../../hooks/useAuth';
+import { AuthService, UserData } from '../../../../services/authService';
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const { user, userData: authUserData, loading: authLoading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [userData, setUserData] = useState<UserData>({
-    name: 'João Silva',
-    email: 'joao@exemplo.com',
-  });
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  // Carregar dados do usuário quando o hook de autenticação estiver pronto
+  useEffect(() => {
+    if (authUserData) {
+      setUserData(authUserData);
+    }
+  }, [authUserData]);
 
   const handleSave = async () => {
+    if (!user || !userData) return;
+    
     try {
       setLoading(true);
-      // Simular salvamento
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Atualizar dados no Firestore
+      await AuthService.updateUserData(user.uid, {
+        name: userData.name,
+        email: userData.email,
+        workHours: userData.workHours,
+        plan: userData.plan
+      });
       setIsEditing(false);
       setError(null);
     } catch (error) {
@@ -48,7 +47,8 @@ export default function ProfileScreen() {
     }
   };
 
-  if (loading) {
+  // Mostrar loading enquanto carrega dados de autenticação
+  if (authLoading) {
     return (
       <div className={styles.containerWrapper}>
         <div className={styles.loadingState}>Carregando...</div>
@@ -57,10 +57,21 @@ export default function ProfileScreen() {
     );
   }
 
+  // Mostrar erro se houver
   if (error) {
     return (
       <div className={styles.containerWrapper}>
         <div className={styles.errorState}>{error}</div>
+        <BottomNav />
+      </div>
+    );
+  }
+
+  // Se não há dados do usuário, mostrar loading
+  if (!userData) {
+    return (
+      <div className={styles.containerWrapper}>
+        <div className={styles.loadingState}>Carregando dados do usuário...</div>
         <BottomNav />
       </div>
     );
@@ -98,7 +109,7 @@ export default function ProfileScreen() {
             </div>
             <input
               className={`${styles.input} ${!isEditing ? styles.inputDisabled : ''}`}
-              value={userData.name}
+              value={userData.name || ''}
               onChange={(e) => setUserData({...userData, name: e.target.value})}
               disabled={!isEditing}
             />
@@ -111,7 +122,7 @@ export default function ProfileScreen() {
             </div>
             <input
               className={`${styles.input} ${!isEditing ? styles.inputDisabled : ''}`}
-              value={userData.email}
+              value={userData.email || ''}
               onChange={(e) => setUserData({...userData, email: e.target.value})}
               disabled={!isEditing}
               type="email"

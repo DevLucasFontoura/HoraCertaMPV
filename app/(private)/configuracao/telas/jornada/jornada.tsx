@@ -5,11 +5,16 @@ import BottomNav from '../../../../components/Menu/menu';
 import { FaClock, FaArrowLeft } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import styles from './jornada.module.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../../../hooks/useAuth';
+import { AuthService } from '../../../../services/authService';
 
 export default function WorkScheduleScreen() {
   const router = useRouter();
+  const { user, userData, loading: authLoading } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   // Função para criar uma data base com apenas horas e minutos
   const createTimeDate = (hours: number, minutes: number) => {
@@ -18,11 +23,45 @@ export default function WorkScheduleScreen() {
     return date;
   };
 
-  const initialWorkTime = createTimeDate(8, 0);
-  const initialLunchTime = createTimeDate(1, 0);
+  // Inicializar com os dados do usuário ou valores padrão
+  const getInitialWorkTime = () => {
+    if (userData?.workHours) {
+      const hours = Math.floor(userData.workHours);
+      const minutes = Math.round((userData.workHours - hours) * 60);
+      return createTimeDate(hours, minutes);
+    }
+    return createTimeDate(8, 0); // 8 horas padrão
+  };
+
+  const getInitialLunchTime = () => {
+    if (userData?.lunchHours) {
+      const hours = Math.floor(userData.lunchHours);
+      const minutes = Math.round((userData.lunchHours - hours) * 60);
+      return createTimeDate(hours, minutes);
+    }
+    return createTimeDate(1, 0); // 1 hora de almoço padrão
+  };
+
+  const initialWorkTime = getInitialWorkTime();
+  const initialLunchTime = getInitialLunchTime();
 
   const [workTime, setWorkTime] = useState(initialWorkTime);
   const [lunchTime, setLunchTime] = useState(initialLunchTime);
+
+  // Atualizar workTime e lunchTime quando userData carregar
+  useEffect(() => {
+    if (userData?.workHours) {
+      const hours = Math.floor(userData.workHours);
+      const minutes = Math.round((userData.workHours - hours) * 60);
+      setWorkTime(createTimeDate(hours, minutes));
+    }
+    
+    if (userData?.lunchHours) {
+      const hours = Math.floor(userData.lunchHours);
+      const minutes = Math.round((userData.lunchHours - hours) * 60);
+      setLunchTime(createTimeDate(hours, minutes));
+    }
+  }, [userData]);
 
   const formatTime = (date: Date) => {
     return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
@@ -38,10 +77,58 @@ export default function WorkScheduleScreen() {
     setLunchTime(createTimeDate(hours, minutes));
   };
 
-  const handleSave = () => {
-    // Implementar lógica de salvamento
-    router.push(CONSTANTES.ROUTE_CONFIGURACAO);
+  const handleSave = async () => {
+    if (!user) return;
+    
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Converter os tempos para horas decimais
+      const workHoursDecimal = workTime.getHours() + (workTime.getMinutes() / 60);
+      const lunchHoursDecimal = lunchTime.getHours() + (lunchTime.getMinutes() / 60);
+      
+      console.log('Salvando workHours:', workHoursDecimal, 'lunchHours:', lunchHoursDecimal); // Debug
+      
+      // Atualizar workHours e lunchHours no Firestore
+      await AuthService.updateUserData(user.uid, {
+        workHours: workHoursDecimal,
+        lunchHours: lunchHoursDecimal
+      });
+      
+      // Atualizar localStorage com os novos dados
+      const updatedUserData = { ...userData, workHours: workHoursDecimal, lunchHours: lunchHoursDecimal };
+      localStorage.setItem('userData', JSON.stringify(updatedUserData));
+      
+      // Redirecionar para configuração
+      router.push(CONSTANTES.ROUTE_CONFIGURACAO);
+    } catch (error) {
+      console.error('Erro ao salvar jornada de trabalho:', error);
+      setError('Erro ao salvar alterações');
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // Mostrar loading enquanto carrega dados de autenticação
+  if (authLoading) {
+    return (
+      <div className={styles.containerWrapper}>
+        <div className={styles.loadingState}>Carregando...</div>
+        <BottomNav />
+      </div>
+    );
+  }
+
+  // Mostrar erro se houver
+  if (error) {
+    return (
+      <div className={styles.containerWrapper}>
+        <div className={styles.errorState}>{error}</div>
+        <BottomNav />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.containerWrapper}>
@@ -102,8 +189,9 @@ export default function WorkScheduleScreen() {
         <button 
           className={styles.actionButton}
           onClick={handleSave}
+          disabled={loading}
         >
-          {CONSTANTES.BOTAO_SALVAR_ALTERACOES}
+          {loading ? 'Salvando...' : CONSTANTES.BOTAO_SALVAR_ALTERACOES}
         </button>
       </motion.div>
       

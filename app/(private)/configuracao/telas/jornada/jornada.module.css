@@ -128,3 +128,28 @@
 .actionButton:hover {
     background-color: #3960c8;
 }
+
+.actionButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.loadingState {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-size: 1rem;
+    color: #666;
+}
+
+.errorState {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-size: 1rem;
+    color: #e74c3c;
+    text-align: center;
+    padding: 24px;
+}

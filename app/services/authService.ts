@@ -16,6 +16,7 @@ export interface UserData {
   email: string;
   name: string;
   workHours: number;
+  lunchHours: number;
   plan: string;
 }
 
@@ -76,6 +77,20 @@ export class AuthService {
       return null;
     } catch (error) {
       console.error('Erro ao buscar dados do usuário:', error);
+      throw error;
+    }
+  }
+
+  // Atualizar dados do usuário no Firestore
+  static async updateUserData(uid: string, userData: Partial<UserData>): Promise<void> {
+    try {
+      const userDocRef = doc(db, 'users', uid);
+      await setDoc(userDocRef, {
+        ...userData,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+    } catch (error) {
+      console.error('Erro ao atualizar dados do usuário:', error);
       throw error;
     }
   }

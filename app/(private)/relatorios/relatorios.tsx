@@ -6,8 +6,9 @@ import BottomNav from '../../components/Menu/menu';
 import styles from './relatorios.module.css';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { registroService, DayRecord, TimeRecord } from '../../services/registroService';
 
-interface TimeRecord {
+interface ProcessedTimeRecord {
   id: string;
   date: string;
   entry: string;
@@ -18,18 +19,30 @@ interface TimeRecord {
 }
 
 interface TimeRecordItemProps {
-  record: TimeRecord;
+  record: ProcessedTimeRecord;
 }
 
 interface DayGroup {
   day: string;
-  records: TimeRecord[];
+  records: ProcessedTimeRecord[];
 }
 
 interface MonthGroup {
   month: string;
   days: DayGroup[];
 }
+
+// Função utilitária para formatar horas
+const formatHours = (totalHours: number): string => {
+  const hours = Math.floor(totalHours);
+  const minutes = Math.round((totalHours - hours) * 60);
+  
+  if (minutes === 0) {
+    return `${hours}h`;
+  } else {
+    return `${hours}h${minutes.toString().padStart(2, '0')}m`;
+  }
+};
 
 const StatsCard = ({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) => {
   return (
@@ -59,7 +72,7 @@ const TimeRecordItem = ({ record }: TimeRecordItemProps) => {
     setIsEditing(!isEditing);
   };
 
-  const handleTimeChange = (field: keyof TimeRecord, value: string) => {
+  const handleTimeChange = (field: keyof ProcessedTimeRecord, value: string) => {
     setEditedRecord(prev => ({
       ...prev,
       [field]: value
@@ -143,7 +156,19 @@ const TimeRecordItem = ({ record }: TimeRecordItemProps) => {
 
 const DayRecordGroup = ({ day, records }: DayGroup) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const totalHours = records.reduce((acc) => acc + 8, 0);
+  const totalHours = records.reduce((acc, record) => {
+    // Parsear formato "8h19m" ou "8h"
+    const totalStr = record.total;
+    if (!totalStr) return acc;
+    
+    const hoursMatch = totalStr.match(/(\d+)h/);
+    const minutesMatch = totalStr.match(/(\d+)m/);
+    
+    const hours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
+    const minutes = minutesMatch ? parseInt(minutesMatch[1]) : 0;
+    
+    return acc + hours + (minutes / 60);
+  }, 0);
 
   return (
     <div className={styles.dayGroup}>
@@ -154,7 +179,7 @@ const DayRecordGroup = ({ day, records }: DayGroup) => {
         <div className={styles.dayInfo}>
           <h4 className={styles.dayTitle}>{day}</h4>
           <span className={styles.dayStats}>
-            {records.length} registros • {totalHours}h
+            {records.length} registros • {formatHours(totalHours)}
           </span>
         </div>
         {isExpanded ? <FiChevronUp size={20} /> : <FiChevronDown size={20} />}
@@ -179,7 +204,19 @@ const MonthlyRecordGroup = ({ month, days }: MonthGroup) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const totalRecords = days.reduce((acc, day) => acc + day.records.length, 0);
   const totalHours = days.reduce((acc, day) => 
-    acc + day.records.reduce((sum) => sum + 8, 0), 0
+    acc + day.records.reduce((sum, record) => {
+      // Parsear formato "8h19m" ou "8h"
+      const totalStr = record.total;
+      if (!totalStr) return sum;
+      
+      const hoursMatch = totalStr.match(/(\d+)h/);
+      const minutesMatch = totalStr.match(/(\d+)m/);
+      
+      const hours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
+      const minutes = minutesMatch ? parseInt(minutesMatch[1]) : 0;
+      
+      return sum + hours + (minutes / 60);
+    }, 0), 0
   );
 
   return (
@@ -195,7 +232,7 @@ const MonthlyRecordGroup = ({ month, days }: MonthGroup) => {
         <div className={styles.monthInfo}>
           <h3 className={styles.monthTitle}>{month}</h3>
           <span className={styles.monthStats}>
-            {totalRecords} registros • {totalHours}h totais
+            {totalRecords} registros • {formatHours(totalHours)} totais
           </span>
         </div>
         {isExpanded ? <FiChevronUp size={24} /> : <FiChevronDown size={24} />}
@@ -219,7 +256,10 @@ const MonthlyRecordGroup = ({ month, days }: MonthGroup) => {
 
 export default function ReportsScreen() {
   const [loading, setLoading] = useState(true);
-  const [reports, setReports] = useState<TimeRecord[]>([]);
+  const [allReports, setAllReports] = useState<ProcessedTimeRecord[]>([]);
+  const [reports, setReports] = useState<ProcessedTimeRecord[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [stats, setStats] = useState<{
     totalHours: number | null;
     dailyAverage: number | null;
@@ -230,36 +270,129 @@ export default function ReportsScreen() {
     workedDays: null
   });
 
+  // Função para converter dados do Firebase para o formato da interface
+  const processDayRecord = (dayRecord: DayRecord): ProcessedTimeRecord => {
+    const records = dayRecord.records;
+    const entry = records.find(r => r.type === 'entry')?.time || '';
+    const lunchOut = records.find(r => r.type === 'lunchOut')?.time || '';
+    const lunchReturn = records.find(r => r.type === 'lunchReturn')?.time || '';
+    const exit = records.find(r => r.type === 'exit')?.time || '';
+    
+    // Calcular total de horas trabalhadas
+    let total = '';
+    if (entry && exit) {
+      const entryTime = new Date(`2000-01-01T${entry}:00`);
+      const exitTime = new Date(`2000-01-01T${exit}:00`);
+      
+      // Calcular tempo total (saída - entrada)
+      const totalMs = exitTime.getTime() - entryTime.getTime();
+      let totalHours = totalMs / (1000 * 60 * 60);
+      
+      // Subtrair horário de almoço se existir
+      if (lunchOut && lunchReturn) {
+        const lunchOutTime = new Date(`2000-01-01T${lunchOut}:00`);
+        const lunchReturnTime = new Date(`2000-01-01T${lunchReturn}:00`);
+        const lunchMs = lunchReturnTime.getTime() - lunchOutTime.getTime();
+        const lunchHours = lunchMs / (1000 * 60 * 60);
+        totalHours -= lunchHours;
+      }
+      
+      // Formatar resultado
+      const hours = Math.floor(totalHours);
+      const minutes = Math.round((totalHours - hours) * 60);
+      
+      if (minutes === 0) {
+        total = `${hours}h`;
+      } else {
+        total = `${hours}h${minutes.toString().padStart(2, '0')}m`;
+      }
+    }
+
+    // Converter data corretamente (formato YYYY-MM-DD para DD/MM/YYYY)
+    const [year, month, day] = dayRecord.date.split('-');
+    const formattedDate = `${day}/${month}/${year}`;
+
+    return {
+      id: dayRecord.date,
+      date: formattedDate,
+      entry,
+      lunchOut,
+      lunchReturn,
+      exit,
+      total
+    };
+  };
+
+  // Carregar todos os registros uma vez
   useEffect(() => {
-    // Função para buscar dados dos relatórios (a ser implementada)
-    const fetchReports = async () => {
+    const fetchAllReports = async () => {
       try {
         setLoading(true);
-        // Aqui virá a chamada real à API
-        // const response = await api.getReports();
-        // setReports(response.records);
-        // setStats(response.stats);
-        setReports([]); // Temporário até implementar a API
-        setStats({
-          totalHours: null,
-          dailyAverage: null,
-          workedDays: null
-        });
+        
+        // Buscar todos os registros
+        const allMonthRecords = await registroService.getAllRegistros();
+        
+        // Converter para o formato da interface
+        const processedAllRecords = allMonthRecords.map(processDayRecord);
+        setAllReports(processedAllRecords);
+        
       } catch (error) {
-        console.error('Erro ao carregar relatórios:', error);
+        console.error('Erro ao carregar todos os relatórios:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchReports();
+    fetchAllReports();
   }, []);
 
+  // Filtrar registros baseado no mês/ano selecionado
+  useEffect(() => {
+    const monthStr = selectedMonth.toString().padStart(2, '0');
+    const yearStr = selectedYear.toString();
+    
+    const filteredRecords = allReports.filter(record => {
+      // Parsear data no formato DD/MM/YYYY
+      const parts = record.date.split('/');
+      const recordDay = parseInt(parts[0]);
+      const recordMonth = parseInt(parts[1]);
+      const recordYear = parseInt(parts[2]);
+      
+      return recordMonth === selectedMonth && recordYear === selectedYear;
+    });
+    
+    setReports(filteredRecords);
+    
+    // Calcular estatísticas
+    const totalHours = filteredRecords.reduce((acc, record) => {
+      // Parsear formato "8h19m" ou "8h"
+      const totalStr = record.total;
+      if (!totalStr) return acc;
+      
+      const hoursMatch = totalStr.match(/(\d+)h/);
+      const minutesMatch = totalStr.match(/(\d+)m/);
+      
+      const hours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
+      const minutes = minutesMatch ? parseInt(minutesMatch[1]) : 0;
+      
+      return acc + hours + (minutes / 60);
+    }, 0);
+    
+    const workedDays = filteredRecords.length;
+    const dailyAverage = workedDays > 0 ? totalHours / workedDays : 0;
+    
+    setStats({
+      totalHours: Math.round(totalHours * 10) / 10,
+      dailyAverage: Math.round(dailyAverage * 10) / 10,
+      workedDays
+    });
+  }, [allReports, selectedMonth, selectedYear]);
+
   // Função para agrupar registros por mês e dia
-  const groupRecords = (records: TimeRecord[]): MonthGroup[] => {
+  const groupRecords = (records: ProcessedTimeRecord[]): MonthGroup[] => {
     if (!records.length) return [];
     
-    const groups = records.reduce((acc: { [key: string]: { [key: string]: TimeRecord[] } }, record) => {
+    const groups = records.reduce((acc: { [key: string]: { [key: string]: ProcessedTimeRecord[] } }, record) => {
       const date = new Date(record.date.split('/').reverse().join('-'));
       const monthKey = date.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
       const dayKey = date.toLocaleString('pt-BR', { day: 'numeric', weekday: 'long' });
@@ -316,15 +449,63 @@ export default function ReportsScreen() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
+        <div className={styles.filterContainer}>
+          <div className={styles.filterGroup}>
+            <label htmlFor="monthSelect">Mês:</label>
+            <select 
+              id="monthSelect"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+              className={styles.filterSelect}
+            >
+              <option value={1}>Janeiro</option>
+              <option value={2}>Fevereiro</option>
+              <option value={3}>Março</option>
+              <option value={4}>Abril</option>
+              <option value={5}>Maio</option>
+              <option value={6}>Junho</option>
+              <option value={7}>Julho</option>
+              <option value={8}>Agosto</option>
+              <option value={9}>Setembro</option>
+              <option value={10}>Outubro</option>
+              <option value={11}>Novembro</option>
+              <option value={12}>Dezembro</option>
+            </select>
+          </div>
+          <div className={styles.filterGroup}>
+            <label htmlFor="yearSelect">Ano:</label>
+            <select 
+              id="yearSelect"
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+              className={styles.filterSelect}
+            >
+              {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+          <div className={styles.filterGroup}>
+            <label>&nbsp;</label>
+            <button 
+              onClick={() => window.location.reload()}
+              className={styles.refreshButton}
+              disabled={loading}
+            >
+              {loading ? 'Carregando...' : 'Atualizar'}
+            </button>
+          </div>
+        </div>
+
         <div className={styles.statsContainer}>
           <StatsCard 
             label="Total de Horas" 
-            value={stats.totalHours ? `${stats.totalHours}h` : '--'} 
+            value={stats.totalHours ? formatHours(stats.totalHours) : '--'} 
             icon={<FiClock size={24} />}
           />
           <StatsCard 
             label="Média Diária" 
-            value={stats.dailyAverage ? `${stats.dailyAverage}h` : '--'} 
+            value={stats.dailyAverage ? formatHours(stats.dailyAverage) : '--'} 
             icon={<IoStatsChartOutline size={24} />}
           />
           <StatsCard 
@@ -333,8 +514,8 @@ export default function ReportsScreen() {
             icon={<FiCalendar size={24} />}
           />
           <StatsCard 
-            label="Relatório Completo" 
-            value="Em breve" 
+            label="Registros Carregados" 
+            value={allReports.length.toString()} 
             icon={<FiFileText size={24} />}
           />
         </div>
@@ -354,7 +535,11 @@ export default function ReportsScreen() {
             ))
           ) : (
             <div className={styles.emptyContainer}>
-              <p className={styles.emptyText}>Nenhum registro encontrado</p>
+              <p className={styles.emptyText}>
+                Nenhum registro encontrado para {selectedMonth}/{selectedYear}
+                <br />
+                <small>Total de registros carregados: {allReports.length}</small>
+              </p>
             </div>
           )}
         </div>

@@ -9,17 +9,12 @@ import styles from './registrarPonto.module.css';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Switch } from '@mui/material';
+import { registroService, TimeRecord } from '../../services/registroService';
 
 interface TimeState {
   hours: string;
   minutes: string;
   seconds: string;
-}
-
-interface TimeRecord {
-  type: 'entry' | 'lunchOut' | 'lunchReturn' | 'exit';
-  time: string;
-  label: string;
 }
 
 const timeDisplayVariants = {
@@ -70,48 +65,73 @@ export default function RegistrarPonto() {
     return () => clearInterval(timer);
   }, []);
 
+  // Carregar registros do dia ao montar o componente
+  useEffect(() => {
+    const carregarRegistrosDoDia = async () => {
+      try {
+        const registros = await registroService.getRegistrosDoDia();
+        setTodayRecords(registros);
+        
+        // Atualizar estado dos botões baseado nos registros existentes
+        const tipos = registros.map(r => r.type);
+        setTodayRecord({
+          entry: tipos.includes('entry'),
+          lunchOut: tipos.includes('lunchOut'),
+          lunchReturn: tipos.includes('lunchReturn'),
+          exit: tipos.includes('exit')
+        });
+      } catch (error) {
+        console.error('Erro ao carregar registros:', error);
+        setError('Erro ao carregar registros do dia');
+      }
+    };
+
+    carregarRegistrosDoDia();
+  }, []);
+
   const handleRegister = (type: 'entry' | 'lunchOut' | 'lunchReturn' | 'exit') => {
     setSelectedRegisterType(type);
     setIsModalOpen(true);
   };
 
-  const handleConfirmRegister = (adjustedTime: Date) => {
+  const handleConfirmRegister = async (adjustedTime: Date) => {
     if (!selectedRegisterType) return;
     
     setLoading(true);
     setError('');
     
-    const timeString = adjustedTime.toLocaleTimeString('pt-BR', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-    
-    const typeLabels = {
-      entry: CONSTANTES.RP_ENTRADA,
-      lunchOut: CONSTANTES.RP_SAIDA_ALMOCO,
-      lunchReturn: CONSTANTES.RP_RETORNO_ALMOCO,
-      exit: CONSTANTES.RP_SAIDA
-    };
-
-    setTimeout(() => {
-      setTodayRecord(prev => ({
-        ...prev,
-        [selectedRegisterType]: true
-      }));
-
-      setTodayRecords(prev => [...prev, {
-        type: selectedRegisterType,
-        time: timeString,
-        label: typeLabels[selectedRegisterType]
-      }]);
-
-      setSuccess('Ponto registrado com sucesso!');
+    try {
+      // Registrar no Firebase
+      const success = await registroService.registrarPonto(selectedRegisterType);
+      
+      if (success) {
+        // Recarregar registros do dia para sincronizar
+        const registros = await registroService.getRegistrosDoDia();
+        setTodayRecords(registros);
+        
+        // Atualizar estado dos botões
+        const tipos = registros.map(r => r.type);
+        setTodayRecord({
+          entry: tipos.includes('entry'),
+          lunchOut: tipos.includes('lunchOut'),
+          lunchReturn: tipos.includes('lunchReturn'),
+          exit: tipos.includes('exit')
+        });
+        
+        setSuccess('Ponto registrado com sucesso!');
+      } else {
+        setError('Erro ao registrar ponto. Tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao registrar ponto:', error);
+      setError('Erro ao registrar ponto. Tente novamente.');
+    } finally {
       setLoading(false);
-
       setTimeout(() => {
         setSuccess('');
+        setError('');
       }, 3000);
-    }, 1000);
+    }
   };
 
   return (
@@ -151,6 +171,7 @@ export default function RegistrarPonto() {
             />
           </div>
 
+          {loading && <div className={styles.loadingMessage}>Registrando ponto...</div>}
           {error && <div className={styles.errorMessage}>{error}</div>}
           {success && <div className={styles.successMessage}>{success}</div>}
 

@@ -130,6 +130,17 @@
     margin-bottom: 1rem;
 }
 
+.loadingMessage {
+    background: #FEF3C7;
+    border: 1px solid #F59E0B;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #F59E0B;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
 .timelineItem {
     display: flex;
     align-items: center;

@@ -1,11 +1,18 @@
+"use client";
+
 import { FaInstagram, FaTwitter, FaLinkedin, FaFacebook, FaYoutube } from 'react-icons/fa';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { CONSTANTES } from '../../common/constantes';
 import styles from './footer.module.css';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState('');
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear().toString());
+  }, []);
 
   const footerSections = {
     empresa: {

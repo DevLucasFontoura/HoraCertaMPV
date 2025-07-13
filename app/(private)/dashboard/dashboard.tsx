@@ -1,10 +1,10 @@
 "use client";
 
-import HabitTracker from '../components/HabitTracker/HabitTracker';
-import BarChart from '../components/Graficos/graficoDeBarras';
-import LineChart from '../components/Graficos/graficoDeLinha';
-import { CONSTANTES } from '../common/constantes';
-import BottomNav from '../components/Menu/menu';
+import HabitTracker from '../../components/HabitTracker/HabitTracker';
+import BarChart from '../../components/Graficos/graficoDeBarras';
+import LineChart from '../../components/Graficos/graficoDeLinha';
+import { CONSTANTES } from '../../common/constantes';
+import BottomNav from '../../components/Menu/menu';
 import { useState, useEffect } from 'react';
 import styles from './dashboard.module.css';
 import { motion } from 'framer-motion';

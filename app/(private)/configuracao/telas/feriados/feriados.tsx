@@ -1,8 +1,8 @@
 'use client';
 
 import { FaCalendar, FaArrowLeft, FaPlus, FaTrash, FaQuestionCircle, FaTimes } from 'react-icons/fa';
-import { CONSTANTES } from '../common/constantes';
-import BottomNav from '../components/Menu/menu';
+import { CONSTANTES } from '../../../../common/constantes';
+import BottomNav from '../../../../components/Menu/menu';
 import { useRouter } from 'next/navigation';
 import styles from './feriados.module.css';
 import React, { useState } from 'react';

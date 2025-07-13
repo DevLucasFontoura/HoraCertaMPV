@@ -1,6 +1,8 @@
+"use client";
+
 import { FaArrowLeft, FaClock, FaChartBar, FaUsers } from 'react-icons/fa';
-import { CONSTANTES } from '../common/constantes';
-import BottomNav from '../components/Menu/menu';
+import { CONSTANTES } from '../../../../common/constantes';
+import BottomNav from '../../../../components/Menu/menu';
 import { useRouter } from 'next/navigation';
 import styles from './sobre.module.css';
 import { motion } from 'framer-motion';
@@ -19,7 +21,7 @@ const aboutSections: AboutSection[] = [
 ];
 
 export default function AboutScreen() {
-  const navigate = useRouter();
+  const router = useRouter();
 
   return (
     <div className={styles.containerWrapper}>

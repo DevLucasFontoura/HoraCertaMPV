@@ -1,6 +1,8 @@
+"use client";
+
 import { FaArrowLeft, FaClock, FaChartBar, FaEdit, FaTachometerAlt } from 'react-icons/fa';
-import { CONSTANTES } from '../common/constantes';
-import BottomNav from '../components/Menu/menu';
+import { CONSTANTES } from '../../../../common/constantes';
+import BottomNav from '../../../../components/Menu/menu';
 import { useRouter } from 'next/navigation';
 import styles from './tutorial.module.css';
 import { motion } from 'framer-motion';
@@ -13,7 +15,7 @@ const tutorialSteps = [
 ];
 
 export default function TutorialScreen() {
-  const navigate = useRouter();
+  const router = useRouter();
 
   return (
     <div className={styles.containerWrapper}>

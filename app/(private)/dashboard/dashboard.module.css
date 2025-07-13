@@ -25,12 +25,14 @@
   font-weight: 700;
   margin: 0;
   margin-bottom: 0.5rem;
+  color: #fff !important;
 }
 
 .subtitle {
   font-size: 1rem;
   opacity: 0.8;
   margin: 0;
+  color: #fff !important;
 }
 
 .content {

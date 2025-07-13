@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { CONSTANTES } from '../common/constantes';
-import BottomNav from '../components/Menu/menu';
+import { CONSTANTES } from '../../../../common/constantes';
+import BottomNav from '../../../../components/Menu/menu';
 import { FaBell, FaArrowLeft } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import styles from './notificacoes.module.css';

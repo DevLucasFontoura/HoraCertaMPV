@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 import { FaUser, FaEnvelope, FaArrowLeft } from 'react-icons/fa';
-import { CONSTANTES } from '../common/constantes';
-import BottomNav from '../components/Menu/menu';
+import { CONSTANTES } from '../../../../common/constantes';
+import BottomNav from '../../../../components/Menu/menu';
 import { useRouter } from 'next/navigation';
 import styles from './perfil.module.css';
 import { motion } from 'framer-motion';

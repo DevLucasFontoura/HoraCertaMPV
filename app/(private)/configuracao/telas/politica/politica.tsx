@@ -1,6 +1,8 @@
+"use client";
+
 import { FaArrowLeft, FaDatabase, FaChartArea, FaShieldAlt, FaUsers, FaCloud, FaUser } from 'react-icons/fa';
-import { CONSTANTES } from '../common/constantes';
-import BottomNav from '../components/Menu/menu';
+import { CONSTANTES } from '../../../../common/constantes';
+import BottomNav from '../../../../components/Menu/menu';
 import { useRouter } from 'next/navigation';
 import styles from './politica.module.css';
 import React, { useEffect } from 'react';
@@ -22,7 +24,7 @@ const policySections: PolicySection[] = [
 ];
 
 export default function PrivacyPolicyScreen() {
-  const navigate = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
     window.scrollTo(0, 0);

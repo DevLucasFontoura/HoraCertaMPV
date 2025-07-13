@@ -1,5 +1,7 @@
-import { CONSTANTES } from '../common/constantes';
-import BottomNav from '../components/Menu/menu';
+"use client";
+
+import { CONSTANTES } from '../../../../common/constantes';
+import BottomNav from '../../../../components/Menu/menu';
 import { FaClock, FaArrowLeft } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import styles from './jornada.module.css';

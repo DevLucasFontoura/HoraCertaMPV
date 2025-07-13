@@ -414,7 +414,7 @@ export const CONSTANTES = {
     SOBRE_02: 'Recursos',
     SOBRE_02_DESCRICAO: '- Registro de ponto digital\n- Controle de banco de horas\n- Relatórios detalhados\n- Notificações personalizáveis',
     SOBRE_03: 'Desenvolvido por',
-    SOBRE_03_DESCRICAO: 'InovaSoftBSB',
+    SOBRE_03_DESCRICAO: 'DevLucasFontoura',
 
     // -------------------------- PAGINA SUPORTE --------------------------
     TITULO_SUPORTE: 'Suporte',

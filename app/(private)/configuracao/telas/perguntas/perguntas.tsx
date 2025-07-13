@@ -1,7 +1,8 @@
+"use client";
 
 import { FaArrowLeft, FaChevronDown } from 'react-icons/fa';
-import { CONSTANTES } from '../common/constantes';
-import BottomNav from '../components/Menu/menu';
+import { CONSTANTES } from '../../../../common/constantes';
+import BottomNav from '../../../../components/Menu/menu';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import styles from './perguntas.module.css';
@@ -62,7 +63,7 @@ const AccordionItem = ({ item, isOpen, onPress }: AccordionItemProps) => {
 };
 
 export default function FAQScreen() {
-  const navigate = useRouter();
+  const router = useRouter();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleAccordion = (index: number) => {

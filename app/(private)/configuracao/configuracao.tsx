@@ -2,11 +2,11 @@
 
 import { FaUser, FaBell, FaClock, FaCalendar, FaBook, FaQuestionCircle, FaHeadset, FaLock, FaInfoCircle, FaCog } from 'react-icons/fa';
 // import React, { useEffect } from 'react';
-import BottomNav from '../components/Menu/menu';
+import BottomNav from '../../components/Menu/menu';
 import { useRouter } from 'next/navigation';
 import styles from './configuracao.module.css';
 import { motion } from 'framer-motion';
-import { CONSTANTES } from '../common/constantes';
+import { CONSTANTES } from '../../common/constantes';
 
 // Mock user settings type
 // interface UserSettings {
@@ -165,8 +165,10 @@ export default function SettingsScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className={styles.title}>{CONSTANTES.TITULO_CONFIGURACAO}</h1>
-          <p className={styles.subtitle}>{CONSTANTES.SUBTITULO_CONFIGURACAO}</p>
+          <div className={styles.headerContent}>
+            <h1 className={styles.title}>{CONSTANTES.TITULO_CONFIGURACAO}</h1>
+            <p className={styles.subtitle}>{CONSTANTES.SUBTITULO_CONFIGURACAO}</p>
+          </div>
         </motion.header>
 
         <div className={styles.content}>

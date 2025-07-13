@@ -1,6 +1,8 @@
+"use client";
+
 import { FaArrowLeft, FaClock, FaEnvelope, FaQuestionCircle } from 'react-icons/fa';
-import { CONSTANTES } from '../common/constantes';
-import BottomNav from '../components/Menu/menu';
+import { CONSTANTES } from '../../../../common/constantes';
+import BottomNav from '../../../../components/Menu/menu';
 import { useRouter } from 'next/navigation';
 import styles from './suporte.module.css';
 import { motion } from 'framer-motion';
@@ -22,7 +24,7 @@ const supportItems: SupportItem[] = [
 ];
 
 export default function SupportScreen() {
-  const navigate = useRouter();
+  const router = useRouter();
 
   const handleItemClick = (item: SupportItem) => {
     if (item.isEmail) {

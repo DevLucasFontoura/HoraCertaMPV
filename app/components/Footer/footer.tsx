@@ -1,5 +1,8 @@
 import { FaInstagram, FaTwitter, FaLinkedin, FaFacebook, FaYoutube } from 'react-icons/fa';
+import { AiOutlineClockCircle } from 'react-icons/ai';
+import { CONSTANTES } from '../../common/constantes';
 import styles from './footer.module.css';
+import Link from 'next/link';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -42,26 +45,10 @@ const Footer = () => {
     <footer className={styles.footer}>
       <div className={styles.footerContent}>
         <div className={styles.footerBrand}>
-          <div className={styles.logo}>
-            <img src="/logo.png" alt="Hora Certa" />
-          </div>
-          <div className={styles.socialLinks}>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-              <FaInstagram />
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-              <FaTwitter />
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
-              <FaLinkedin />
-            </a>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-              <FaFacebook />
-            </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-              <FaYoutube />
-            </a>
-          </div>
+          <Link className={styles.logo} href="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, fontSize: '1.25rem' }}>
+            <AiOutlineClockCircle size={24} />
+            {CONSTANTES.TITULO_SITE}
+          </Link>
         </div>
 
         <div className={styles.footerLinks}>
@@ -77,6 +64,14 @@ const Footer = () => {
               </ul>
             </div>
           ))}
+        </div>
+
+        <div className={styles.socialLinks}>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
+          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><FaFacebook /></a>
+          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer"><FaYoutube /></a>
         </div>
       </div>
 

@@ -377,7 +377,7 @@ const LandingPage = () => {
                   <AiOutlineStar key={i} size={16} className={styles.star} />
                 ))}
               </div>
-              <p className={styles.testimonialText}>"{testimonial.text}"</p>
+              <p className={styles.testimonialText}>&ldquo;{testimonial.text}&rdquo;</p>
               <div className={styles.testimonialAuthor}>
                 <strong>{testimonial.name}</strong>
                 <span>{testimonial.role} • {testimonial.company}</span>

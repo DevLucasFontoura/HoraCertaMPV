@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { CONSTANTES } from '../common/constantes';
+
 import styles from './configLayout.module.css';
 
 export default function ConfigLayout({

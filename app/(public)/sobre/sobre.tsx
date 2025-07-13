@@ -73,7 +73,7 @@ const Sobre = () => {
         <hr className={styles.sectionDivider} />
 
         <section className={styles.sectionRow}>
-          <img src={CONSTANTES.IMAGE_SOBRE_01}className={styles.sectionImage}/>
+          <img src={CONSTANTES.IMAGE_SOBRE_01} className={styles.sectionImage} alt="Nossa missão" />
           <div className={styles.sectionText}><h2 className={styles.equipeTitulo}>{CONSTANTES.TITULO_MISSAO}</h2><p>{CONSTANTES.DESCRICAO_MISSAO}</p></div>
         </section>
 
@@ -93,7 +93,7 @@ const Sobre = () => {
 
         <section className={styles.sectionRowReverse}>
           <div className={styles.sectionText}> <h2 className={styles.equipeTitulo}>{CONSTANTES.TITULO_NOSSA_HISTORIA}</h2> <p>{CONSTANTES.DESCRICAO_NOSSA_HISTORIA_01}</p> <p>{CONSTANTES.DESCRICAO_NOSSA_HISTORIA_02}</p> </div>
-          <img src={CONSTANTES.IMAGE_SOBRE_02} className={styles.sectionImage}/>
+          <img src={CONSTANTES.IMAGE_SOBRE_02} className={styles.sectionImage} alt="Nossa história" />
         </section>
 
         <hr className={styles.sectionDivider} />
@@ -111,7 +111,7 @@ const Sobre = () => {
         <hr className={styles.sectionDivider} />
 
         <section className={styles.sectionRow}>
-          <img src={CONSTANTES.IMAGE_SOBRE_03} className={styles.sectionImage}/>
+          <img src={CONSTANTES.IMAGE_SOBRE_03} className={styles.sectionImage} alt="Nossa equipe" />
           <div className={styles.sectionText}> <h2 className={styles.equipeTitulo}>{CONSTANTES.TITULO_EQUIPE}</h2> <p>{CONSTANTES.DESCRICAO_EQUIPE}</p></div>
         </section>
       </div>

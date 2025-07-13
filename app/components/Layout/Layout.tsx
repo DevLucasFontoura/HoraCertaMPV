@@ -1,11 +1,13 @@
-import { Outlet } from 'react-router-dom';
-import Footer from '../Footer/footer';
+import { ReactNode } from 'react';
 
-const Layout = () => {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="app">
-      <Outlet />
-      <Footer />
+      {children}
     </div>
   );
 };

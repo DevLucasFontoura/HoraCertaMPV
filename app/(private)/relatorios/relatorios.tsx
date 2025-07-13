@@ -6,7 +6,7 @@ import BottomNav from '../../components/Menu/menu';
 import styles from './relatorios.module.css';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { registroService, DayRecord, TimeRecord } from '../../services/registroService';
+import { registroService, DayRecord } from '../../services/registroService';
 
 interface ProcessedTimeRecord {
   id: string;
@@ -348,13 +348,9 @@ export default function ReportsScreen() {
 
   // Filtrar registros baseado no mês/ano selecionado
   useEffect(() => {
-    const monthStr = selectedMonth.toString().padStart(2, '0');
-    const yearStr = selectedYear.toString();
-    
     const filteredRecords = allReports.filter(record => {
       // Parsear data no formato DD/MM/YYYY
       const parts = record.date.split('/');
-      const recordDay = parseInt(parts[0]);
       const recordMonth = parseInt(parts[1]);
       const recordYear = parseInt(parts[2]);
       

@@ -6,7 +6,7 @@ import BottomNav from '../../../../components/Menu/menu';
 import { useRouter } from 'next/navigation';
 import styles from './perfil.module.css';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface UserData {
   name: string;

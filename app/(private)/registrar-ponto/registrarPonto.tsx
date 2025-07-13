@@ -94,7 +94,7 @@ export default function RegistrarPonto() {
     setIsModalOpen(true);
   };
 
-  const handleConfirmRegister = async (adjustedTime: Date) => {
+  const handleConfirmRegister = async () => {
     if (!selectedRegisterType) return;
     
     setLoading(true);

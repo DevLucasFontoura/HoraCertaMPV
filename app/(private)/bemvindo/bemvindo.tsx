@@ -19,7 +19,7 @@ interface BankHours {
 }
 
 const BemVindo = () => {
-  const { user, userData, loading } = useAuth();
+  const { userData, loading } = useAuth();
   const [todayStats, setTodayStats] = useState<TodayStats>({ hoursWorked: 0, isComplete: false });
   const [bankHours, setBankHours] = useState<BankHours>({ total: 0, positive: 0, negative: 0 });
   const [statsLoading, setStatsLoading] = useState(true);

@@ -1,7 +1,7 @@
 "use client";
 
 import HabitTracker from '../../components/HabitTracker/HabitTracker';
-import BarChart from '../../components/Graficos/graficoDeBarras';
+
 import LineChart from '../../components/Graficos/graficoDeLinha';
 import { CONSTANTES } from '../../common/constantes';
 import BottomNav from '../../components/Menu/menu';
@@ -54,7 +54,7 @@ const Dashboard = () => {
     workedDays: 0,
     overtimeHours: 0
   });
-  const [todayRecords, setTodayRecords] = useState<TimeRecord[]>([]);
+
 
   // Função para calcular status atual do dia
   const calculateTodayStatus = (records: TimeRecord[]): TodayStatus => {
@@ -220,7 +220,6 @@ const Dashboard = () => {
         
         // Buscar registros do dia atual
         const todayRecords = await registroService.getRegistrosDoDia();
-        setTodayRecords(todayRecords);
         
         // Calcular status do dia
         const todayStatus = calculateTodayStatus(todayRecords);

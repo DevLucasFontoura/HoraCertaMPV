@@ -68,7 +68,10 @@ export default function Historico() {
   }, [userData])
 
   return (
-    <div className={`${styles.containerWrapper} ${isMobile ? mobileStyles.containerWrapper : ''}`}>
+    <div
+      className={`${styles.containerWrapper} ${isMobile ? mobileStyles.containerWrapper : ''}`}
+      style={isMobile ? { paddingLeft: 16, paddingRight: 16 } : {}}
+    >
       <div className={`${styles.backgroundIcon} ${isMobile ? mobileStyles.backgroundIcon : ''}`}>
         <FaHistory size={200} color="rgba(0,0,0,0.10)" />
       </div>

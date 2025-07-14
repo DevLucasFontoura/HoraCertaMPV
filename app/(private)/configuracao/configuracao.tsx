@@ -1,6 +1,6 @@
 "use client";
 
-import { FaUser, FaBell, FaClock, FaCalendar, FaBook, FaQuestionCircle, FaHeadset, FaLock, FaInfoCircle, FaCog } from 'react-icons/fa';
+import { FaUser, FaBell, FaClock, FaCalendar, FaBook, FaQuestionCircle, FaHeadset, FaLock, FaInfoCircle, FaCog, FaHistory } from 'react-icons/fa';
 import React, { useState } from 'react';
 import BottomNav from '../../components/Menu/menu';
 import { useRouter } from 'next/navigation';
@@ -85,6 +85,12 @@ export default function SettingsScreen() {
         icon: <FaCalendar />,
         description: CONSTANTES.SUBTITULO_CONFIGURACAO_FERIADOS,
         onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_FERIADOS)
+      },
+      {
+        title: CONSTANTES.TITULO_CONFIGURACAO_HISTORICO,
+        icon: <FaHistory />,
+        description: CONSTANTES.SUBTITULO_CONFIGURACAO_HISTORICO,
+        onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_HISTORICO)
       }
     ],
     help: [

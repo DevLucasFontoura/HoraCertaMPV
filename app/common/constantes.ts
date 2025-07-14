@@ -51,6 +51,7 @@ export const CONSTANTES = {
     ROUTE_CONFIGURACAO_POLITICA: '/configuracao/telas/politica',
     ROUTE_CONFIGURACAO_SOBRE: '/configuracao/telas/sobre',
     ROUTE_CONFIGURACAO_SUPORTE: '/configuracao/telas/suporte',
+    ROUTE_CONFIGURACAO_HISTORICO: '/configuracao/telas/historico',
     ROUTE_REGISTRAR_PONTO: '/registrarPonto',
     ROUTE_RELATORIOS: '/relatorios',
 
@@ -293,7 +294,10 @@ export const CONSTANTES = {
     // ---- FERIADOS E COMPENSAÇOES ----
     TITULO_CONFIGURACAO_FERIADOS: 'Feriados e Compensações',
     SUBTITULO_CONFIGURACAO_FERIADOS: 'Gerencie feriados que afetam sua jornada',
+    TITULO_CONFIGURACAO_HISTORICO: 'Histórico de Registros',
+    SUBTITULO_CONFIGURACAO_HISTORICO: 'Visualize todos os seus registros de ponto organizados por data',
     CAMINHO_CONFIGURACAO_FERIADOS: '/configuracao/telas/feriados',
+    CAMINHO_CONFIGURACAO_HISTORICO: '/configuracao/telas/historico',
     // ---- TUTORIAL DO APP ----
     TITULO_CONFIGURACAO_TUTORIAL: 'Tutorial do App',
     SUBTITULO_CONFIGURACAO_TUTORIAL: 'Aprenda a usar todas as funcionalidades',

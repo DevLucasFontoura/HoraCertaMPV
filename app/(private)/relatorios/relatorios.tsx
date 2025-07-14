@@ -4,9 +4,9 @@ import { FiClock, FiCalendar, FiFileText, FiChevronDown, FiChevronUp } from 'rea
 import { IoStatsChartOutline } from 'react-icons/io5'
 import BottomNav from '../../components/Menu/menu';
 import styles from './relatorios.module.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { registroService, DayRecord } from '../../services/registroService';
+import { registroService, DayRecord, TimeRecord } from '../../services/registroService';
 import { TimeCalculationService, WorkTimeConfig } from '../../services/timeCalculationService';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -75,18 +75,18 @@ const TimeRecordItem = ({ record }: TimeRecordItemProps) => {
           return;
         }
         // Montar array de records no formato esperado
-        const records = [
-          editedRecord.entry && { type: 'entry', time: editedRecord.entry, label: 'Entrada' },
-          editedRecord.lunchOut && { type: 'lunchOut', time: editedRecord.lunchOut, label: 'Saída Almoço' },
-          editedRecord.lunchReturn && { type: 'lunchReturn', time: editedRecord.lunchReturn, label: 'Retorno Almoço' },
-          editedRecord.exit && { type: 'exit', time: editedRecord.exit, label: 'Saída' }
-        ].filter(Boolean);
+        const records: TimeRecord[] = [
+          editedRecord.entry && { type: 'entry', time: editedRecord.entry, label: 'Entrada', timestamp: new Date() },
+          editedRecord.lunchOut && { type: 'lunchOut', time: editedRecord.lunchOut, label: 'Saída Almoço', timestamp: new Date() },
+          editedRecord.lunchReturn && { type: 'lunchReturn', time: editedRecord.lunchReturn, label: 'Retorno Almoço', timestamp: new Date() },
+          editedRecord.exit && { type: 'exit', time: editedRecord.exit, label: 'Saída', timestamp: new Date() }
+        ].filter(Boolean) as TimeRecord[];
         // Converter data para YYYY-MM-DD
         const [day, month, year] = editedRecord.date.split('/');
         const dateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         await registroService.atualizarRegistro(user.uid, dateStr, records);
         setSuccess(true);
-      } catch (err) {
+      } catch {
         setError('Erro ao salvar alterações!');
       } finally {
         setSaving(false);
@@ -309,12 +309,12 @@ export default function ReportsScreen() {
   });
 
   // Obter configuração de jornada do usuário
-  const getWorkTimeConfig = (): WorkTimeConfig => {
+  const getWorkTimeConfig = useCallback((): WorkTimeConfig => {
     return TimeCalculationService.getWorkTimeConfig(userData);
-  };
+  }, [userData]);
 
   // Função para converter dados do Firebase para o formato da interface
-  const processDayRecord = (dayRecord: DayRecord): ProcessedTimeRecord => {
+  const processDayRecord = useCallback((dayRecord: DayRecord): ProcessedTimeRecord => {
     const records = dayRecord.records;
     const entry = records.find(r => r.type === 'entry')?.time || '';
     const lunchOut = records.find(r => r.type === 'lunchOut')?.time || '';
@@ -343,7 +343,7 @@ export default function ReportsScreen() {
       exit,
       total
     };
-  };
+  }, [getWorkTimeConfig]);
 
   // Carregar todos os registros uma vez
   useEffect(() => {
@@ -380,13 +380,13 @@ export default function ReportsScreen() {
     });
     
     setReports(filteredRecords);
-    
-    // Calcular estatísticas usando o novo serviço
-    const config = getWorkTimeConfig();
-    
-    // Buscar registros originais do período selecionado
-    const getMonthRecords = async () => {
+  }, [allReports, selectedMonth, selectedYear]);
+
+  // Calcular estatísticas quando mudar o período selecionado
+  useEffect(() => {
+    const calculateStats = async () => {
       try {
+        const config = getWorkTimeConfig();
         const monthRecords = await registroService.getRegistrosDoMes(selectedYear, selectedMonth);
         const monthlyStats = TimeCalculationService.calculateMonthlyStats(monthRecords, config);
         
@@ -400,8 +400,8 @@ export default function ReportsScreen() {
       }
     };
     
-    getMonthRecords();
-  }, [allReports, selectedMonth, selectedYear, userData]);
+    calculateStats();
+  }, [selectedMonth, selectedYear, getWorkTimeConfig]);
 
   // Função para agrupar registros por mês e dia
   const groupRecords = (records: ProcessedTimeRecord[]): MonthGroup[] => {

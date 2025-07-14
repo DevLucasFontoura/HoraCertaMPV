@@ -34,7 +34,7 @@ export default function Historico() {
         const registros: DayRecord[] = await registroService.getAllRegistros()
         
         // Converter para o formato da tabela
-        const dadosFormatados: z.infer<typeof historicoSchema>[] = registros.map((registro, index) => {
+        const dadosFormatados: z.infer<typeof historicoSchema>[] = registros.map((registro) => {
           const entrada = registro.records.find(r => r.type === 'entry')?.time
           const saidaAlmoco = registro.records.find(r => r.type === 'lunchOut')?.time
           const retornoAlmoco = registro.records.find(r => r.type === 'lunchReturn')?.time
@@ -65,7 +65,7 @@ export default function Historico() {
     }
 
     carregarHistorico()
-  }, [userData])
+  }, [])
 
   return (
     <div

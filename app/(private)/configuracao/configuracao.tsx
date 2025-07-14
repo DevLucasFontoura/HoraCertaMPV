@@ -1,26 +1,15 @@
 "use client";
 
 import { FaUser, FaBell, FaClock, FaCalendar, FaBook, FaQuestionCircle, FaHeadset, FaLock, FaInfoCircle, FaCog, FaHistory } from 'react-icons/fa';
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import BottomNav from '../../components/Menu/menu';
 import { useRouter } from 'next/navigation';
 import styles from './configuracao.module.css';
-import { motion } from 'framer-motion';
 import { CONSTANTES } from '../../common/constantes';
 import { AuthService } from '../../services/authService';
 import { useAuth } from '../../hooks/useAuth';
 import DeleteAccountModal from '../../components/PopUpConfirmacao/DeleteAccountModal';
 import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
-
-// Mock user settings type
-// interface UserSettings {
-//   notifications: boolean;
-//   emailReports: boolean;
-//   workSchedule: {
-//     workTime: number;
-//     lunchTime: number;
-//   };
-// }
 
 interface SettingOption {
   title: string;
@@ -35,30 +24,9 @@ export default function SettingsScreen() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-//   const [userSettings, setUserSettings] = useState<UserSettings>({
-//     notifications: false,
-//     emailReports: false,
-//     workSchedule: {
-//       workTime: 8,
-//       lunchTime: 1
-//     }
-//   });
 
-  // Mock user data loading
-//   useEffect(() => {
-//     // Simulate loading user settings from an API
-//     const mockUserSettings = {
-//       notifications: true,
-//       emailReports: true,
-//       workSchedule: {
-//         workTime: 8,
-//         lunchTime: 1
-//       }
-//     };
-//     // setUserSettings(mockUserSettings);
-//   }, []);
-
-  const settingsOptions = {
+  // Memoizar as opções de configuração para evitar recriações desnecessárias
+  const settingsOptions = useMemo(() => ({
     profile: [
       {
         title: CONSTANTES.TITULO_CONFIGURACAO_PERFIL,
@@ -127,22 +95,22 @@ export default function SettingsScreen() {
         onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_SOBRE)
       }
     ]
-  };
+  }), [router]);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       await logout();
       router.push(CONSTANTES.CAMINHO_CONFIGURACAO_SAIR);
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
     }
-  };
+  }, [logout, router]);
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = useCallback(() => {
     setShowDeleteModal(true);
-  };
+  }, []);
 
-  const handleConfirmDelete = async (password: string) => {
+  const handleConfirmDelete = useCallback(async (password: string) => {
     setIsDeleting(true);
     setDeleteError(null);
     try {
@@ -160,33 +128,30 @@ export default function SettingsScreen() {
       await logout();
       localStorage.clear();
       router.push('/');
-    } catch (error: any) {
-      if (error.code === 'auth/wrong-password') {
+    } catch (error: unknown) {
+      const firebaseError = error as { code?: string };
+      if (firebaseError.code === 'auth/wrong-password') {
         setDeleteError('Senha incorreta. Tente novamente.');
-      } else if (error.code === 'auth/too-many-requests') {
+      } else if (firebaseError.code === 'auth/too-many-requests') {
         setDeleteError('Muitas tentativas. Tente novamente mais tarde.');
-      } else if (error.code === 'auth/network-request-failed') {
+      } else if (firebaseError.code === 'auth/network-request-failed') {
         setDeleteError('Erro de rede. Verifique sua conexão.');
       } else {
         setDeleteError('Erro ao deletar conta. Faça login novamente e tente de novo.');
       }
       setIsDeleting(false);
     }
-  };
+  }, [user, logout, router]);
 
-  const handleCloseDeleteModal = () => {
+  const handleCloseDeleteModal = useCallback(() => {
     if (!isDeleting) {
       setShowDeleteModal(false);
       setDeleteError(null);
     }
-  };
+  }, [isDeleting]);
 
-  const renderSection = (title: string, icon: React.ReactNode, options: SettingOption[]) => (
-    <motion.section 
-      className={styles.section}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-    >
+  const renderSection = useCallback((title: string, icon: React.ReactNode, options: SettingOption[]) => (
+    <section className={styles.section}>
       <div className={styles.sectionHeader}>
         <div className={styles.sectionIcon}>{icon}</div>
         <h2 className={styles.sectionTitle}>{title}</h2>
@@ -206,8 +171,8 @@ export default function SettingsScreen() {
           </div>
         </button>
       ))}
-    </motion.section>
-  );
+    </section>
+  ), []);
 
   return (
     <div className={styles.containerWrapper}>
@@ -216,16 +181,12 @@ export default function SettingsScreen() {
       </div>
       
       <div className={styles.container}>
-        <motion.header 
-          className={styles.header}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+        <header className={styles.header}>
           <div className={styles.headerContent}>
             <h1 className={styles.title}>{CONSTANTES.TITULO_CONFIGURACAO}</h1>
             <p className={styles.subtitle}>{CONSTANTES.SUBTITULO_CONFIGURACAO}</p>
           </div>
-        </motion.header>
+        </header>
 
         <div className={styles.content}>
           {renderSection('Perfil', <FaUser size={24} />, settingsOptions.profile)}
@@ -233,11 +194,7 @@ export default function SettingsScreen() {
           {renderSection('Ajuda', <FaQuestionCircle size={24} />, settingsOptions.help)}
           {renderSection('Sobre', <FaInfoCircle size={24} />, settingsOptions.about)}
 
-          <motion.section 
-            className={styles.section}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <section className={styles.section}>
             <div className={styles.dangerZone}>
               <h3 className={styles.dangerTitle}>{CONSTANTES.CONFIGURACAO_ZONA_DE_PERIGO}</h3>
               <p className={styles.dangerDescription}>
@@ -256,7 +213,7 @@ export default function SettingsScreen() {
                 {CONSTANTES.CONFIGURACAO_ZONA_DE_PERIGO_BOTAO}
               </button>
             </div>
-          </motion.section>
+          </section>
 
           <button 
             className={`${styles.outlineButton} ${styles.logoutButton}`}

@@ -14,10 +14,8 @@ import {
   VisibilityState,
 } from "@tanstack/react-table"
 import {
-  IconChevronDown,
   IconChevronLeft,
   IconChevronRight,
-  IconChevronUp,
   IconChevronsLeft,
   IconChevronsRight,
   IconLayoutColumns,
@@ -26,7 +24,6 @@ import {
 import { z } from "zod"
 
 import { useIsMobile } from "../../hooks/use-mobile"
-import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
 import {
@@ -45,8 +42,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
+
 import {
   Select,
   SelectContent,
@@ -83,7 +79,7 @@ export function HistoricoTable({
   showHeaderControls?: boolean
   pageSize?: number
 }) {
-  const [data, setData] = React.useState(() => initialData)
+
   const [selectedYear, setSelectedYear] = React.useState<number>(new Date().getFullYear())
   const [selectedMonth, setSelectedMonth] = React.useState<number | ''>('')
   const [rowSelection, setRowSelection] = React.useState({})
@@ -99,10 +95,7 @@ export function HistoricoTable({
   })
   const isMobile = useIsMobile()
 
-  // Atualizar dados quando initialData mudar
-  React.useEffect(() => {
-    setData(initialData)
-  }, [initialData])
+
 
   // Obter anos únicos dos dados
   const getUniqueYears = () => {

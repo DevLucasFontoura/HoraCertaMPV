@@ -215,7 +215,7 @@ class RegistroService {
   }
 
   // Atualizar registros de um dia específico
-  async atualizarRegistro(userId: string, date: string, records: any[]) {
+  async atualizarRegistro(userId: string, date: string, records: TimeRecord[]) {
     try {
       const docId = this.getDocId(userId, date);
       const docRef = doc(db, 'registros', docId);

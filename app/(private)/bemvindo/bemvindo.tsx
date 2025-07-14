@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import BottomNav from '../../components/Menu/menu';
 import styles from './bemvindo.module.css';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
-import { registroService, DayRecord, TimeRecord } from '../../services/registroService';
+import { registroService } from '../../services/registroService';
 import { TimeCalculationService, WorkTimeConfig } from '../../services/timeCalculationService';
 
 interface TodayStats {
@@ -34,9 +34,9 @@ const BemVindo = () => {
   };
 
   // Obter configuração de jornada do usuário
-  const getWorkTimeConfig = (): WorkTimeConfig => {
+  const getWorkTimeConfig = useCallback((): WorkTimeConfig => {
     return TimeCalculationService.getWorkTimeConfig(userData);
-  };
+  }, [userData]);
 
   useEffect(() => {
     const fetchStats = async () => {

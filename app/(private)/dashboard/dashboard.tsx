@@ -5,7 +5,7 @@ import HabitTracker from '../../components/HabitTracker/HabitTracker';
 import LineChart from '../../components/Graficos/graficoDeLinha';
 import { CONSTANTES } from '../../common/constantes';
 import BottomNav from '../../components/Menu/menu';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styles from './dashboard.module.css';
 import { motion } from 'framer-motion';
 import { registroService, DayRecord, TimeRecord } from '../../services/registroService';
@@ -59,12 +59,12 @@ const Dashboard = () => {
   });
 
   // Obter configuração de jornada do usuário
-  const getWorkTimeConfig = (): WorkTimeConfig => {
+  const getWorkTimeConfig = useCallback((): WorkTimeConfig => {
     return TimeCalculationService.getWorkTimeConfig(userData);
-  };
+  }, [userData]);
 
   // Função para calcular status atual do dia
-  const calculateTodayStatus = (records: TimeRecord[]): TodayStatus => {
+  const calculateTodayStatus = useCallback((records: TimeRecord[]): TodayStatus => {
     const types = records.map(r => r.type);
     const lastRecord = records[records.length - 1];
     const config = getWorkTimeConfig();
@@ -105,10 +105,10 @@ const Dashboard = () => {
       lastPunch: lastRecord ? lastRecord.time : '',
       isOnTime
     };
-  };
+  }, [getWorkTimeConfig]);
 
   // Função para calcular estatísticas semanais
-  const calculateWeeklyStats = (weekRecords: DayRecord[]): WeeklyStats => {
+  const calculateWeeklyStats = useCallback((weekRecords: DayRecord[]): WeeklyStats => {
     const config = getWorkTimeConfig();
     const monthlyStats = TimeCalculationService.calculateMonthlyStats(weekRecords, config);
     
@@ -118,10 +118,10 @@ const Dashboard = () => {
       workedDays: monthlyStats.completeDays,
       overtimeHours: monthlyStats.totalOvertimeHours
     };
-  };
+  }, [getWorkTimeConfig]);
 
   // Função para gerar dados dos gráficos
-  const generateChartData = (records: DayRecord[]) => {
+  const generateChartData = useCallback((records: DayRecord[]) => {
     const config = getWorkTimeConfig();
     
     // Dados semanais (últimos 7 dias)
@@ -147,7 +147,7 @@ const Dashboard = () => {
       weeklyHours: { data: weeklyData, labels: weeklyLabels },
       punchHistory: punchHistory
     };
-  };
+  }, [getWorkTimeConfig]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {

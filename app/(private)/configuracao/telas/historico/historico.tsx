@@ -32,6 +32,7 @@ export default function Historico() {
         
         // Buscar todos os registros
         const registros: DayRecord[] = await registroService.getAllRegistros()
+        console.log('Registros carregados do Firebase:', registros.length)
         
         // Converter para o formato da tabela
         const dadosFormatados: z.infer<typeof historicoSchema>[] = registros.map((registro) => {
@@ -44,9 +45,13 @@ export default function Historico() {
           const config = TimeCalculationService.getWorkTimeConfig(userData)
           const workTime = TimeCalculationService.calculateWorkTime(registro.records, config)
           
+          // Converter data do formato YYYY-MM-DD para DD/MM/YYYY
+          const [year, month, day] = registro.date.split('-')
+          const dataFormatada = `${day}/${month}/${year}`
+          
           return {
             id: `${registro.userId}_${registro.date}`,
-            data: registro.date,
+            data: dataFormatada,
             entrada,
             saidaAlmoco,
             retornoAlmoco,
@@ -55,6 +60,8 @@ export default function Historico() {
           }
         })
         
+        console.log('Dados formatados para a tabela:', dadosFormatados.length)
+        console.log('Primeiro registro:', dadosFormatados[0])
         setHistoricoData(dadosFormatados)
       } catch (error) {
         console.error('Erro ao carregar histórico:', error)

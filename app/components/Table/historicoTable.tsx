@@ -95,25 +95,59 @@ export function HistoricoTable({
   })
   const isMobile = useIsMobile()
 
+  // Atualizar ano selecionado quando os dados mudarem
+  React.useEffect(() => {
+    const years = getUniqueYears()
+    
+    if (years.length > 0 && !years.includes(selectedYear)) {
+      setSelectedYear(years[0])
+    }
+  }, [initialData])
+
 
 
   // Obter anos únicos dos dados
   const getUniqueYears = () => {
     const years = new Set<number>()
+    
     initialData.forEach(record => {
-      const year = new Date(record.data).getFullYear()
-      years.add(year)
+      try {
+        // Converter data do formato DD/MM/YYYY para Date
+        const [day, month, year] = record.data.split('/')
+        const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+        
+        if (!isNaN(date.getTime())) {
+          const yearValue = date.getFullYear()
+          if (!isNaN(yearValue)) {
+            years.add(yearValue)
+          }
+        }
+      } catch (error) {
+        console.warn('Erro ao processar data:', record.data, error)
+      }
     })
-    return Array.from(years).sort((a, b) => b - a) // Ordenar decrescente
+    
+    const result = Array.from(years).sort((a, b) => b - a) // Ordenar decrescente
+    return result
   }
 
   // Obter meses únicos para o ano selecionado
   const getUniqueMonths = () => {
     const months = new Set<number>()
     initialData.forEach(record => {
-      const recordDate = new Date(record.data)
-      if (recordDate.getFullYear() === selectedYear) {
-        months.add(recordDate.getMonth() + 1) // +1 porque getMonth() retorna 0-11
+      try {
+        // Converter data do formato DD/MM/YYYY para Date
+        const [day, month, year] = record.data.split('/')
+        const recordDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+        
+        if (!isNaN(recordDate.getTime()) && recordDate.getFullYear() === selectedYear) {
+          const monthValue = recordDate.getMonth() + 1 // +1 porque getMonth() retorna 0-11
+          if (!isNaN(monthValue)) {
+            months.add(monthValue)
+          }
+        }
+      } catch (error) {
+        console.warn('Erro ao processar data:', record.data, error)
       }
     })
     return Array.from(months).sort((a, b) => a - b) // Ordenar crescente
@@ -121,17 +155,35 @@ export function HistoricoTable({
 
   // Filtrar dados baseado no ano e mês selecionados
   const getFilteredData = () => {
-    return initialData.filter(record => {
-      const recordDate = new Date(record.data)
-      const recordYear = recordDate.getFullYear()
-      const recordMonth = recordDate.getMonth() + 1
+    const filtered = initialData.filter(record => {
+      try {
+        // Converter data do formato DD/MM/YYYY para Date
+        const [day, month, year] = record.data.split('/')
+        const recordDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+        
+        if (isNaN(recordDate.getTime())) {
+          return false
+        }
+        
+        const recordYear = recordDate.getFullYear()
+        const recordMonth = recordDate.getMonth() + 1
 
-      if (recordYear !== selectedYear) return false
-      
-      if (selectedMonth !== '' && recordMonth !== selectedMonth) return false
-      
-      return true
+        if (isNaN(recordYear) || recordYear !== selectedYear) {
+          return false
+        }
+        
+        if (selectedMonth !== '' && (isNaN(recordMonth) || recordMonth !== selectedMonth)) {
+          return false
+        }
+        
+        return true
+      } catch (error) {
+        console.warn('Erro ao filtrar data:', record.data, error)
+        return false
+      }
     })
+    
+    return filtered
   }
 
   const filteredData = getFilteredData()
@@ -149,15 +201,17 @@ export function HistoricoTable({
 
   const handleDownloadXLSX = () => {
     // Criar dados para download
-    const downloadData = filteredData.map((record, index) => ({
-      'Item': index + 1,
-      'Data': new Date(record.data).toLocaleDateString('pt-BR'),
-      'Entrada': record.entrada || '-',
-      'Saída Almoço': record.saidaAlmoco || '-',
-      'Retorno Almoço': record.retornoAlmoco || '-',
-      'Saída': record.saida || '-',
-      'Total Horas': record.totalHoras ? `${record.totalHoras.toFixed(2)}h` : '-'
-    }))
+        const downloadData = filteredData.map((record, index) => {
+      return {
+        'Item': index + 1,
+        'Data': record.data, // Usar a data já formatada
+        'Entrada': record.entrada || '-',
+        'Saída Almoço': record.saidaAlmoco || '-',
+        'Retorno Almoço': record.retornoAlmoco || '-',
+        'Saída': record.saida || '-',
+        'Total Horas': record.totalHoras ? `${record.totalHoras.toFixed(2)}h` : '-'
+      }
+    })
 
     // Converter para CSV (simples, sem biblioteca externa)
     const headers = Object.keys(downloadData[0])
@@ -220,15 +274,13 @@ export function HistoricoTable({
     {
       accessorKey: "data",
       header: "Data",
-      cell: ({ row }) => (
-        <div className="font-medium">
-          {new Date(row.original.data).toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          })}
-        </div>
-      ),
+      cell: ({ row }) => {
+        return (
+          <div className="font-medium">
+            {row.original.data}
+          </div>
+        )
+      },
       enableHiding: false,
     },
     {
@@ -314,6 +366,13 @@ export function HistoricoTable({
 
   const years = getUniqueYears()
   const months = getUniqueMonths()
+  
+  // Debug: verificar se há dados
+  if (initialData.length === 0) {
+    console.log('Nenhum dado recebido na tabela')
+  } else {
+    console.log('Dados recebidos:', initialData.length, 'registros, anos:', years, 'ano selecionado:', selectedYear)
+  }
 
   if (isMobile) {
     return (
@@ -326,11 +385,17 @@ export function HistoricoTable({
                   <SelectValue placeholder="Ano" />
                 </SelectTrigger>
                 <SelectContent>
-                  {years.map((year) => (
-                    <SelectItem key={year} value={year.toString()}>
-                      {year}
+                  {years.length > 0 ? (
+                    years.map((year) => (
+                      <SelectItem key={year} value={year.toString()}>
+                        {year}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value={selectedYear.toString()}>
+                      {selectedYear}
                     </SelectItem>
-                  ))}
+                  )}
                 </SelectContent>
               </Select>
               
@@ -390,7 +455,7 @@ export function HistoricoTable({
                       Item {row.index + 1}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {new Date(row.original.data).toLocaleDateString('pt-BR')}
+                      {row.original.data}
                     </p>
                   </div>
                   <Button variant="ghost" size="sm">
@@ -410,7 +475,7 @@ export function HistoricoTable({
                     <div>
                       <p className="text-sm font-medium">Data</p>
                       <p className="text-sm text-muted-foreground">
-                        {new Date(row.original.data).toLocaleDateString('pt-BR')}
+                        {row.original.data}
                       </p>
                     </div>
                     <div>
@@ -493,11 +558,17 @@ export function HistoricoTable({
                 <SelectValue placeholder="Ano" />
               </SelectTrigger>
               <SelectContent>
-                {years.map((year) => (
-                  <SelectItem key={year} value={year.toString()}>
-                    {year}
+                {years.length > 0 ? (
+                  years.map((year) => (
+                    <SelectItem key={year} value={year.toString()}>
+                      {year}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value={selectedYear.toString()}>
+                    {selectedYear}
                   </SelectItem>
-                ))}
+                )}
               </SelectContent>
             </Select>
             

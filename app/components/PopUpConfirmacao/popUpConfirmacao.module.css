@@ -55,3 +55,46 @@
 .confirmButton:hover {
     background-color: #1565c0 !important;
 }
+
+/* Estilos específicos para o modal de exclusão */
+.dangerConfirmButton {
+    background-color: #dc3545 !important;
+    color: white !important;
+    padding: 8px 24px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+}
+
+.dangerConfirmButton:hover {
+    background-color: #c82333 !important;
+}
+
+.dangerConfirmButton:disabled {
+    background-color: #6c757d !important;
+    opacity: 0.6 !important;
+}
+
+.dangerIcon {
+    color: #dc3545;
+    margin-bottom: 16px;
+}
+
+.dangerText {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-align: center;
+    margin: 16px 0;
+}
+
+.dangerList {
+    margin: 16px 0;
+    padding-left: 20px;
+    color: #666666;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.dangerList li {
+    margin-bottom: 8px;
+}

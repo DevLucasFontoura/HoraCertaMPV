@@ -213,6 +213,21 @@ class RegistroService {
     
     return (saidaTime - entradaTime) / (1000 * 60 * 60); // Converter para horas
   }
+
+  // Atualizar registros de um dia específico
+  async atualizarRegistro(userId: string, date: string, records: any[]) {
+    try {
+      const docId = this.getDocId(userId, date);
+      const docRef = doc(db, 'registros', docId);
+      await setDoc(docRef, {
+        records,
+        updatedAt: Timestamp.now()
+      }, { merge: true });
+    } catch (error) {
+      console.error('Erro ao atualizar registro:', error);
+      throw error;
+    }
+  }
 }
 
 export const registroService = new RegistroService(); 

@@ -58,11 +58,39 @@ const StatsCard = ({ label, value, icon }: { label: string; value: string; icon:
 const TimeRecordItem = ({ record }: TimeRecordItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedRecord, setEditedRecord] = useState(record);
+  const { user, userData } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-  const handleEdit = () => {
+  const handleEdit = async () => {
     if (isEditing) {
-      // Aqui você implementaria a lógica para salvar as alterações
-      console.log('Salvando alterações:', editedRecord);
+      setSaving(true);
+      setError(null);
+      setSuccess(false);
+      try {
+        if (!user || !userData) {
+          setError('Usuário não autenticado!');
+          setSaving(false);
+          return;
+        }
+        // Montar array de records no formato esperado
+        const records = [
+          editedRecord.entry && { type: 'entry', time: editedRecord.entry, label: 'Entrada' },
+          editedRecord.lunchOut && { type: 'lunchOut', time: editedRecord.lunchOut, label: 'Saída Almoço' },
+          editedRecord.lunchReturn && { type: 'lunchReturn', time: editedRecord.lunchReturn, label: 'Retorno Almoço' },
+          editedRecord.exit && { type: 'exit', time: editedRecord.exit, label: 'Saída' }
+        ].filter(Boolean);
+        // Converter data para YYYY-MM-DD
+        const [day, month, year] = editedRecord.date.split('/');
+        const dateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        await registroService.atualizarRegistro(user.uid, dateStr, records);
+        setSuccess(true);
+      } catch (err) {
+        setError('Erro ao salvar alterações!');
+      } finally {
+        setSaving(false);
+      }
     }
     setIsEditing(!isEditing);
   };
@@ -73,6 +101,9 @@ const TimeRecordItem = ({ record }: TimeRecordItemProps) => {
       [field]: value
     }));
   };
+
+  const isEmpty =
+    !record.entry && !record.lunchOut && !record.lunchReturn && !record.exit;
 
   return (
     <motion.div 
@@ -141,9 +172,20 @@ const TimeRecordItem = ({ record }: TimeRecordItemProps) => {
         <span className={styles.recordValue}>{record.total || '--:--'}</span>
       </div>
       <div className={styles.dangerZone}>
-        <button onClick={handleEdit} className={styles.editButton}>
-          {isEditing ? 'Salvar' : 'Editar'}
+        <button
+          onClick={handleEdit}
+          className={styles.editButton}
+          disabled={saving || isEmpty}
+        >
+          {isEditing ? (saving ? 'Salvando...' : 'Salvar') : 'Editar'}
         </button>
+        {isEmpty && (
+          <span className={styles.infoText}>
+            Só é possível editar registros já salvos.
+          </span>
+        )}
+        {error && <span className={styles.errorText}>{error}</span>}
+        {success && <span className={styles.successText}>Salvo!</span>}
       </div>
     </motion.div>
   );
@@ -366,7 +408,9 @@ export default function ReportsScreen() {
     if (!records.length) return [];
     
     const groups = records.reduce((acc: { [key: string]: { [key: string]: ProcessedTimeRecord[] } }, record) => {
-      const date = new Date(record.date.split('/').reverse().join('-'));
+      // Corrigido: criar Date usando ano, mês, dia para evitar problemas de fuso
+      const [day, month, year] = record.date.split('/');
+      const date = new Date(Number(year), Number(month) - 1, Number(day));
       const monthKey = date.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
       const dayKey = date.toLocaleString('pt-BR', { day: 'numeric', weekday: 'long' });
       

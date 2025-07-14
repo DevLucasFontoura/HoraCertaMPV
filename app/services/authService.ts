@@ -2,12 +2,18 @@ import {
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword,
   signOut,
-  UserCredential 
+  UserCredential,
+  deleteUser
 } from 'firebase/auth';
 import { 
   doc, 
   setDoc, 
-  getDoc
+  getDoc,
+  deleteDoc,
+  collection,
+  getDocs,
+  query,
+  where
 } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 
@@ -91,6 +97,58 @@ export class AuthService {
       }, { merge: true });
     } catch (error) {
       console.error('Erro ao atualizar dados do usuário:', error);
+      throw error;
+    }
+  }
+
+  // Deletar todos os registros do usuário na coleção 'registros'
+  static async deleteAllUserRegistros(uid: string): Promise<void> {
+    try {
+      const registrosRef = collection(db, 'registros');
+      const q = query(registrosRef, where('userId', '==', uid));
+      const querySnapshot = await getDocs(q);
+      const batchDeletes: Promise<void>[] = [];
+      querySnapshot.forEach((docSnap) => {
+        batchDeletes.push(deleteDoc(docSnap.ref));
+      });
+      await Promise.all(batchDeletes);
+    } catch (error) {
+      console.error('Erro ao deletar registros do usuário:', error);
+      throw error;
+    }
+  }
+
+  // Deletar conta do usuário
+  static async deleteUserAccount(): Promise<void> {
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        throw new Error('Nenhum usuário autenticado');
+      }
+      const uid = user.uid; // Salvar o uid antes de deletar
+
+      console.log('[DeleteAccount] Tentando deletar usuário do Authentication:', uid);
+      await deleteUser(user);
+      console.log('[DeleteAccount] Usuário do Authentication deletado com sucesso:', uid);
+
+      try {
+        console.log('[DeleteAccount] Tentando deletar todos os registros do usuário:', uid);
+        await AuthService.deleteAllUserRegistros(uid);
+        console.log('[DeleteAccount] Registros do usuário deletados com sucesso:', uid);
+      } catch (regError) {
+        console.error('[DeleteAccount] Erro ao deletar registros do usuário:', regError);
+      }
+
+      try {
+        console.log('[DeleteAccount] Tentando deletar documento do usuário na coleção users:', uid);
+        const userDocRef = doc(db, 'users', uid);
+        await deleteDoc(userDocRef);
+        console.log('[DeleteAccount] Documento do usuário deletado com sucesso:', uid);
+      } catch (userDocError) {
+        console.error('[DeleteAccount] Erro ao deletar documento do usuário:', userDocError);
+      }
+    } catch (error) {
+      console.error('Erro ao deletar conta do usuário:', error);
       throw error;
     }
   }

@@ -1,12 +1,16 @@
 "use client";
 
 import { FaUser, FaBell, FaClock, FaCalendar, FaBook, FaQuestionCircle, FaHeadset, FaLock, FaInfoCircle, FaCog } from 'react-icons/fa';
-// import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import BottomNav from '../../components/Menu/menu';
 import { useRouter } from 'next/navigation';
 import styles from './configuracao.module.css';
 import { motion } from 'framer-motion';
 import { CONSTANTES } from '../../common/constantes';
+import { AuthService } from '../../services/authService';
+import { useAuth } from '../../hooks/useAuth';
+import DeleteAccountModal from '../../components/PopUpConfirmacao/DeleteAccountModal';
+import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 
 // Mock user settings type
 // interface UserSettings {
@@ -27,6 +31,10 @@ interface SettingOption {
 
 export default function SettingsScreen() {
   const router = useRouter();
+  const { user, logout } = useAuth();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 //   const [userSettings, setUserSettings] = useState<UserSettings>({
 //     notifications: false,
 //     emailReports: false,
@@ -115,14 +123,56 @@ export default function SettingsScreen() {
     ]
   };
 
-  const handleLogout = () => {
-    // Mock logout functionality
-    router.push(CONSTANTES.CAMINHO_CONFIGURACAO_SAIR);
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push(CONSTANTES.CAMINHO_CONFIGURACAO_SAIR);
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
   };
 
   const handleDeleteAccount = () => {
-    // Mock delete account functionality
-    console.log('Delete account clicked');
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async (password: string) => {
+    setIsDeleting(true);
+    setDeleteError(null);
+    try {
+      if (!user || !user.email) {
+        setDeleteError('Usuário não autenticado. Faça login novamente.');
+        setIsDeleting(false);
+        return;
+      }
+      // Reautenticar usuário
+      const credential = EmailAuthProvider.credential(user.email, password);
+      await reauthenticateWithCredential(user, credential);
+      // Excluir conta
+      await AuthService.deleteUserAccount();
+      // Fazer logout explicitamente
+      await logout();
+      localStorage.clear();
+      router.push('/');
+    } catch (error: any) {
+      if (error.code === 'auth/wrong-password') {
+        setDeleteError('Senha incorreta. Tente novamente.');
+      } else if (error.code === 'auth/too-many-requests') {
+        setDeleteError('Muitas tentativas. Tente novamente mais tarde.');
+      } else if (error.code === 'auth/network-request-failed') {
+        setDeleteError('Erro de rede. Verifique sua conexão.');
+      } else {
+        setDeleteError('Erro ao deletar conta. Faça login novamente e tente de novo.');
+      }
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCloseDeleteModal = () => {
+    if (!isDeleting) {
+      setShowDeleteModal(false);
+      setDeleteError(null);
+    }
   };
 
   const renderSection = (title: string, icon: React.ReactNode, options: SettingOption[]) => (
@@ -187,9 +237,15 @@ export default function SettingsScreen() {
               <p className={styles.dangerDescription}>
                 {CONSTANTES.CONFIGURACAO_ZONA_DE_PERIGO_DESCRICAO}
               </p>
+              {deleteError && (
+                <p className={styles.errorMessage} style={{ color: 'red', marginBottom: '10px' }}>
+                  {deleteError}
+                </p>
+              )}
               <button 
                 className={styles.dangerButton} 
                 onClick={handleDeleteAccount}
+                disabled={isDeleting}
               >
                 {CONSTANTES.CONFIGURACAO_ZONA_DE_PERIGO_BOTAO}
               </button>
@@ -206,6 +262,14 @@ export default function SettingsScreen() {
       </div>
 
       <BottomNav />
+
+      <DeleteAccountModal
+        open={showDeleteModal}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+        isDeleting={isDeleting}
+        error={deleteError}
+      />
     </div>
   );
 }

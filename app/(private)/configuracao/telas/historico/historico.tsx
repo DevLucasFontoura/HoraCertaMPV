@@ -2,23 +2,27 @@
 
 import { useState, useEffect } from 'react'
 import { CircularProgress, Alert } from '@mui/material'
-import { HistoricoTable, HistoricoRecord } from '../../../../components/Table/historicoTable'
+import { HistoricoTable, historicoSchema } from '../../../../components/Table/historicoTable'
+import { z } from 'zod'
 import { registroService, DayRecord } from '../../../../services/registroService'
 import { TimeCalculationService } from '../../../../services/timeCalculationService'
 import { useAuth } from '../../../../hooks/useAuth'
+import { useIsMobile } from '../../../../hooks/use-mobile'
 import { useRouter } from 'next/navigation'
 import BottomNav from '../../../../components/Menu/menu'
 import { CONSTANTES } from '../../../../common/constantes'
 import { FaHistory, FaArrowLeft } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 import styles from './historico.module.css'
+import mobileStyles from './historicoMobile.module.css'
 
 export default function Historico() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [historicoData, setHistoricoData] = useState<HistoricoRecord[]>([])
+  const [historicoData, setHistoricoData] = useState<z.infer<typeof historicoSchema>[]>([])
   const { userData } = useAuth()
   const router = useRouter()
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const carregarHistorico = async () => {
@@ -30,7 +34,7 @@ export default function Historico() {
         const registros: DayRecord[] = await registroService.getAllRegistros()
         
         // Converter para o formato da tabela
-        const dadosFormatados: HistoricoRecord[] = registros.map((registro, index) => {
+        const dadosFormatados: z.infer<typeof historicoSchema>[] = registros.map((registro, index) => {
           const entrada = registro.records.find(r => r.type === 'entry')?.time
           const saidaAlmoco = registro.records.find(r => r.type === 'lunchOut')?.time
           const retornoAlmoco = registro.records.find(r => r.type === 'lunchReturn')?.time
@@ -64,32 +68,32 @@ export default function Historico() {
   }, [userData])
 
   return (
-    <div className={styles.containerWrapper}>
-      <div className={styles.backgroundIcon}>
+    <div className={`${styles.containerWrapper} ${isMobile ? mobileStyles.containerWrapper : ''}`}>
+      <div className={`${styles.backgroundIcon} ${isMobile ? mobileStyles.backgroundIcon : ''}`}>
         <FaHistory size={200} color="rgba(0,0,0,0.10)" />
       </div>
       
       <motion.div 
-        className={styles.container}
+        className={`${styles.container} ${isMobile ? mobileStyles.container : ''}`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className={styles.header}>
+        <div className={`${styles.header} ${isMobile ? mobileStyles.header : ''}`}>
           <button 
-            className={styles.backButton}
+            className={`${styles.backButton} ${isMobile ? mobileStyles.backButton : ''}`}
             onClick={() => router.push(CONSTANTES.ROUTE_CONFIGURACAO)}
           >
             <FaArrowLeft size={20} />
           </button>
           <div>
-            <h1 className={styles.title}>{CONSTANTES.TITULO_CONFIGURACAO_HISTORICO}</h1>
-            <p className={styles.subtitle}>{CONSTANTES.SUBTITULO_CONFIGURACAO_HISTORICO}</p>
+            <h1 className={`${styles.title} ${isMobile ? mobileStyles.title : ''}`}>{CONSTANTES.TITULO_CONFIGURACAO_HISTORICO}</h1>
+            <p className={`${styles.subtitle} ${isMobile ? mobileStyles.subtitle : ''}`}>{CONSTANTES.SUBTITULO_CONFIGURACAO_HISTORICO}</p>
           </div>
         </div>
 
-        <section className={styles.section}>
+        <section className={`${styles.section} ${isMobile ? mobileStyles.section : ''}`}>
           {loading ? (
-            <div className={styles.loadingContainer}>
+            <div className={`${styles.loadingContainer} ${isMobile ? mobileStyles.loadingContainer : ''}`}>
               <CircularProgress />
             </div>
           ) : error ? (
@@ -97,7 +101,13 @@ export default function Historico() {
               {error}
             </Alert>
           ) : (
-            <div className={styles.tableContainer}>
+            <div 
+              className={`${styles.tableContainer} ${isMobile ? mobileStyles.tableContainer : ''}`}
+              style={{
+                overflowX: 'auto',
+                WebkitOverflowScrolling: 'touch'
+              }}
+            >
               <HistoricoTable 
                 data={historicoData}
                 showHeaderControls={true}

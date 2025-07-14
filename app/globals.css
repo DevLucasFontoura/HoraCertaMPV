@@ -71,3 +71,55 @@ h1, h2, h3, h4, h5, h6 {
 html {
   scroll-behavior: smooth;
 }
+
+/* Regras globais para mobile - corrigir drawer e dropdowns */
+@media (max-width: 768px) {
+  /* Corrige posicionamento do drawer */
+  [data-radix-popper-content-wrapper] {
+    bottom: 80px !important;
+    max-height: calc(100vh - 120px) !important;
+  }
+
+  /* Corrige dropdown de colunas */
+  [role="menu"] {
+    right: 8px !important;
+    left: auto !important;
+    max-width: calc(100vw - 16px) !important;
+  }
+
+  /* Força z-index menor para drawer */
+  [data-slot="drawer-content"] {
+    bottom: 100px !important;
+    max-height: calc(100vh - 140px) !important;
+  }
+
+  [data-slot="drawer-overlay"] {
+    z-index: 40 !important;
+  }
+
+  /* Força containers de filtros a ficarem em coluna */
+  div[class*="space-y-4"] > div:first-child {
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+  }
+
+  /* Força o botão de colunas a ficar alinhado à direita */
+  div[class*="space-y-4"] > div:first-child > div:last-child {
+    align-self: flex-end !important;
+  }
+
+  [class*="section"] {
+    padding: 16px !important;
+    box-sizing: border-box !important;
+  }
+  [class*="section"] > div {
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+  }
+  [class*="section"] > .tableContainer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

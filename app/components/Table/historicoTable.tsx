@@ -59,6 +59,7 @@ import {
   TableRow,
 } from "../ui/table"
 import { cn } from "@/lib/utils"
+import { TimeCalculationService } from "../../services/timeCalculationService"
 
 export const historicoSchema = z.object({
   id: z.string(),
@@ -75,11 +76,13 @@ export function HistoricoTable({
   showHeaderControls = true,
   pageSize = 10,
   onRowClick,
+  workConfig,
 }: {
   data: z.infer<typeof historicoSchema>[]
   showHeaderControls?: boolean
   pageSize?: number
   onRowClick?: (row: z.infer<typeof historicoSchema>) => void
+  workConfig?: { dailyWorkHours: number; lunchBreakHours: number }
 }) {
 
   const [selectedYear, setSelectedYear] = React.useState<number>(new Date().getFullYear())
@@ -349,7 +352,7 @@ export function HistoricoTable({
       cell: ({ row }) => {
         if (!row.original.totalHoras) return <div className="font-medium">-</div>;
         
-        const config = { dailyWorkHours: 8, lunchBreakHours: 1 }; // Configuração padrão
+        const config = workConfig || { dailyWorkHours: 8, lunchBreakHours: 1 }; // Usar configuração do usuário ou padrão
         const expectedHours = config.dailyWorkHours;
         const workedHours = row.original.totalHoras;
         const balance = workedHours - expectedHours;
@@ -358,9 +361,12 @@ export function HistoricoTable({
         const colorClass = isPositive ? "text-green-600" : "text-red-600";
         const sign = isPositive ? "+" : "";
         
+        // Usar o método de formatação do TimeCalculationService
+        const formattedBalance = TimeCalculationService.formatBankHours(balance);
+        
         return (
           <div className={`font-medium ${colorClass}`}>
-            {sign}{balance.toFixed(2)}h
+            {formattedBalance}
           </div>
         );
       },

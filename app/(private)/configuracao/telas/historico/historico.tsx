@@ -314,6 +314,7 @@ export default function Historico() {
                   showHeaderControls={true}
                   pageSize={31}
                   onRowClick={preencherFormularioComLinha}
+                  workConfig={workConfig}
                 />
               </div>
             )}

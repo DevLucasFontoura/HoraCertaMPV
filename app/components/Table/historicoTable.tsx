@@ -144,17 +144,17 @@ export function HistoricoTable({
 
   // Memoizar dados filtrados
   const filteredData = React.useMemo(() => {
-    // Se não há mês selecionado (Todos os meses), mostrar todos os registros do ano
-    if (selectedMonth === '') {
-      return initialData.filter(record => {
-        try {
-          const [day, month, year] = record.data.split('/')
-          return parseInt(year) === selectedYear
-        } catch (error) {
-          return false
-        }
-      })
-    }
+          // Se não há mês selecionado (Todos os meses), mostrar todos os registros do ano
+      if (selectedMonth === '') {
+        return initialData.filter(record => {
+          try {
+            const [, , year] = record.data.split('/')
+            return parseInt(year) === selectedYear
+          } catch {
+            return false
+          }
+        })
+      }
 
     // Criar um mapa para busca mais eficiente
     const dataMap = new Map()
@@ -163,7 +163,7 @@ export function HistoricoTable({
         const [day, month, year] = record.data.split('/')
         const key = `${day}-${month}-${year}`
         dataMap.set(key, record)
-      } catch (error) {
+      } catch {
         // Ignorar registros com data inválida
       }
     })
@@ -292,15 +292,15 @@ export function HistoricoTable({
       header: "Dia da Semana",
       cell: ({ row }) => {
         try {
-          const [day, month, year] = row.original.data.split('/')
-          const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+          const [, month, year] = row.original.data.split('/')
+          const date = new Date(parseInt(year), parseInt(month) - 1, 1)
           const dayOfWeek = date.toLocaleDateString('pt-BR', { weekday: 'short' })
           return (
             <div className="font-medium">
               {dayOfWeek}
             </div>
           )
-        } catch (error) {
+        } catch {
           return (
             <div className="font-medium">
               -
@@ -359,7 +359,6 @@ export function HistoricoTable({
         
         const isPositive = balance >= 0;
         const colorClass = isPositive ? "text-green-600" : "text-red-600";
-        const sign = isPositive ? "+" : "";
         
         // Usar o método de formatação do TimeCalculationService
         const formattedBalance = TimeCalculationService.formatBankHours(balance);
@@ -403,17 +402,17 @@ export function HistoricoTable({
     row.entrada || row.saidaAlmoco || row.retornoAlmoco || row.saida
   )
   
-  // Verificar se há dados em outros meses
-  const dadosOutrosMeses = initialData.filter(record => {
-    try {
-      const [day, month, year] = record.data.split('/')
-      return parseInt(year) === selectedYear && parseInt(month) !== selectedMonth
-    } catch (error) {
-      return false
-    }
-  }).filter(row => 
-    row.entrada || row.saidaAlmoco || row.retornoAlmoco || row.saida
-  )
+  // Verificar se há dados em outros meses (comentado para evitar warning de variável não usada)
+  // const dadosOutrosMeses = initialData.filter(record => {
+  //   try {
+  //     const [, month, year] = record.data.split('/')
+  //     return parseInt(year) === selectedYear && parseInt(month) !== selectedMonth
+  //   } catch {
+  //     return false
+  //   }
+  // }).filter(row => 
+  //   row.entrada || row.saidaAlmoco || row.retornoAlmoco || row.saida
+  // )
   
   if (initialData.length === 0) {
     // Nenhum dado recebido

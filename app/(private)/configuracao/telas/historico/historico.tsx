@@ -159,20 +159,22 @@ export default function Historico() {
       
       fecharFormulario()
       await recarregarDados()
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao salvar registro:', error)
       
       // Exibir erro amigável para o usuário
       let errorMessage = 'Erro ao salvar registro.'
       
-      if (error.message?.includes('Firebase não está configurado')) {
-        errorMessage = 'Sistema não configurado. Entre em contato com o suporte técnico.'
-      } else if (error.message?.includes('Sem conexão')) {
-        errorMessage = 'Sem conexão com a internet. Verifique sua conexão e tente novamente.'
-      } else if (error.message?.includes('permissão')) {
-        errorMessage = 'Erro de permissão. Entre em contato com o suporte técnico.'
-      } else if (error.message) {
-        errorMessage = error.message
+      if (error instanceof Error) {
+        if (error.message?.includes('Firebase não está configurado')) {
+          errorMessage = 'Sistema não configurado. Entre em contato com o suporte técnico.'
+        } else if (error.message?.includes('Sem conexão')) {
+          errorMessage = 'Sem conexão com a internet. Verifique sua conexão e tente novamente.'
+        } else if (error.message?.includes('permissão')) {
+          errorMessage = 'Erro de permissão. Entre em contato com o suporte técnico.'
+        } else {
+          errorMessage = error.message
+        }
       }
       
       // Aqui você pode adicionar um toast ou alert para mostrar o erro
@@ -184,7 +186,6 @@ export default function Historico() {
 
   // Função para preencher formulário com dados de uma linha selecionada
   const preencherFormularioComLinha = (linha: z.infer<typeof historicoSchema>) => {
-    const [day, month, year] = linha.data.split('/')
     setFormData({
       data: linha.data,
       entrada: linha.entrada || '',

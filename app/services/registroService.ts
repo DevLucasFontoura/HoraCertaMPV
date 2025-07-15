@@ -336,11 +336,6 @@ class RegistroService {
         throw new Error('Firebase não está configurado. Configure as variáveis de ambiente do Firebase.');
       }
 
-      // Verificar se o Firebase está configurado corretamente
-      if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY || process.env.NEXT_PUBLIC_FIREBASE_API_KEY === "mock-api-key") {
-        throw new Error('Firebase não está configurado. Configure as variáveis de ambiente do Firebase.');
-      }
-
       const userId = this.getUserId();
       const docId = this.getDocId(userId, date);
       const docRef = doc(db, 'registros', docId);
@@ -416,18 +411,22 @@ class RegistroService {
       }
       
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao atualizar registro manual:', error);
       
       // Retornar mensagem de erro específica
-      if (error.message?.includes('Firebase não está configurado')) {
-        throw new Error('Firebase não está configurado. Configure as variáveis de ambiente do Firebase.');
-      } else if (error.code === 'permission-denied') {
-        throw new Error('Sem permissão para acessar o Firebase. Verifique as regras de segurança.');
-      } else if (error.code === 'unavailable' || error.message?.includes('offline')) {
-        throw new Error('Sem conexão com o Firebase. Verifique sua conexão com a internet.');
+      if (error instanceof Error) {
+        if (error.message?.includes('Firebase não está configurado')) {
+          throw new Error('Firebase não está configurado. Configure as variáveis de ambiente do Firebase.');
+        } else if (error.message?.includes('permissão')) {
+          throw new Error('Sem permissão para acessar o Firebase. Verifique as regras de segurança.');
+        } else if (error.message?.includes('offline')) {
+          throw new Error('Sem conexão com o Firebase. Verifique sua conexão com a internet.');
+        } else {
+          throw new Error(`Erro ao salvar registro: ${error.message || 'Erro desconhecido'}`);
+        }
       } else {
-        throw new Error(`Erro ao salvar registro: ${error.message || 'Erro desconhecido'}`);
+        throw new Error('Erro desconhecido ao salvar registro.');
       }
     }
   }

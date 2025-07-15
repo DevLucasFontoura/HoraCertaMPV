@@ -74,10 +74,12 @@ export function HistoricoTable({
   data: initialData,
   showHeaderControls = true,
   pageSize = 10,
+  onRowClick,
 }: {
   data: z.infer<typeof historicoSchema>[]
   showHeaderControls?: boolean
   pageSize?: number
+  onRowClick?: (row: z.infer<typeof historicoSchema>) => void
 }) {
 
   const [selectedYear, setSelectedYear] = React.useState<number>(new Date().getFullYear())
@@ -132,33 +134,23 @@ export function HistoricoTable({
     }
   }, [years, selectedYear, selectedMonth])
 
-  // Memoizar meses únicos para o ano selecionado
+  // Memoizar todos os meses (1-12)
   const months = React.useMemo(() => {
-    const monthsSet = new Set<number>()
-    initialData.forEach(record => {
-      try {
-        // Converter data do formato DD/MM/YYYY para Date
-        const [day, month, year] = record.data.split('/')
-        const recordDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
-        
-        if (!isNaN(recordDate.getTime()) && recordDate.getFullYear() === selectedYear) {
-          const monthValue = recordDate.getMonth() + 1 // +1 porque getMonth() retorna 0-11
-          if (!isNaN(monthValue)) {
-            monthsSet.add(monthValue)
-          }
-        }
-      } catch (error) {
-        console.warn('Erro ao processar data:', record.data, error)
-      }
-    })
-    return Array.from(monthsSet).sort((a, b) => a - b) // Ordenar crescente
-  }, [initialData, selectedYear])
+    return Array.from({ length: 12 }, (_, i) => i + 1)
+  }, [])
 
   // Memoizar dados filtrados
   const filteredData = React.useMemo(() => {
-    // Se não há mês selecionado, retornar array vazio
+    // Se não há mês selecionado (Todos os meses), mostrar todos os registros do ano
     if (selectedMonth === '') {
-      return []
+      return initialData.filter(record => {
+        try {
+          const [day, month, year] = record.data.split('/')
+          return parseInt(year) === selectedYear
+        } catch (error) {
+          return false
+        }
+      })
     }
 
     // Criar um mapa para busca mais eficiente
@@ -400,16 +392,25 @@ export function HistoricoTable({
 
 
   
-  // Debug: verificar se há dados e paginação
-  console.log('Dados filtrados:', filteredData.length, 'registros')
-  console.log('Página atual:', pagination.pageIndex + 1, 'de', table.getPageCount())
-  console.log('Pode ir para próxima página:', table.getCanNextPage())
-  console.log('Pode ir para página anterior:', table.getCanPreviousPage())
+  // Verificar se há dados reais (não vazios) no mês selecionado
+  const dadosReais = filteredData.filter(row => 
+    row.entrada || row.saidaAlmoco || row.retornoAlmoco || row.saida
+  )
+  
+  // Verificar se há dados em outros meses
+  const dadosOutrosMeses = initialData.filter(record => {
+    try {
+      const [day, month, year] = record.data.split('/')
+      return parseInt(year) === selectedYear && parseInt(month) !== selectedMonth
+    } catch (error) {
+      return false
+    }
+  }).filter(row => 
+    row.entrada || row.saidaAlmoco || row.retornoAlmoco || row.saida
+  )
   
   if (initialData.length === 0) {
-    console.log('Nenhum dado recebido na tabela')
-  } else {
-    console.log('Dados recebidos:', initialData.length, 'registros, anos:', years, 'ano selecionado:', selectedYear)
+    // Nenhum dado recebido
   }
 
   if (isMobile) {
@@ -419,10 +420,10 @@ export function HistoricoTable({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Select value={selectedYear.toString()} onValueChange={(value) => handleYearChange(parseInt(value))}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-32 bg-white">
                   <SelectValue placeholder="Ano" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   {years.length > 0 ? (
                     years.map((year) => (
                       <SelectItem key={year} value={year.toString()}>
@@ -438,12 +439,12 @@ export function HistoricoTable({
               </Select>
               
               <Select value={selectedMonth === '' ? 'todos' : selectedMonth.toString()} onValueChange={(value) => handleMonthChange(value === 'todos' ? '' : parseInt(value))}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-32 bg-white">
                   <SelectValue placeholder="Mês" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="todos">
-                    <em>Todos</em>
+                    <em>Todos os meses</em>
                   </SelectItem>
                   {months.map((month) => (
                     <SelectItem key={month} value={month.toString()}>
@@ -592,10 +593,10 @@ export function HistoricoTable({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Select value={selectedYear.toString()} onValueChange={(value) => handleYearChange(parseInt(value))}>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-32 bg-white">
                 <SelectValue placeholder="Ano" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 {years.length > 0 ? (
                   years.map((year) => (
                     <SelectItem key={year} value={year.toString()}>
@@ -611,12 +612,12 @@ export function HistoricoTable({
             </Select>
             
             <Select value={selectedMonth === '' ? 'todos' : selectedMonth.toString()} onValueChange={(value) => handleMonthChange(value === 'todos' ? '' : parseInt(value))}>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-32 bg-white">
                 <SelectValue placeholder="Mês" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 <SelectItem value="todos">
-                  <em>Todos</em>
+                  <em>Todos os meses</em>
                 </SelectItem>
                 {months.map((month) => (
                   <SelectItem key={month} value={month.toString()}>
@@ -700,6 +701,9 @@ export function HistoricoTable({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  onClick={() => onRowClick?.(row.original)}
+                  style={{ cursor: onRowClick ? 'pointer' : 'default' }}
+                  className={onRowClick ? 'hover:bg-gray-50' : ''}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -717,7 +721,11 @@ export function HistoricoTable({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {selectedMonth === '' ? 'Selecione um mês para visualizar os registros.' : 'Nenhum registro encontrado para o período selecionado.'}
+                  {selectedMonth === '' ? 
+                   dadosReais.length === 0 ? `Nenhum registro encontrado para ${selectedYear}.` :
+                   'Selecione um mês específico para visualizar os registros.' : 
+                   dadosReais.length === 0 ? `Nenhum registro encontrado para ${new Date(2000, selectedMonth - 1).toLocaleDateString('pt-BR', { month: 'long' })} de ${selectedYear}.` :
+                   'Nenhum registro encontrado para o período selecionado.'}
                 </TableCell>
               </TableRow>
             )}

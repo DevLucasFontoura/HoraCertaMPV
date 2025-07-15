@@ -155,11 +155,13 @@ class RegistroService {
       const registros: DayRecord[] = [];
       
       querySnapshot.forEach((doc) => {
-        registros.push(doc.data() as DayRecord);
+        const data = doc.data() as DayRecord;
+        registros.push(data);
       });
       
       // Ordenar no código para evitar necessidade de índice
-      return registros.sort((a, b) => b.date.localeCompare(a.date));
+      const registrosOrdenados = registros.sort((a, b) => b.date.localeCompare(a.date));
+      return registrosOrdenados;
     } catch (error) {
       console.error('Erro ao buscar todos os registros:', error);
       return [];
@@ -226,6 +228,207 @@ class RegistroService {
     } catch (error) {
       console.error('Erro ao atualizar registro:', error);
       throw error;
+    }
+  }
+
+  // Adicionar registro manual para uma data específica
+  async adicionarRegistroManual(
+    date: string, // formato YYYY-MM-DD
+    entrada?: string,
+    saidaAlmoco?: string,
+    retornoAlmoco?: string,
+    saida?: string
+  ): Promise<boolean> {
+    try {
+      const userId = this.getUserId();
+      const docId = this.getDocId(userId, date);
+      const docRef = doc(db, 'registros', docId);
+      
+      const records: TimeRecord[] = [];
+      
+      // Adicionar entrada se fornecida
+      if (entrada) {
+        records.push({
+          type: 'entry',
+          time: entrada,
+          timestamp: new Date(`${date}T${entrada}:00`),
+          label: 'Entrada'
+        });
+      }
+      
+      // Adicionar saída almoço se fornecida
+      if (saidaAlmoco) {
+        records.push({
+          type: 'lunchOut',
+          time: saidaAlmoco,
+          timestamp: new Date(`${date}T${saidaAlmoco}:00`),
+          label: 'Saída para almoço'
+        });
+      }
+      
+      // Adicionar retorno almoço se fornecida
+      if (retornoAlmoco) {
+        records.push({
+          type: 'lunchReturn',
+          time: retornoAlmoco,
+          timestamp: new Date(`${date}T${retornoAlmoco}:00`),
+          label: 'Retorno do almoço'
+        });
+      }
+      
+      // Adicionar saída se fornecida
+      if (saida) {
+        records.push({
+          type: 'exit',
+          time: saida,
+          timestamp: new Date(`${date}T${saida}:00`),
+          label: 'Saída'
+        });
+      }
+      
+      // Ordenar registros por timestamp
+      records.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+      
+      // Verificar se já existe um documento para esta data
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        // Atualizar documento existente
+        const existingData = docSnap.data() as DayRecord;
+        const updatedRecords = [...existingData.records, ...records];
+        
+        await setDoc(docRef, {
+          ...existingData,
+          records: updatedRecords,
+          updatedAt: Timestamp.now()
+        }, { merge: true });
+      } else {
+        // Criar novo documento
+        const newDayRecord: DayRecord = {
+          userId,
+          date,
+          records,
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now()
+        };
+        
+        await setDoc(docRef, newDayRecord);
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Erro ao adicionar registro manual:', error);
+      return false;
+    }
+  }
+
+  // Atualizar registro manual para uma data específica (substitui registros existentes)
+  async atualizarRegistroManual(
+    date: string, // formato YYYY-MM-DD
+    entrada?: string,
+    saidaAlmoco?: string,
+    retornoAlmoco?: string,
+    saida?: string
+  ): Promise<boolean> {
+    try {
+      // Verificar se o Firebase está configurado corretamente
+      if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY || process.env.NEXT_PUBLIC_FIREBASE_API_KEY === "mock-api-key") {
+        throw new Error('Firebase não está configurado. Configure as variáveis de ambiente do Firebase.');
+      }
+
+      // Verificar se o Firebase está configurado corretamente
+      if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY || process.env.NEXT_PUBLIC_FIREBASE_API_KEY === "mock-api-key") {
+        throw new Error('Firebase não está configurado. Configure as variáveis de ambiente do Firebase.');
+      }
+
+      const userId = this.getUserId();
+      const docId = this.getDocId(userId, date);
+      const docRef = doc(db, 'registros', docId);
+      
+      const records: TimeRecord[] = [];
+      
+      // Adicionar entrada se fornecida
+      if (entrada) {
+        records.push({
+          type: 'entry',
+          time: entrada,
+          timestamp: new Date(`${date}T${entrada}:00`),
+          label: 'Entrada'
+        });
+      }
+      
+      // Adicionar saída almoço se fornecida
+      if (saidaAlmoco) {
+        records.push({
+          type: 'lunchOut',
+          time: saidaAlmoco,
+          timestamp: new Date(`${date}T${saidaAlmoco}:00`),
+          label: 'Saída para almoço'
+        });
+      }
+      
+      // Adicionar retorno almoço se fornecida
+      if (retornoAlmoco) {
+        records.push({
+          type: 'lunchReturn',
+          time: retornoAlmoco,
+          timestamp: new Date(`${date}T${retornoAlmoco}:00`),
+          label: 'Retorno do almoço'
+        });
+      }
+      
+      // Adicionar saída se fornecida
+      if (saida) {
+        records.push({
+          type: 'exit',
+          time: saida,
+          timestamp: new Date(`${date}T${saida}:00`),
+          label: 'Saída'
+        });
+      }
+      
+      // Ordenar registros por timestamp
+      records.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+      
+      // Verificar se já existe um documento para esta data
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        // Atualizar documento existente - SUBSTITUIR registros, não adicionar
+        const existingData = docSnap.data() as DayRecord;
+        
+        await setDoc(docRef, {
+          ...existingData,
+          records: records, // Substituir completamente os registros
+          updatedAt: Timestamp.now()
+        }, { merge: true });
+      } else {
+        // Criar novo documento
+        const newDayRecord: DayRecord = {
+          userId,
+          date,
+          records,
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now()
+        };
+        
+        await setDoc(docRef, newDayRecord);
+      }
+      
+      return true;
+    } catch (error: any) {
+      console.error('Erro ao atualizar registro manual:', error);
+      
+      // Retornar mensagem de erro específica
+      if (error.message?.includes('Firebase não está configurado')) {
+        throw new Error('Firebase não está configurado. Configure as variáveis de ambiente do Firebase.');
+      } else if (error.code === 'permission-denied') {
+        throw new Error('Sem permissão para acessar o Firebase. Verifique as regras de segurança.');
+      } else if (error.code === 'unavailable' || error.message?.includes('offline')) {
+        throw new Error('Sem conexão com o Firebase. Verifique sua conexão com a internet.');
+      } else {
+        throw new Error(`Erro ao salvar registro: ${error.message || 'Erro desconhecido'}`);
+      }
     }
   }
 }

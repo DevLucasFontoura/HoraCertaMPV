@@ -2,17 +2,37 @@
 
 /* Ajustes gerais para mobile */
 @media (max-width: 768px) {
-  /* Header empilhado */
+  /* Header com layout flexível */
   .header {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 8px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+  }
+
+  /* Container do título e subtítulo */
+  .header > div:first-child {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex: 1 !important;
+    min-width: 0 !important;
   }
 
   /* Botão voltar menor */
   .backButton {
     padding: 4px !important;
     font-size: 1rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Botão adicionar responsivo */
+  .addButton {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
   }
 
   /* Seção com padding menor */
@@ -96,6 +116,16 @@
 
   .subtitle {
     font-size: 0.7rem !important;
+  }
+
+  /* Header ainda mais compacto */
+  .header {
+    gap: 8px !important;
+  }
+
+  .addButton {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
   }
 
   .tableContainer {

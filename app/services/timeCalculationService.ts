@@ -150,10 +150,12 @@ export class TimeCalculationService {
    * Formatar banco de horas para exibição
    */
   static formatBankHours(hours: number): string {
-    const absHours = Math.abs(hours);
+    // Arredondar para 2 casas decimais para evitar problemas de precisão
+    const roundedHours = Math.round(hours * 100) / 100;
+    const absHours = Math.abs(roundedHours);
     const h = Math.floor(absHours);
     const m = Math.round((absHours - h) * 60);
-    const sign = hours < 0 ? '-' : '+';
+    const sign = roundedHours < 0 ? '-' : '+';
     return `${sign}${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
   }
 

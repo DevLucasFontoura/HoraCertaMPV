@@ -347,6 +347,33 @@ export function HistoricoTable({
       ),
     },
     {
+      accessorKey: "trabalhado",
+      header: "Trabalhado",
+      cell: ({ row }) => {
+        if (!row.original.totalHoras) return <div className="font-medium">-</div>;
+        
+        const config = workConfig || { dailyWorkHours: 8, lunchBreakHours: 1 };
+        const expectedHours = config.dailyWorkHours;
+        const workedHours = row.original.totalHoras;
+        let displayHours = workedHours;
+        
+        // Aplicar a mesma tolerância de ±5 minutos para exibição
+        const tolerance = 5 / 60; // 5 minutos em horas
+        const balance = workedHours - expectedHours;
+        if (Math.abs(balance) <= tolerance) {
+          displayHours = expectedHours; // Mostrar 8h quando estiver dentro da tolerância
+        }
+        
+        const formattedHours = TimeCalculationService.formatHours(displayHours);
+        
+        return (
+          <div className="font-medium">
+            {formattedHours}
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: "totalHoras",
       header: "Saldo Horas",
       cell: ({ row }) => {
@@ -355,7 +382,22 @@ export function HistoricoTable({
         const config = workConfig || { dailyWorkHours: 8, lunchBreakHours: 1 }; // Usar configuração do usuário ou padrão
         const expectedHours = config.dailyWorkHours;
         const workedHours = row.original.totalHoras;
-        const balance = workedHours - expectedHours;
+        let balance = workedHours - expectedHours;
+        
+        // Tolerância de ±5 minutos (0.0833 horas) para considerar como 8h exatas
+        const tolerance = 5 / 60; // 5 minutos em horas
+        if (Math.abs(balance) <= tolerance) {
+          balance = 0; // Arredondar para 8h exatas
+        }
+        
+        // Debug: log para verificar os valores
+        console.log(`Dia ${row.original.data}:`, {
+          workedHours,
+          expectedHours,
+          balance,
+          tolerance,
+          config
+        });
         
         const isPositive = balance >= 0;
         const colorClass = isPositive ? "text-green-600" : "text-red-600";

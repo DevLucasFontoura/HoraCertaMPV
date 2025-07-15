@@ -81,7 +81,7 @@ export function HistoricoTable({
 }) {
 
   const [selectedYear, setSelectedYear] = React.useState<number>(new Date().getFullYear())
-  const [selectedMonth, setSelectedMonth] = React.useState<number | ''>('')
+  const [selectedMonth, setSelectedMonth] = React.useState<number | ''>(new Date().getMonth() + 1)
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -95,20 +95,9 @@ export function HistoricoTable({
   })
   const isMobile = useIsMobile()
 
-  // Atualizar ano selecionado quando os dados mudarem
-  React.useEffect(() => {
-    const years = getUniqueYears()
-    
-    if (years.length > 0 && !years.includes(selectedYear)) {
-      setSelectedYear(years[0])
-    }
-  }, [initialData])
-
-
-
-  // Obter anos únicos dos dados
-  const getUniqueYears = () => {
-    const years = new Set<number>()
+  // Memoizar anos únicos dos dados
+  const years = React.useMemo(() => {
+    const yearsSet = new Set<number>()
     
     initialData.forEach(record => {
       try {
@@ -119,7 +108,7 @@ export function HistoricoTable({
         if (!isNaN(date.getTime())) {
           const yearValue = date.getFullYear()
           if (!isNaN(yearValue)) {
-            years.add(yearValue)
+            yearsSet.add(yearValue)
           }
         }
       } catch (error) {
@@ -127,13 +116,25 @@ export function HistoricoTable({
       }
     })
     
-    const result = Array.from(years).sort((a, b) => b - a) // Ordenar decrescente
+    const result = Array.from(yearsSet).sort((a, b) => b - a) // Ordenar decrescente
     return result
-  }
+  }, [initialData])
 
-  // Obter meses únicos para o ano selecionado
-  const getUniqueMonths = () => {
-    const months = new Set<number>()
+  // Atualizar ano e mês selecionados quando os dados mudarem
+  React.useEffect(() => {
+    if (years.length > 0 && !years.includes(selectedYear)) {
+      setSelectedYear(years[0])
+    }
+    
+    // Garantir que o mês atual seja selecionado se não houver mês selecionado
+    if (selectedMonth === '') {
+      setSelectedMonth(new Date().getMonth() + 1)
+    }
+  }, [years, selectedYear, selectedMonth])
+
+  // Memoizar meses únicos para o ano selecionado
+  const months = React.useMemo(() => {
+    const monthsSet = new Set<number>()
     initialData.forEach(record => {
       try {
         // Converter data do formato DD/MM/YYYY para Date
@@ -143,50 +144,66 @@ export function HistoricoTable({
         if (!isNaN(recordDate.getTime()) && recordDate.getFullYear() === selectedYear) {
           const monthValue = recordDate.getMonth() + 1 // +1 porque getMonth() retorna 0-11
           if (!isNaN(monthValue)) {
-            months.add(monthValue)
+            monthsSet.add(monthValue)
           }
         }
       } catch (error) {
         console.warn('Erro ao processar data:', record.data, error)
       }
     })
-    return Array.from(months).sort((a, b) => a - b) // Ordenar crescente
-  }
+    return Array.from(monthsSet).sort((a, b) => a - b) // Ordenar crescente
+  }, [initialData, selectedYear])
 
-  // Filtrar dados baseado no ano e mês selecionados
-  const getFilteredData = () => {
-    const filtered = initialData.filter(record => {
+  // Memoizar dados filtrados
+  const filteredData = React.useMemo(() => {
+    // Se não há mês selecionado, retornar array vazio
+    if (selectedMonth === '') {
+      return []
+    }
+
+    // Criar um mapa para busca mais eficiente
+    const dataMap = new Map()
+    initialData.forEach(record => {
       try {
-        // Converter data do formato DD/MM/YYYY para Date
         const [day, month, year] = record.data.split('/')
-        const recordDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
-        
-        if (isNaN(recordDate.getTime())) {
-          return false
-        }
-        
-        const recordYear = recordDate.getFullYear()
-        const recordMonth = recordDate.getMonth() + 1
-
-        if (isNaN(recordYear) || recordYear !== selectedYear) {
-          return false
-        }
-        
-        if (selectedMonth !== '' && (isNaN(recordMonth) || recordMonth !== selectedMonth)) {
-          return false
-        }
-        
-        return true
+        const key = `${day}-${month}-${year}`
+        dataMap.set(key, record)
       } catch (error) {
-        console.warn('Erro ao filtrar data:', record.data, error)
-        return false
+        // Ignorar registros com data inválida
       }
     })
-    
-    return filtered
-  }
 
-  const filteredData = getFilteredData()
+    // Obter o número de dias no mês selecionado
+    const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate()
+    
+    // Criar array com todos os dias do mês
+    const allDays = []
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateString = `${day.toString().padStart(2, '0')}/${selectedMonth.toString().padStart(2, '0')}/${selectedYear}`
+      const key = `${day.toString().padStart(2, '0')}-${selectedMonth.toString().padStart(2, '0')}-${selectedYear}`
+      
+      // Procurar se existe registro para este dia
+      const existingRecord = dataMap.get(key)
+      
+      if (existingRecord) {
+        allDays.push(existingRecord)
+      } else {
+        // Criar registro vazio para este dia
+        allDays.push({
+          id: `empty_${day}`,
+          data: dateString,
+          entrada: '',
+          saidaAlmoco: '',
+          retornoAlmoco: '',
+          saida: '',
+          totalHoras: undefined
+        })
+      }
+    }
+    
+    return allDays
+  }, [initialData, selectedYear, selectedMonth])
 
   const handleYearChange = (year: number) => {
     setSelectedYear(year)
@@ -263,23 +280,38 @@ export function HistoricoTable({
     },
     {
       accessorKey: "id",
-      header: "Item",
-      cell: ({ row }) => (
-        <div className="font-medium">
-          {row.index + 1}
-        </div>
-      ),
+      header: "Dia",
+      cell: ({ row }) => {
+        // Extrair o dia da data
+        const day = row.original.data.split('/')[0]
+        return (
+          <div className="font-medium">
+            {day}
+          </div>
+        )
+      },
       enableHiding: false,
     },
     {
       accessorKey: "data",
-      header: "Data",
+      header: "Dia da Semana",
       cell: ({ row }) => {
-        return (
-          <div className="font-medium">
-            {row.original.data}
-          </div>
-        )
+        try {
+          const [day, month, year] = row.original.data.split('/')
+          const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+          const dayOfWeek = date.toLocaleDateString('pt-BR', { weekday: 'short' })
+          return (
+            <div className="font-medium">
+              {dayOfWeek}
+            </div>
+          )
+        } catch (error) {
+          return (
+            <div className="font-medium">
+              -
+            </div>
+          )
+        }
       },
       enableHiding: false,
     },
@@ -362,12 +394,18 @@ export function HistoricoTable({
       pagination,
       rowSelection,
     },
+    manualPagination: false,
+    pageCount: Math.ceil(filteredData.length / pagination.pageSize),
   })
 
-  const years = getUniqueYears()
-  const months = getUniqueMonths()
+
   
-  // Debug: verificar se há dados
+  // Debug: verificar se há dados e paginação
+  console.log('Dados filtrados:', filteredData.length, 'registros')
+  console.log('Página atual:', pagination.pageIndex + 1, 'de', table.getPageCount())
+  console.log('Pode ir para próxima página:', table.getCanNextPage())
+  console.log('Pode ir para página anterior:', table.getCanPreviousPage())
+  
   if (initialData.length === 0) {
     console.log('Nenhum dado recebido na tabela')
   } else {
@@ -452,7 +490,7 @@ export function HistoricoTable({
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div className="space-y-1">
                     <p className="text-sm font-medium">
-                      Item {row.index + 1}
+                      Dia {row.original.data.split('/')[0]}
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {row.original.data}
@@ -522,7 +560,7 @@ export function HistoricoTable({
 
         <div className="flex items-center justify-between space-x-2 py-4">
           <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} de{" "}
+            Página {pagination.pageIndex + 1} de {table.getPageCount()} • {table.getFilteredSelectedRowModel().rows.length} de{" "}
             {table.getFilteredRowModel().rows.length} linha(s) selecionada(s).
           </div>
           <div className="space-x-2">
@@ -679,7 +717,7 @@ export function HistoricoTable({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Nenhum registro encontrado para o período selecionado.
+                  {selectedMonth === '' ? 'Selecione um mês para visualizar os registros.' : 'Nenhum registro encontrado para o período selecionado.'}
                 </TableCell>
               </TableRow>
             )}
@@ -689,7 +727,7 @@ export function HistoricoTable({
 
       <div className="flex items-center justify-between space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} de{" "}
+          Página {pagination.pageIndex + 1} de {table.getPageCount()} • {table.getFilteredSelectedRowModel().rows.length} de{" "}
           {table.getFilteredRowModel().rows.length} linha(s) selecionada(s).
         </div>
         <div className="space-x-2">

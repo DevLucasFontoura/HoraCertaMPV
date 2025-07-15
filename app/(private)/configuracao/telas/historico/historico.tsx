@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { CircularProgress, Alert } from '@mui/material'
 import { HistoricoTable, historicoSchema } from '../../../../components/Table/historicoTable'
 import { z } from 'zod'
@@ -19,10 +19,55 @@ import mobileStyles from './historicoMobile.module.css'
 export default function Historico() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [historicoData, setHistoricoData] = useState<z.infer<typeof historicoSchema>[]>([])
+  const [registros, setRegistros] = useState<DayRecord[]>([])
   const { userData } = useAuth()
   const router = useRouter()
   const isMobile = useIsMobile()
+
+  // Memoizar a configuração de trabalho
+  const workConfig = useMemo(() => {
+    return TimeCalculationService.getWorkTimeConfig(userData)
+  }, [userData])
+
+  // Função otimizada para processar um registro
+  const processarRegistro = useCallback((registro: DayRecord) => {
+    // Criar um mapa para evitar múltiplas operações find()
+    const recordsMap = new Map()
+    registro.records.forEach(record => {
+      recordsMap.set(record.type, record.time)
+    })
+    
+    const entrada = recordsMap.get('entry')
+    const saidaAlmoco = recordsMap.get('lunchOut')
+    const retornoAlmoco = recordsMap.get('lunchReturn')
+    const saida = recordsMap.get('exit')
+    
+    // Calcular horas trabalhadas apenas se houver registros
+    let totalHoras: number | undefined
+    if (registro.records.length > 0) {
+      const workTime = TimeCalculationService.calculateWorkTime(registro.records, workConfig)
+      totalHoras = workTime.isComplete ? workTime.workedHours : undefined
+    }
+    
+    // Converter data do formato YYYY-MM-DD para DD/MM/YYYY
+    const [year, month, day] = registro.date.split('-')
+    const dataFormatada = `${day}/${month}/${year}`
+    
+    return {
+      id: `${registro.userId}_${registro.date}`,
+      data: dataFormatada,
+      entrada,
+      saidaAlmoco,
+      retornoAlmoco,
+      saida,
+      totalHoras
+    }
+  }, [workConfig])
+
+  // Memoizar os dados formatados
+  const historicoData = useMemo(() => {
+    return registros.map(processarRegistro)
+  }, [registros, processarRegistro])
 
   useEffect(() => {
     const carregarHistorico = async () => {
@@ -31,38 +76,10 @@ export default function Historico() {
         setError('')
         
         // Buscar todos os registros
-        const registros: DayRecord[] = await registroService.getAllRegistros()
-        console.log('Registros carregados do Firebase:', registros.length)
+        const registrosData: DayRecord[] = await registroService.getAllRegistros()
+        console.log('Registros carregados do Firebase:', registrosData.length)
         
-        // Converter para o formato da tabela
-        const dadosFormatados: z.infer<typeof historicoSchema>[] = registros.map((registro) => {
-          const entrada = registro.records.find(r => r.type === 'entry')?.time
-          const saidaAlmoco = registro.records.find(r => r.type === 'lunchOut')?.time
-          const retornoAlmoco = registro.records.find(r => r.type === 'lunchReturn')?.time
-          const saida = registro.records.find(r => r.type === 'exit')?.time
-          
-          // Usar o serviço de cálculo de tempo para calcular horas trabalhadas
-          const config = TimeCalculationService.getWorkTimeConfig(userData)
-          const workTime = TimeCalculationService.calculateWorkTime(registro.records, config)
-          
-          // Converter data do formato YYYY-MM-DD para DD/MM/YYYY
-          const [year, month, day] = registro.date.split('-')
-          const dataFormatada = `${day}/${month}/${year}`
-          
-          return {
-            id: `${registro.userId}_${registro.date}`,
-            data: dataFormatada,
-            entrada,
-            saidaAlmoco,
-            retornoAlmoco,
-            saida,
-            totalHoras: workTime.isComplete ? workTime.workedHours : undefined
-          }
-        })
-        
-        console.log('Dados formatados para a tabela:', dadosFormatados.length)
-        console.log('Primeiro registro:', dadosFormatados[0])
-        setHistoricoData(dadosFormatados)
+        setRegistros(registrosData)
       } catch (error) {
         console.error('Erro ao carregar histórico:', error)
         setError('Erro ao carregar histórico de registros')
@@ -118,11 +135,13 @@ export default function Historico() {
                 WebkitOverflowScrolling: 'touch'
               }}
             >
-              <HistoricoTable 
-                data={historicoData}
-                showHeaderControls={true}
-                pageSize={10}
-              />
+              {historicoData.length > 0 && (
+                <HistoricoTable 
+                  data={historicoData}
+                  showHeaderControls={true}
+                  pageSize={31}
+                />
+              )}
             </div>
           )}
         </section>

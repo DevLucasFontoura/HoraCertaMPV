@@ -1,5 +1,36 @@
 @import "tailwindcss";
 
+/* Forçar tema claro, ignorando o tema do dispositivo */
+:root, html, body {
+  color-scheme: light !important;
+  background: #fff !important;
+  color: #111 !important;
+}
+
+/* Sobrescrever completamente o tema escuro */
+@media (prefers-color-scheme: dark) {
+  :root, html, body {
+    color-scheme: light !important;
+    background: #fff !important;
+    color: #111 !important;
+  }
+  
+  /* Forçar todas as variáveis para tema claro */
+  :root {
+    --background: #ffffff !important;
+    --foreground: #171717 !important;
+    --color-bg: #ffffff !important;
+    --color-surface: #fafafa !important;
+    --color-text-primary: #111111 !important;
+    --color-text-secondary: #666666 !important;
+    --color-text-tertiary: #999999 !important;
+    --color-border: #eaeaea !important;
+    --color-border-hover: #d3d3d3 !important;
+    --color-accent: #111111 !important;
+    --color-accent-hover: #000000 !important;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

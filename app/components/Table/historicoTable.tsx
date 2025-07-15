@@ -292,9 +292,9 @@ export function HistoricoTable({
       header: "Dia da Semana",
       cell: ({ row }) => {
         try {
-          const [, month, year] = row.original.data.split('/')
-          const date = new Date(parseInt(year), parseInt(month) - 1, 1)
-          const dayOfWeek = date.toLocaleDateString('pt-BR', { weekday: 'short' })
+          const [day, month, year] = row.original.data.split('/')
+          const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+          const dayOfWeek = date.toLocaleDateString('pt-BR', { weekday: 'long' })
           return (
             <div className="font-medium">
               {dayOfWeek}
@@ -683,10 +683,13 @@ export function HistoricoTable({
                   return (
                     <TableHead
                       key={header.id}
-                      className={cn({
-                        'rounded-tl-md': isFirst,
-                        'rounded-tr-md': isLast,
-                      })}
+                      className={cn(
+                        'bg-black text-white',
+                        {
+                          'rounded-tl-md': isFirst,
+                          'rounded-tr-md': isLast,
+                        }
+                      )}
                     >
                       {header.isPlaceholder
                         ? null
@@ -708,7 +711,19 @@ export function HistoricoTable({
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => onRowClick?.(row.original)}
                   style={{ cursor: onRowClick ? 'pointer' : 'default' }}
-                  className={onRowClick ? 'hover:bg-gray-50' : ''}
+                  className={cn(
+                    onRowClick ? 'hover:bg-gray-50' : '',
+                    (() => {
+                      try {
+                        const [day, month, year] = row.original.data.split('/')
+                        const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+                        const dayOfWeek = date.getDay() // 0 = domingo, 6 = sábado
+                        return (dayOfWeek === 0 || dayOfWeek === 6) ? 'bg-gray-100' : ''
+                      } catch {
+                        return ''
+                      }
+                    })()
+                  )}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

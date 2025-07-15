@@ -423,7 +423,7 @@ export const CONSTANTES = {
     // -------------------------- PAGINA SUPORTE --------------------------
     TITULO_SUPORTE: 'Suporte',
     SUBTITULO_SUPORTE: 'Entre em contato com nossa equipe',
-    EMAIL_SUPORTE: 'smartfinds271024@gmail.com',
+    EMAIL_SUPORTE: 'horacerta25112024@gmail.com',
 
     SUPORTE_01: 'Horário de Atendimento',
     SUPORTE_01_DESCRICAO: 'Segunda a Sexta: 08h às 18h',

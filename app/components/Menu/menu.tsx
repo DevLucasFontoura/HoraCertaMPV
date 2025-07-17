@@ -40,7 +40,7 @@ const BottomNav = () => {
         </button>
         <Link href="/historico" className={isActive('/historico') ? styles.active : ''}> 
           <IoStatsChartOutline size={24} /> 
-          <span>{CONSTANTES.TITULO_MENU_RELATORIOS}</span>
+          <span>{CONSTANTES.TITULO_MENU_HISTORICO}</span>
         </Link>
         <Link href="/configuracao" className={isActive('/configuracao') ? styles.active : ''}> 
           <AiOutlineSetting size={24} /> 
@@ -64,7 +64,7 @@ const BottomNav = () => {
           </button>
           <Link href="/historico" className={isActive('/historico') ? styles.active : ''}> 
             <IoStatsChartOutline size={24} /> 
-            <span>{CONSTANTES.TITULO_MENU_RELATORIOS}</span>
+            <span>{CONSTANTES.TITULO_MENU_HISTORICO}</span>
           </Link>
           <Link href="/configuracao" className={isActive('/configuracao') ? styles.active : ''}> 
             <AiOutlineSetting size={24} /> 

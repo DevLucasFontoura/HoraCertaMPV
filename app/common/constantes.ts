@@ -27,6 +27,7 @@ export const CONSTANTES = {
     TITULO_MENU_COMO_FUNCIONA: 'Como Funciona',
     TITULO_MENU_DASHBOARD: 'Dashboard',
     TITULO_MENU_RELATORIOS: 'Relatórios',
+    TITULO_MENU_HISTORICO: 'Histórico',
     TITULO_MENU_AJUSTES: 'Ajustes',
     TITULO_MENU_HOME: 'Home',
     

@@ -54,12 +54,6 @@ export default function SettingsScreen() {
         description: CONSTANTES.SUBTITULO_CONFIGURACAO_FERIADOS,
         onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_FERIADOS)
       },
-      {
-        title: CONSTANTES.TITULO_CONFIGURACAO_HISTORICO,
-        icon: <FaHistory />,
-        description: CONSTANTES.SUBTITULO_CONFIGURACAO_HISTORICO,
-        onPress: () => router.push(CONSTANTES.CAMINHO_CONFIGURACAO_HISTORICO)
-      }
     ],
     help: [
       {

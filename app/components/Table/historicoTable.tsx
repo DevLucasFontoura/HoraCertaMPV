@@ -61,7 +61,7 @@ import {
 import { cn } from "@/lib/utils"
 import { TimeCalculationService } from "../../services/timeCalculationService"
 import { registroService } from "../../services/registroService"
-import { FaEllipsisV, FaTrash } from 'react-icons/fa';
+import { FaEllipsisV, FaTrash, FaEdit } from 'react-icons/fa';
 
 export const historicoSchema = z.object({
   id: z.string(),
@@ -423,50 +423,6 @@ export function HistoricoTable({
       cell: ({ row }) => (
         row.original.id.startsWith('empty_') ? null : (
           <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-            {/* Botão Ver detalhes para mobile */}
-            {isMobile && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRowClick?.(row.original);
-                }}
-                style={{
-                  background: '#3B82F6',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '6px 8px',
-                  color: '#fff',
-                  fontSize: '12px',
-                  cursor: 'pointer',
-                  minWidth: 40,
-                }}
-              >
-                Ver detalhes
-              </button>
-            )}
-            
-            {/* Botão Editar para mobile */}
-            {isMobile && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRowClick?.(row.original);
-                }}
-                style={{
-                  background: '#111',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '6px 8px',
-                  color: '#fff',
-                  fontSize: '12px',
-                  cursor: 'pointer',
-                  minWidth: 40,
-                }}
-              >
-                Editar
-              </button>
-            )}
-            
             {/* Menu dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -487,7 +443,18 @@ export function HistoricoTable({
                 <DropdownMenuItem
                   onClick={(e) => {
                     e.stopPropagation();
-                    onDeleteRow && onDeleteRow(row.original.data);
+                    onRowClick?.(row.original);
+                  }}
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, backgroundColor: '#fff' }}
+                >
+                  <FaEdit /> Editar
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (onDeleteRow) {
+                      onDeleteRow(row.original.data);
+                    }
                   }}
                   style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: 8, backgroundColor: '#fff' }}
                 >
@@ -548,8 +515,13 @@ export function HistoricoTable({
   //   row.entrada || row.saidaAlmoco || row.retornoAlmoco || row.saida
   // )
   
+  // Verificar se há dados para exibir
   if (initialData.length === 0) {
-    // Nenhum dado recebido
+    return (
+      <div className="text-center py-8 text-gray-500">
+        Nenhum registro encontrado
+      </div>
+    );
   }
 
   if (isMobile) {
@@ -870,8 +842,12 @@ export function HistoricoTable({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  // Remover o onClick da linha para evitar abertura automática do modal
-                  style={{ cursor: 'default' }}
+                  onClick={() => {
+                    if (!row.original.id.startsWith('empty_')) {
+                      onRowClick?.(row.original);
+                    }
+                  }}
+                  style={{ cursor: row.original.id.startsWith('empty_') ? 'default' : 'pointer' }}
                   className={cn(
                     (() => {
                       try {
@@ -882,7 +858,8 @@ export function HistoricoTable({
                       } catch {
                         return ''
                       }
-                    })()
+                    })(),
+                    !row.original.id.startsWith('empty_') && 'hover:bg-gray-50'
                   )}
                 >
                   {row.getVisibleCells().map((cell) => (

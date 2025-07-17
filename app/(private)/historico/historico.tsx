@@ -8,10 +8,8 @@ import { registroService, DayRecord } from '../../services/registroService'
 import { TimeCalculationService } from '../../services/timeCalculationService'
 import { useAuth } from '../../hooks/useAuth'
 import { useIsMobile } from '../../hooks/use-mobile'
-import { useRouter } from 'next/navigation'
 import BottomNav from '../../components/Menu/menu'
-import { CONSTANTES } from '../../common/constantes'
-import { FaHistory, FaPlus, FaTimes, FaTrash } from 'react-icons/fa'
+import { FaHistory, FaTimes } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 import styles from './historico.module.css';
 import mobileStyles from './historicoMobile.module.css'
@@ -32,7 +30,6 @@ export default function Historico() {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [linhaParaDeletar, setLinhaParaDeletar] = useState<string | null>(null);
   const { userData } = useAuth()
-  const router = useRouter()
   const isMobile = useIsMobile()
 
   // Memoizar a configuração de trabalho
@@ -98,28 +95,10 @@ export default function Historico() {
     try {
       const registrosData: DayRecord[] = await registroService.getAllRegistros()
       setRegistros(registrosData)
-    } catch (error) {
-      console.error('Erro ao recarregar dados:', error)
+    } catch (e) {
+      console.error('Erro ao recarregar dados:', e)
     }
   }, [])
-
-  // Função para abrir formulário
-  const abrirFormulario = () => {
-    // Definir data atual como padrão
-    const hoje = new Date()
-    const dia = hoje.getDate().toString().padStart(2, '0')
-    const mes = (hoje.getMonth() + 1).toString().padStart(2, '0')
-    const ano = hoje.getFullYear().toString()
-    
-    setFormData({
-      data: `${dia}/${mes}/${ano}`,
-      entrada: '',
-      saidaAlmoco: '',
-      retornoAlmoco: '',
-      saida: ''
-    })
-    setShowForm(true)
-  }
 
   // Função para fechar formulário
   const fecharFormulario = () => {
@@ -210,7 +189,7 @@ export default function Historico() {
       setShowConfirmDelete(false);
       fecharFormulario();
       await recarregarDados();
-    } catch (error) {
+    } catch {
       alert('Erro ao limpar registros.');
     } finally {
       setSaving(false);
@@ -587,9 +566,8 @@ export default function Historico() {
               background: '#fff',
               borderRadius: '12px',
               padding: '32px',
-              maxWidth: '90vw',
-              width: '100%',
               maxWidth: '400px',
+              width: '100%',
               textAlign: 'center',
               boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
             }}>
@@ -658,9 +636,8 @@ export default function Historico() {
               background: '#fff',
               borderRadius: '12px',
               padding: '32px',
-              maxWidth: '90vw',
-              width: '100%',
               maxWidth: '400px',
+              width: '100%',
               textAlign: 'center',
               boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
             }}>

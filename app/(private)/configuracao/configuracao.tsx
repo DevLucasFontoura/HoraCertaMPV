@@ -1,6 +1,6 @@
 "use client";
 
-import { FaUser, FaBell, FaClock, FaCalendar, FaBook, FaQuestionCircle, FaHeadset, FaLock, FaInfoCircle, FaCog, FaHistory } from 'react-icons/fa';
+import { FaUser, FaBell, FaClock, FaCalendar, FaBook, FaQuestionCircle, FaHeadset, FaLock, FaInfoCircle, FaCog } from 'react-icons/fa';
 import React, { useState, useCallback, useMemo } from 'react';
 import BottomNav from '../../components/Menu/menu';
 import { useRouter } from 'next/navigation';

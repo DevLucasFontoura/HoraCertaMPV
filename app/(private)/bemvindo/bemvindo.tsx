@@ -6,7 +6,7 @@ import BottomNav from '../../components/Menu/menu';
 import styles from './bemvindo.module.css';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
-import { registroService } from '../../services/registroService';
+import { registroService, TimeRecord } from '../../services/registroService';
 import { TimeCalculationService, WorkTimeConfig } from '../../services/timeCalculationService';
 import { FiClock, FiTrendingUp, FiCheckCircle, FiAlertCircle, FiCalendar, FiPlus } from 'react-icons/fi';
 
@@ -57,15 +57,15 @@ const BemVindo = () => {
   }, [userData]);
 
   // Calcular tempo restante para completar a jornada
-  const calculateTimeRemaining = useCallback((records: any, config: WorkTimeConfig): TimeRemaining => {
-    const types = records.map((r: any) => r.type);
+  const calculateTimeRemaining = useCallback((records: TimeRecord[], config: WorkTimeConfig): TimeRemaining => {
+    const types = records.map((r: TimeRecord) => r.type);
     
     // Se não há entrada ou já foi finalizado, não há tempo restante
     if (!types.includes('entry') || types.includes('exit')) {
       return { hours: 0, minutes: 0, isComplete: true };
     }
     
-    const entry = records.find((r: any) => r.type === 'entry');
+    const entry = records.find((r: TimeRecord) => r.type === 'entry');
     if (!entry) {
       return { hours: 0, minutes: 0, isComplete: false };
     }
@@ -86,8 +86,8 @@ const BemVindo = () => {
     
     // Descontar tempo de almoço se já saiu para almoço
     if (types.includes('lunchOut') && types.includes('lunchReturn')) {
-      const lunchOut = records.find((r: any) => r.type === 'lunchOut');
-      const lunchReturn = records.find((r: any) => r.type === 'lunchReturn');
+      const lunchOut = records.find((r: TimeRecord) => r.type === 'lunchOut');
+      const lunchReturn = records.find((r: TimeRecord) => r.type === 'lunchReturn');
       
       if (lunchOut && lunchReturn) {
         const lunchOutTime = new Date();
@@ -103,7 +103,7 @@ const BemVindo = () => {
       }
     } else if (types.includes('lunchOut') && !types.includes('lunchReturn')) {
       // Se saiu para almoço mas não retornou, descontar tempo até agora
-      const lunchOut = records.find((r: any) => r.type === 'lunchOut');
+      const lunchOut = records.find((r: TimeRecord) => r.type === 'lunchOut');
       if (lunchOut) {
         const lunchOutTime = new Date();
         const [lunchOutHours, lunchOutMinutes] = lunchOut.time.split(':').map(Number);
@@ -125,8 +125,8 @@ const BemVindo = () => {
   }, []);
 
   // Calcular status atual do dia
-  const calculateTodayStatus = useCallback((records: any): TodayStats => {
-    const types = records.map((r: any) => r.type);
+  const calculateTodayStatus = useCallback((records: TimeRecord[]): TodayStats => {
+    const types = records.map((r: TimeRecord) => r.type);
     const config = getWorkTimeConfig();
 
     let currentStatus: 'working' | 'lunch' | 'finished' | 'not_started' = 'not_started';
@@ -195,7 +195,7 @@ const BemVindo = () => {
     if (!loading) {
       fetchStats();
     }
-  }, [loading, userData, calculateTodayStatus, getWorkTimeConfig]);
+  }, [loading, userData, calculateTodayStatus, getWorkTimeConfig, calculateTimeRemaining]);
 
   // Atualizar tempo restante a cada minuto
   useEffect(() => {

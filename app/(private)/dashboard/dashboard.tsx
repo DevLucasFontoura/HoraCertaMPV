@@ -187,7 +187,7 @@ const Dashboard = () => {
     };
 
     fetchDashboardData();
-  }, []);
+  }, [calculateTodayStatus, calculateWeeklyStats, generateChartData]);
 
   const renderEmptyState = () => (
     <div className={styles.emptyState}>

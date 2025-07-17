@@ -87,7 +87,7 @@ const LandingPage = () => {
       <nav className={styles.navbar}>
         <DesktopMenu />
 
-        {/* Menu Mobile */}
+        {/* Menu Mobile Button */}
         <motion.button 
           className={styles.mobileMenuButton}
           onClick={toggleMenu}
@@ -118,59 +118,76 @@ const LandingPage = () => {
             )}
           </AnimatePresence>
         </motion.button>
+      </nav>
 
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <>
-              <motion.div
-                className={styles.mobileMenuOverlay}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={toggleMenu}
-              />
-              <motion.div
-                className={styles.mobileMenu}
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
-                transition={{ type: 'tween', duration: 0.3, ease: 'easeOut' }}
-              >
-                <motion.div
-                  initial="closed"
-                  animate="open"
-                  variants={{
-                    open: {
-                      transition: { staggerChildren: 0.05 }
-                    },
-                    closed: {}
-                  }}
+      {/* Menu Mobile - Movido para fora do navbar */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              className={styles.mobileMenuOverlay}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={toggleMenu}
+            />
+            <motion.div
+              className={styles.mobileMenu}
+              initial={{ x: '100vw' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100vw' }}
+              transition={{ type: 'tween', duration: 0.3, ease: 'easeOut' }}
+            >
+              {/* Header do menu */}
+              <div className={styles.mobileMenuHeader}>
+                <div className={styles.mobileMenuLogo}>
+                  <AiOutlineClockCircle size={24} />
+                  <span>{CONSTANTES.TITULO_SITE}</span>
+                </div>
+                <button
+                  className={styles.mobileMenuCloseButton}
+                  onClick={toggleMenu}
                 >
-                  <motion.div variants={{
-                    closed: { opacity: 0, y: 20 },
-                    open: { opacity: 1, y: 0 }
-                  }}>
-                    <Link className={styles.mobileNavLink} href="/recursos" onClick={toggleMenu}>
-                      {CONSTANTES.TITULO_MENU_RECURSOS}
-                    </Link>
-                  </motion.div>
-                  <motion.div variants={{
-                    closed: { opacity: 0, y: 20 },
-                    open: { opacity: 1, y: 0 }
-                  }}>
-                    <Link className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>
-                      {CONSTANTES.TITULO_MENU_PRECOS}
-                    </Link>
-                  </motion.div>
-                  <motion.div variants={{
-                    closed: { opacity: 0, y: 20 },
-                    open: { opacity: 1, y: 0 }
-                  }}>
-                    <Link className={styles.mobileNavLink} href="/como-funciona" onClick={toggleMenu}>
-                      {CONSTANTES.TITULO_MENU_COMO_FUNCIONA}
-                    </Link>
-                  </motion.div>
-                  <motion.div variants={{
+                  <AiOutlineClose size={20} />
+                </button>
+              </div>
+              
+              <motion.div
+                className={styles.mobileMenuContent}
+                initial="closed"
+                animate="open"
+                variants={{
+                  open: {
+                    transition: { staggerChildren: 0.05 }
+                  },
+                  closed: {}
+                }}
+              >
+                <motion.div variants={{
+                  closed: { opacity: 0, y: 20 },
+                  open: { opacity: 1, y: 0 }
+                }}>
+                  <Link className={styles.mobileNavLink} href="/recursos" onClick={toggleMenu}>
+                    {CONSTANTES.TITULO_MENU_RECURSOS}
+                  </Link>
+                </motion.div>
+                <motion.div variants={{
+                  closed: { opacity: 0, y: 20 },
+                  open: { opacity: 1, y: 0 }
+                }}>
+                  <Link className={styles.mobileNavLink} href="/precos" onClick={toggleMenu}>
+                    {CONSTANTES.TITULO_MENU_PRECOS}
+                  </Link>
+                </motion.div>
+                <motion.div variants={{
+                  closed: { opacity: 0, y: 20 },
+                  open: { opacity: 1, y: 0 }
+                }}>
+                  <Link className={styles.mobileNavLink} href="/como-funciona" onClick={toggleMenu}>
+                    {CONSTANTES.TITULO_MENU_COMO_FUNCIONA}
+                  </Link>
+                </motion.div>
+                                  <motion.div variants={{
                     closed: { opacity: 0, y: 20 },
                     open: { opacity: 1, y: 0 }
                   }}>
@@ -179,11 +196,21 @@ const LandingPage = () => {
                     </Link>
                   </motion.div>
                 </motion.div>
+                
+                {/* Footer do menu */}
+                <div className={styles.mobileMenuFooter}>
+                  <div className={styles.mobileMenuFooterText}>
+                    <p>
+                      <AiOutlineClockCircle size={16} />
+                      Hora Certa
+                    </p>
+                    <span>Controle de ponto simplificado</span>
+                  </div>
+                </div>
               </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-      </nav>
+          </>
+        )}
+      </AnimatePresence>
 
       <div className={styles.hero}>
         <motion.div

@@ -102,6 +102,36 @@
   background-color: #3B82F6;
 }
 
+.balanceCard {
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2px;
+  border-radius: 24px;
+}
+
+.balanceCard::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background: white;
+  border-radius: 22px;
+  z-index: 0;
+}
+
+.balanceCard .statsHeader,
+.balanceCard .statsValue,
+.balanceCard .statsSubtext {
+  position: relative;
+  z-index: 1;
+}
+
+.balanceCard {
+  padding: 1.5rem;
+}
+
 .statsLabel {
   font-size: 1rem;
   color: #666666;
@@ -449,8 +479,9 @@
 }
 
 .statusCard {
-  background: #111;
-  color: #fff;
+  background: #fff;
+  color: #111;
+  border: 2px solid #111;
   border-radius: 20px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.12);
   padding: 2rem 1.5rem 1.5rem 1.5rem;
@@ -492,6 +523,7 @@
   font-size: 1.3rem;
   font-weight: 600;
   letter-spacing: 0.01em;
+  color: #111;
 }
 .statusWorking {
   color: #22C55E;
@@ -503,16 +535,84 @@
   color: #F59E42;
 }
 .statusNotStarted {
-  color: #fff;
+  color: #111;
   opacity: 0.8;
 }
 
 .statusDescription {
   font-size: 1rem;
-  color: #fff;
+  color: #111;
   opacity: 0.85;
   margin-top: 0.25rem;
   margin-bottom: 0.5rem;
+}
+
+/* Card de tempo restante */
+.timeRemainingCard {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.15);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+}
+
+.timeRemainingCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  pointer-events: none;
+}
+
+.timeRemainingHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.timeRemainingIcon {
+  font-size: 1.5rem;
+  color: #fff;
+  filter: drop-shadow(0 2px 8px rgba(255,255,255,0.2));
+}
+
+.timeRemainingTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #fff;
+}
+
+.timeRemainingValue {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.25rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.timeRemainingSubtext {
+  font-size: 0.875rem;
+  color: #fff;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
 }
 
 .quickActions {
@@ -561,6 +661,18 @@
 @media (max-width: 600px) {
   .statusCard {
     padding: 1.2rem 0.7rem 1rem 0.7rem;
+  }
+  .timeRemainingCard {
+    padding: 1.25rem;
+  }
+  .timeRemainingValue {
+    font-size: 2rem;
+  }
+  .timeRemainingTitle {
+    font-size: 0.875rem;
+  }
+  .timeRemainingIcon {
+    font-size: 1.25rem;
   }
   .actionButton {
     padding: 0.8rem 1.2rem;

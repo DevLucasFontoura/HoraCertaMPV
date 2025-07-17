@@ -23,6 +23,12 @@ interface BankHours {
   negative: number;
 }
 
+interface TimeRemaining {
+  hours: number;
+  minutes: number;
+  isComplete: boolean;
+}
+
 const BemVindo = () => {
   const router = useRouter();
   const { userData, loading } = useAuth();
@@ -33,6 +39,7 @@ const BemVindo = () => {
     currentStatus: 'not_started'
   });
   const [bankHours, setBankHours] = useState<BankHours>({ total: 0, positive: 0, negative: 0 });
+  const [timeRemaining, setTimeRemaining] = useState<TimeRemaining>({ hours: 0, minutes: 0, isComplete: false });
   const [statsLoading, setStatsLoading] = useState(true);
 
   const formatDate = () => {
@@ -48,6 +55,74 @@ const BemVindo = () => {
   const getWorkTimeConfig = useCallback((): WorkTimeConfig => {
     return TimeCalculationService.getWorkTimeConfig(userData);
   }, [userData]);
+
+  // Calcular tempo restante para completar a jornada
+  const calculateTimeRemaining = useCallback((records: any, config: WorkTimeConfig): TimeRemaining => {
+    const types = records.map((r: any) => r.type);
+    
+    // Se não há entrada ou já foi finalizado, não há tempo restante
+    if (!types.includes('entry') || types.includes('exit')) {
+      return { hours: 0, minutes: 0, isComplete: true };
+    }
+    
+    const entry = records.find((r: any) => r.type === 'entry');
+    if (!entry) {
+      return { hours: 0, minutes: 0, isComplete: false };
+    }
+    
+    // Calcular tempo já trabalhado
+    const now = new Date();
+    const entryTime = new Date();
+    const [entryHours, entryMinutes] = entry.time.split(':').map(Number);
+    entryTime.setHours(entryHours, entryMinutes, 0, 0);
+    
+    // Se ainda não chegou no horário de entrada
+    if (now < entryTime) {
+      return { hours: config.dailyWorkHours, minutes: 0, isComplete: false };
+    }
+    
+    // Calcular tempo trabalhado até agora
+    let workedMinutes = (now.getTime() - entryTime.getTime()) / (1000 * 60);
+    
+    // Descontar tempo de almoço se já saiu para almoço
+    if (types.includes('lunchOut') && types.includes('lunchReturn')) {
+      const lunchOut = records.find((r: any) => r.type === 'lunchOut');
+      const lunchReturn = records.find((r: any) => r.type === 'lunchReturn');
+      
+      if (lunchOut && lunchReturn) {
+        const lunchOutTime = new Date();
+        const lunchReturnTime = new Date();
+        const [lunchOutHours, lunchOutMinutes] = lunchOut.time.split(':').map(Number);
+        const [lunchReturnHours, lunchReturnMinutes] = lunchReturn.time.split(':').map(Number);
+        
+        lunchOutTime.setHours(lunchOutHours, lunchOutMinutes, 0, 0);
+        lunchReturnTime.setHours(lunchReturnHours, lunchReturnMinutes, 0, 0);
+        
+        const lunchMinutes = (lunchReturnTime.getTime() - lunchOutTime.getTime()) / (1000 * 60);
+        workedMinutes -= lunchMinutes;
+      }
+    } else if (types.includes('lunchOut') && !types.includes('lunchReturn')) {
+      // Se saiu para almoço mas não retornou, descontar tempo até agora
+      const lunchOut = records.find((r: any) => r.type === 'lunchOut');
+      if (lunchOut) {
+        const lunchOutTime = new Date();
+        const [lunchOutHours, lunchOutMinutes] = lunchOut.time.split(':').map(Number);
+        lunchOutTime.setHours(lunchOutHours, lunchOutMinutes, 0, 0);
+        
+        const lunchMinutes = (now.getTime() - lunchOutTime.getTime()) / (1000 * 60);
+        workedMinutes -= lunchMinutes;
+      }
+    }
+    
+    // Calcular tempo restante
+    const totalRequiredMinutes = config.dailyWorkHours * 60;
+    const remainingMinutes = Math.max(0, totalRequiredMinutes - workedMinutes);
+    
+    const hours = Math.floor(remainingMinutes / 60);
+    const minutes = Math.round(remainingMinutes % 60);
+    
+    return { hours, minutes, isComplete: false };
+  }, []);
 
   // Calcular status atual do dia
   const calculateTodayStatus = useCallback((records: any): TodayStats => {
@@ -94,8 +169,10 @@ const BemVindo = () => {
         // Buscar registros do dia atual
         const todayRecords = await registroService.getRegistrosDoDia();
         const todayStatus = calculateTodayStatus(todayRecords);
+        const timeRemainingData = calculateTimeRemaining(todayRecords, config);
 
         setTodayStats(todayStatus);
+        setTimeRemaining(timeRemainingData);
 
         // Buscar todos os registros para calcular banco de horas
         const allRecords = await registroService.getAllRegistros();
@@ -174,24 +251,46 @@ const BemVindo = () => {
 
       <div className={styles.content}>
         <div className={styles.statsContainer}>
-          <motion.div
-            className={`${styles.statsCard} ${styles.workCard}`}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            whileHover={{ y: -5 }}
-          >
-            <div className={styles.statsHeader}>
-              <div className={styles.dot} />
-              <span className={styles.statsLabel}>Horas Trabalhadas</span>
-            </div>
-            <div className={styles.statsValue}>
-              {statsLoading ? '--:--' : TimeCalculationService.formatHours(todayStats.hoursWorked)}
-            </div>
-            <div className={styles.statsSubtext}>
-              {todayStats.isComplete ? 'Dia finalizado' : 'Hoje'}
-            </div>
-          </motion.div>
+          {/* Card de tempo restante - só mostra se o usuário já entrou e não finalizou */}
+          {todayStats.currentStatus !== 'not_started' && todayStats.currentStatus !== 'finished' ? (
+            <motion.div
+              className={styles.timeRemainingCard}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className={styles.timeRemainingHeader}>
+                <FiClock className={styles.timeRemainingIcon} />
+                <span className={styles.timeRemainingTitle}>Tempo Restante</span>
+              </div>
+              <div className={styles.timeRemainingValue}>
+                {statsLoading ? '--:--' : `${timeRemaining.hours}h ${timeRemaining.minutes}m`}
+              </div>
+              <div className={styles.timeRemainingSubtext}>
+                Para completar sua jornada
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              className={`${styles.statsCard} ${styles.workCard}`}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className={styles.statsHeader}>
+                <div className={styles.dot} />
+                <span className={styles.statsLabel}>Horas Trabalhadas</span>
+              </div>
+              <div className={styles.statsValue}>
+                {statsLoading ? '--:--' : TimeCalculationService.formatHours(todayStats.hoursWorked)}
+              </div>
+              <div className={styles.statsSubtext}>
+                {todayStats.isComplete ? 'Dia finalizado' : 'Hoje'}
+              </div>
+            </motion.div>
+          )}
 
           <motion.div
             className={`${styles.statsCard} ${styles.balanceCard}`}

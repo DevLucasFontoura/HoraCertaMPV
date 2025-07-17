@@ -212,12 +212,27 @@ export default function RegistrarPonto() {
       <div className={styles.pageContainer}>
         <Confetti isVisible={showConfetti} />
         
-        <div className={styles.pageHeader}>
-          <h1 className={styles.pageTitle}>{CONSTANTES.TITULO_REGISTRO_DE_PONTO}</h1>
-          <p className={styles.pageSubtitle}>{CONSTANTES.SUBTITULO_REGISTRO_DE_PONTO}</p>
-        </div>
+        <header className={styles.pageHeader}>
+          <div>
+            <motion.h1 
+              className={styles.pageTitle}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              {CONSTANTES.TITULO_REGISTRO_DE_PONTO}
+            </motion.h1>
+            <motion.p 
+              className={styles.pageSubtitle}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.8 }}
+            >
+              {CONSTANTES.SUBTITULO_REGISTRO_DE_PONTO}
+            </motion.p>
+          </div>
+        </header>
 
-        <div className={styles.mainCard}>
+        <div className={styles.content}>
+          <div className={styles.mainCard}>
           <motion.div 
             className={styles.timeDisplay}
             initial="hidden"
@@ -321,6 +336,7 @@ export default function RegistrarPonto() {
               </div>
             </div>
           </motion.div>
+        </div>
         </div>
       </div>
       <BottomNav />

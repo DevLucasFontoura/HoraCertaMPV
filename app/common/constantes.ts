@@ -212,7 +212,7 @@ export const CONSTANTES = {
 
     // -------------------------- PAGINA REGISTRO DE PONTO --------------------------
     TITULO_REGISTRO_DE_PONTO: 'Registrar Ponto',
-    SUBTITULO_REGISTRO_DE_PONTO: 'Registre sua entrada, almoço ou saída',
+    SUBTITULO_REGISTRO_DE_PONTO: 'Registre sua entrada, almoço e saída',
     RP_ALMOCO: 'Almoço',
     RP_SAIDA: 'Saída',
     RP_ENTRADA: 'Entrada',

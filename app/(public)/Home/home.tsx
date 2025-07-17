@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { AiOutlineClockCircle, AiOutlineEdit, AiOutlineFileText, AiOutlineMobile, AiOutlineSafety, AiOutlineTeam, AiOutlineMenu, AiOutlineClose, AiOutlineArrowRight, AiOutlineStar, AiOutlineCheck, AiOutlineVideoCamera } from 'react-icons/ai';
+import { AiOutlineClockCircle, AiOutlineEdit, AiOutlineFileText, AiOutlineMobile, AiOutlineSafety, AiOutlineTeam, AiOutlineMenu, AiOutlineClose, AiOutlineArrowRight, AiOutlineStar, AiOutlineCheck } from 'react-icons/ai';
 import AnimatedClock from '../../components/AnimatedClock/AnimatedClock';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CONSTANTES } from '../../common/constantes';
@@ -401,14 +401,8 @@ const LandingPage = () => {
           <div className={styles.ctaButtons}>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Link className={styles.primaryButton} href="/registro">
-                Começar Agora - Grátis
+                Começar Agora
                 <AiOutlineArrowRight size={16} style={{ marginLeft: '8px' }} />
-              </Link>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Link className={styles.secondaryButton} href="/como-funciona">
-                <AiOutlineVideoCamera size={16} style={{ marginRight: '8px' }} />
-                Ver Demo
               </Link>
             </motion.div>
           </div>

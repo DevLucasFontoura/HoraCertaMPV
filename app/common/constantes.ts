@@ -78,7 +78,7 @@ export const CONSTANTES = {
     // -------------------------- PAGINA HOME --------------------------
     TITULO_PRINCIPAL: 'Controle de ponto que seus colaboradores vão adorar usar',
     SUBTITULO_PRINCIPAL: 'Uma ferramenta simples e intuitiva para registro e gestão de ponto. Sem complicações, sem burocracias.',
-    BOTAO_COMECAR: 'Começar gratuitamente →',
+    BOTAO_COMECAR: 'Começar gratuitamente',
     BOTAO_LOGIN: 'Já tem uma conta? Faça login',
     TITULO_RECURSOS: 'Recursos que facilitam sua gestão',
     SUBTITULO_RECURSOS: 'Tudo que você precisa para gerenciar o ponto dos seus terceirizados',
@@ -148,7 +148,7 @@ export const CONSTANTES = {
     // ---- PRONTO PARA COMEÇAR ----
     TITULO_PRONTO_PARA_COMECAR: 'Pronto para começar?',
     SUBTITULO_PRONTO_PARA_COMECAR: 'Experimente gratuitamente e veja como é fácil gerenciar o ponto dos seus terceirizados',
-    BOTAO_CADASTRAR_GRATUITAMENTE: 'Criar conta gratuita →',
+    BOTAO_CADASTRAR_GRATUITAMENTE: 'Criar conta gratuita',
     BOTAO_VER_PLANOS: 'Ver planos',
 
     // -------------------------- PAGINA PREÇOS --------------------------
@@ -455,7 +455,7 @@ export const CONSTANTES = {
     TXT_REGISTRO_SENHA: 'Senha',
     TXT_REGISTRO_CONFIRMAR_SENHA: 'Confirmar senha',
     TXT_REGISTRO_JA_TENHO_UMA_CONTA: 'Fazer Login',
-    TXT_REGISTRO_CRIAR_CONTA: 'Criar conta →',
+    TXT_REGISTRO_CRIAR_CONTA: 'Criar conta',
     TXT_REGISTRO_CRIANDO_CONTA: 'Criando conta...',
     TXT_REGISTRO_PLACEHOLDER_NOME: 'Seu nome',
     TXT_REGISTRO_PLACEHOLDER_EMAIL: 'seu@email.com',

@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
 import { registroService } from '../../services/registroService';
 import { TimeCalculationService, WorkTimeConfig } from '../../services/timeCalculationService';
-import { FiClock, FiTrendingUp, FiCheckCircle, FiAlertCircle, FiCalendar } from 'react-icons/fi';
+import { FiClock, FiTrendingUp, FiCheckCircle, FiAlertCircle, FiCalendar, FiPlus } from 'react-icons/fi';
 
 interface TodayStats {
   hoursWorked: number;
@@ -273,14 +273,14 @@ const BemVindo = () => {
             </motion.div>
           ) : (
             <motion.div
-              className={`${styles.statsCard} ${styles.workCard}`}
+              className={styles.statsCard}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
               whileHover={{ y: -5 }}
             >
               <div className={styles.statsHeader}>
-                <div className={styles.dot} />
+                <FiClock className={styles.statsIcon} />
                 <span className={styles.statsLabel}>Horas Trabalhadas</span>
               </div>
               <div className={styles.statsValue}>
@@ -293,15 +293,15 @@ const BemVindo = () => {
           )}
 
           <motion.div
-            className={`${styles.statsCard} ${styles.balanceCard}`}
+            className={styles.statsCard}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
             whileHover={{ y: -5 }}
           >
             <div className={styles.statsHeader}>
-              <div className={styles.dot} />
-              <span className={styles.statsLabel}>Banco de Horas</span>
+              <FiPlus className={styles.statsIcon} />
+              <span className={styles.statsLabel}>Saldo de Horas</span>
             </div>
             <div className={`${styles.statsValue} ${bankHours.total >= 0 ? styles.positive : styles.negative}`}>
               {statsLoading ? '--:--' : TimeCalculationService.formatBankHours(bankHours.total)}

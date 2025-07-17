@@ -75,6 +75,9 @@
   padding: 1.5rem;
   border-radius: 24px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .statsCard:hover {
@@ -86,55 +89,20 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 1rem;
+  align-self: flex-start;
 }
 
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
 
-.workCard .dot {
-  background-color: #22C55E;
-}
 
-.balanceCard .dot {
-  background-color: #3B82F6;
-}
-
-.balanceCard {
-  position: relative;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2px;
-  border-radius: 24px;
-}
-
-.balanceCard::before {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  right: 2px;
-  bottom: 2px;
-  background: white;
-  border-radius: 22px;
-  z-index: 0;
-}
-
-.balanceCard .statsHeader,
-.balanceCard .statsValue,
-.balanceCard .statsSubtext {
-  position: relative;
-  z-index: 1;
-}
-
-.balanceCard {
-  padding: 1.5rem;
+.statsIcon {
+  font-size: 1.25rem;
+  color: #111111;
 }
 
 .statsLabel {
   font-size: 1rem;
   color: #666666;
+  font-weight: 600;
 }
 
 .statsValue {
@@ -142,6 +110,11 @@
   font-weight: 600;
   color: #111111;
   margin-bottom: 0.25rem;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .statsValue.positive {
@@ -155,6 +128,7 @@
 .statsSubtext {
   font-size: 0.875rem;
   color: #666666;
+  text-align: center;
 }
 
 .historicoButton {
@@ -549,30 +523,30 @@
 
 /* Card de tempo restante */
 .timeRemainingCard {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
+  background: white;
+  color: #111111;
   border-radius: 24px;
-  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.15);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
   position: relative;
   overflow: hidden;
   flex: 1;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 .timeRemainingCard::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-  pointer-events: none;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 24px;
+  z-index: -1;
 }
 
 .timeRemainingHeader {
@@ -580,39 +554,37 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
-  position: relative;
-  z-index: 1;
+  align-self: flex-start;
 }
 
 .timeRemainingIcon {
   font-size: 1.5rem;
-  color: #fff;
-  filter: drop-shadow(0 2px 8px rgba(255,255,255,0.2));
+  color: #667eea;
 }
 
 .timeRemainingTitle {
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.01em;
-  color: #fff;
+  color: #111111;
 }
 
 .timeRemainingValue {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #fff;
+  color: #667eea;
   margin-bottom: 0.25rem;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  position: relative;
-  z-index: 1;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .timeRemainingSubtext {
   font-size: 0.875rem;
-  color: #fff;
-  opacity: 0.9;
-  position: relative;
-  z-index: 1;
+  color: #666666;
+  text-align: center;
 }
 
 .quickActions {

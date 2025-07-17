@@ -197,6 +197,30 @@ const BemVindo = () => {
     }
   }, [loading, userData, calculateTodayStatus, getWorkTimeConfig]);
 
+  // Atualizar tempo restante a cada minuto
+  useEffect(() => {
+    if (todayStats.currentStatus !== 'not_started' && todayStats.currentStatus !== 'finished') {
+      const updateTimeRemaining = () => {
+        const config = getWorkTimeConfig();
+        registroService.getRegistrosDoDia().then(todayRecords => {
+          const timeRemainingData = calculateTimeRemaining(todayRecords, config);
+          setTimeRemaining(timeRemainingData);
+        }).catch(error => {
+          console.error('Erro ao atualizar tempo restante:', error);
+        });
+      };
+
+      // Atualizar imediatamente
+      updateTimeRemaining();
+
+      // Configurar intervalo para atualizar a cada minuto
+      const interval = setInterval(updateTimeRemaining, 60000); // 60000ms = 1 minuto
+
+      // Limpar intervalo quando componente for desmontado
+      return () => clearInterval(interval);
+    }
+  }, [todayStats.currentStatus, getWorkTimeConfig, calculateTimeRemaining]);
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'working':

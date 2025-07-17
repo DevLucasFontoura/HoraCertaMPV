@@ -80,9 +80,7 @@
   position: relative;
 }
 
-.statsCard:hover {
-  transform: translateY(-2px);
-}
+
 
 .statsHeader {
   display: flex;
@@ -572,19 +570,33 @@
 .timeRemainingValue {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #667eea;
   margin-bottom: 0.25rem;
   text-align: center;
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(90deg, #93c5fd 0%, #8b5cf6 20%, #93c5fd 40%, #a855f7 60%, #93c5fd 80%, #8b5cf6 100%);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: metallicShine 12s ease-in-out infinite;
 }
 
 .timeRemainingSubtext {
   font-size: 0.875rem;
   color: #666666;
   text-align: center;
+}
+
+@keyframes metallicShine {
+  0% {
+    background-position: 300% 0;
+  }
+  100% {
+    background-position: -300% 0;
+  }
 }
 
 .quickActions {

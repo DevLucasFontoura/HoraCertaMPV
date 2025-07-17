@@ -7,7 +7,8 @@ import {
   getDocs, 
   query, 
   where, 
-  Timestamp 
+  Timestamp, 
+  deleteDoc
 } from 'firebase/firestore';
 import { auth } from '../lib/firebase';
 
@@ -429,6 +430,13 @@ class RegistroService {
         throw new Error('Erro desconhecido ao salvar registro.');
       }
     }
+  }
+
+  async deletarRegistrosDaData(date: string): Promise<void> {
+    const userId = this.getUserId();
+    const docId = this.getDocId(userId, date);
+    const docRef = doc(db, 'registros', docId);
+    await deleteDoc(docRef);
   }
 }
 

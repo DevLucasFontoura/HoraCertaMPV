@@ -11,7 +11,7 @@ import { useIsMobile } from '../../hooks/use-mobile'
 import { useRouter } from 'next/navigation'
 import BottomNav from '../../components/Menu/menu'
 import { CONSTANTES } from '../../common/constantes'
-import { FaHistory, FaPlus, FaTimes } from 'react-icons/fa'
+import { FaHistory, FaPlus, FaTimes, FaTrash } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 import styles from './historico.module.css';
 import mobileStyles from './historicoMobile.module.css'
@@ -29,6 +29,8 @@ export default function Historico() {
     saida: ''
   })
   const [saving, setSaving] = useState(false)
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [linhaParaDeletar, setLinhaParaDeletar] = useState<string | null>(null);
   const { userData } = useAuth()
   const router = useRouter()
   const isMobile = useIsMobile()
@@ -196,6 +198,30 @@ export default function Historico() {
     setShowForm(true)
   }
 
+  // Função para limpar registros de uma data
+  const limparRegistrosDaData = async () => {
+    if (!formData.data) return;
+    try {
+      setSaving(true);
+      // Converter data do formato DD/MM/YYYY para YYYY-MM-DD
+      const [day, month, year] = formData.data.split('/');
+      const dateString = `${year}-${month}-${day}`;
+      await registroService.deletarRegistrosDaData(dateString);
+      setShowConfirmDelete(false);
+      fecharFormulario();
+      await recarregarDados();
+    } catch (error) {
+      alert('Erro ao limpar registros.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Função para deletar registro de uma linha
+  const handleDeleteRow = (data: string) => {
+    setLinhaParaDeletar(data);
+  };
+
   useEffect(() => {
     const carregarHistorico = async () => {
       try {
@@ -218,328 +244,464 @@ export default function Historico() {
   }, [])
 
   return (
-    <div className={styles.containerWrapper}>
-      <style jsx>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
-      <header className={styles.header}>
-        <div>
-          <motion.h1 
-            className={styles.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            Histórico
-          </motion.h1>
-          <motion.p 
-            className={styles.subtitle}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.8 }}
-          >
-            Acompanhe seus registros de ponto
-          </motion.p>
+    <>
+      <div className={styles.containerWrapper}>
+        <style jsx>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+        <header className={styles.header}>
+          <div>
+            <motion.h1 
+              className={styles.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              Histórico
+            </motion.h1>
+            <motion.p 
+              className={styles.subtitle}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.8 }}
+            >
+              Acompanhe seus registros de ponto
+            </motion.p>
+          </div>
+        </header>
+        <div className={`${styles.backgroundIcon} ${isMobile ? mobileStyles.backgroundIcon : ''}`}>
+          <FaHistory size={200} color="rgba(0,0,0,0.10)" />
         </div>
-      </header>
-      <div className={`${styles.backgroundIcon} ${isMobile ? mobileStyles.backgroundIcon : ''}`}>
-        <FaHistory size={200} color="rgba(0,0,0,0.10)" />
-      </div>
-      <motion.div 
-        className={`${styles.container} ${isMobile ? mobileStyles.container : ''}`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <section className={`${styles.section} ${isMobile ? mobileStyles.section : ''}`}>
-            {loading ? (
-              <div className={`${styles.loadingContainer} ${isMobile ? mobileStyles.loadingContainer : ''}`}>
-                <CircularProgress />
-              </div>
-            ) : error ? (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                {error}
-              </Alert>
-            ) : (
-              <div 
-                className={`${styles.tableContainer} ${isMobile ? mobileStyles.tableContainer : ''}`}
-                style={{
-                  overflowX: 'auto',
-                  WebkitOverflowScrolling: 'touch'
-                }}
-              >
-                <HistoricoTable 
-                  data={historicoData}
-                  showHeaderControls={true}
-                  pageSize={31}
-                  onRowClick={preencherFormularioComLinha}
-                  workConfig={workConfig}
-                />
-              </div>
-            )}
-
-            {/* Modal do Formulário */}
-            {showForm && (
-              <div 
-                style={{
-                  position: 'fixed',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 1000,
-                  padding: '20px'
-                }}
-              >
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
+        <motion.div 
+          className={`${styles.container} ${isMobile ? mobileStyles.container : ''}`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <section className={`${styles.section} ${isMobile ? mobileStyles.section : ''}`}>
+              {loading ? (
+                <div className={`${styles.loadingContainer} ${isMobile ? mobileStyles.loadingContainer : ''}`}>
+                  <CircularProgress />
+                </div>
+              ) : error ? (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {error}
+                </Alert>
+              ) : (
+                <div 
+                  className={`${styles.tableContainer} ${isMobile ? mobileStyles.tableContainer : ''}`}
                   style={{
-                    backgroundColor: '#fff',
-                    borderRadius: '12px',
-                    padding: '24px',
-                    width: '100%',
-                    maxWidth: '500px',
-                    maxHeight: '90vh',
-                    overflowY: 'auto'
+                    overflowX: 'auto',
+                    WebkitOverflowScrolling: 'touch'
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                    <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '600' }}>Registrar Ponto Manual</h2>
-                    <button
-                      onClick={fecharFormulario}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        padding: '8px',
-                        borderRadius: '4px',
-                        color: '#666'
-                      }}
-                    >
-                      <FaTimes size={20} />
-                    </button>
-                  </div>
-                  
-                  <p style={{ 
-                    margin: '0 0 20px 0', 
-                    fontSize: '14px', 
-                    color: '#666',
-                    lineHeight: '1.5'
-                  }}>
-                    Preencha os horários que deseja registrar para a data selecionada. 
-                    Se já existir um registro para esta data, ele será atualizado.
-                  </p>
-                  
-                  {registroExistente && (
-                    <div style={{
-                      backgroundColor: '#f0f9ff',
-                      border: '1px solid #0ea5e9',
-                      borderRadius: '6px',
-                      padding: '8px 12px',
-                      marginBottom: '16px',
-                      fontSize: '12px',
-                      color: '#0369a1'
-                    }}>
-                      ℹ️ Já existe um registro para {formData.data}. Os dados serão atualizados.
-                    </div>
-                  )}
+                  <HistoricoTable 
+                    data={historicoData}
+                    showHeaderControls={true}
+                    pageSize={31}
+                    onRowClick={preencherFormularioComLinha}
+                    workConfig={workConfig}
+                    onDeleteRow={handleDeleteRow}
+                  />
+                </div>
+              )}
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    {/* Data */}
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#333' }}>
-                        Data do Registro *
-                      </label>
-                      <input
-                        type="date"
-                        value={formData.data ? (() => {
-                          const [day, month, year] = formData.data.split('/')
-                          return `${year}-${month}-${day}`
-                        })() : ''}
-                        onChange={(e) => {
-                          const date = new Date(e.target.value)
-                          const day = date.getDate().toString().padStart(2, '0')
-                          const month = (date.getMonth() + 1).toString().padStart(2, '0')
-                          const year = date.getFullYear().toString()
-                          setFormData(prev => ({ ...prev, data: `${day}/${month}/${year}` }))
-                        }}
-                        style={{
-                          width: '100%',
-                          padding: '12px',
-                          border: '1px solid #ddd',
-                          borderRadius: '8px',
-                          fontSize: '14px',
-                          backgroundColor: '#fff'
-                        }}
-                        required
-                      />
-                      <small style={{ color: '#666', fontSize: '12px', marginTop: '4px', display: 'block' }}>
-                        Selecione a data para a qual deseja adicionar o registro de ponto
-                      </small>
-                    </div>
-
-                    {/* Entrada */}
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#333' }}>
-                        Horário de Entrada
-                      </label>
-                      <input
-                        type="time"
-                        value={formData.entrada}
-                        onChange={(e) => setFormData(prev => ({ ...prev, entrada: e.target.value }))}
-                        style={{
-                          width: '100%',
-                          padding: '12px',
-                          border: '1px solid #ddd',
-                          borderRadius: '8px',
-                          fontSize: '14px'
-                        }}
-                        placeholder="Ex: 08:00"
-                      />
-                    </div>
-
-                    {/* Saída Almoço */}
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#333' }}>
-                        Horário de Saída para Almoço
-                      </label>
-                      <input
-                        type="time"
-                        value={formData.saidaAlmoco}
-                        onChange={(e) => setFormData(prev => ({ ...prev, saidaAlmoco: e.target.value }))}
-                        style={{
-                          width: '100%',
-                          padding: '12px',
-                          border: '1px solid #ddd',
-                          borderRadius: '8px',
-                          fontSize: '14px'
-                        }}
-                        placeholder="Ex: 12:00"
-                      />
-                    </div>
-
-                    {/* Retorno Almoço */}
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#333' }}>
-                        Horário de Retorno do Almoço
-                      </label>
-                      <input
-                        type="time"
-                        value={formData.retornoAlmoco}
-                        onChange={(e) => setFormData(prev => ({ ...prev, retornoAlmoco: e.target.value }))}
-                        style={{
-                          width: '100%',
-                          padding: '12px',
-                          border: '1px solid #ddd',
-                          borderRadius: '8px',
-                          fontSize: '14px'
-                        }}
-                        placeholder="Ex: 13:00"
-                      />
-                    </div>
-
-                    {/* Saída */}
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#333' }}>
-                        Horário de Saída
-                      </label>
-                      <input
-                        type="time"
-                        value={formData.saida}
-                        onChange={(e) => setFormData(prev => ({ ...prev, saida: e.target.value }))}
-                        style={{
-                          width: '100%',
-                          padding: '12px',
-                          border: '1px solid #ddd',
-                          borderRadius: '8px',
-                          fontSize: '14px'
-                        }}
-                        placeholder="Ex: 18:00"
-                      />
-                    </div>
-
-                    {/* Botões */}
-                    <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
+              {/* Modal do Formulário */}
+              {showForm && (
+                <div 
+                  style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 1000,
+                    padding: '20px'
+                  }}
+                >
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    style={{
+                      backgroundColor: '#fff',
+                      borderRadius: '12px',
+                      padding: '24px',
+                      width: '100%',
+                      maxWidth: '500px',
+                      maxHeight: '90vh',
+                      overflowY: 'auto'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '600' }}>Registrar Ponto Manual</h2>
                       <button
                         onClick={fecharFormulario}
-                        disabled={saving}
                         style={{
-                          flex: 1,
-                          padding: '12px',
-                          border: '1px solid #ddd',
-                          borderRadius: '8px',
-                          backgroundColor: '#fff',
-                          color: saving ? '#ccc' : '#333',
-                          cursor: saving ? 'not-allowed' : 'pointer',
-                          fontSize: '14px',
-                          fontWeight: '500'
-                        }}
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        onClick={salvarRegistro}
-                        disabled={saving || !isFormValid()}
-                        style={{
-                          flex: 1,
-                          padding: '12px',
+                          background: 'none',
                           border: 'none',
-                          borderRadius: '8px',
-                          backgroundColor: saving ? '#ccc' : (isFormValid() ? '#000' : '#e5e5e5'),
-                          color: '#fff',
-                          cursor: (saving || !isFormValid()) ? 'not-allowed' : 'pointer',
-                          fontSize: '14px',
-                          fontWeight: '500',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '8px'
+                          cursor: 'pointer',
+                          padding: '8px',
+                          borderRadius: '4px',
+                          color: '#666'
                         }}
                       >
-                        {saving ? (
-                          <>
-                            <div style={{
-                              width: '16px',
-                              height: '16px',
-                              border: '2px solid #fff',
-                              borderTop: '2px solid transparent',
-                              borderRadius: '50%',
-                              animation: 'spin 1s linear infinite'
-                            }} />
-                            Salvando...
-                          </>
-                        ) : (
-                          'Salvar Registro'
-                        )}
+                        <FaTimes size={20} />
                       </button>
                     </div>
                     
-                    {!isFormValid() && (
+                    <p style={{ 
+                      margin: '0 0 20px 0', 
+                      fontSize: '14px', 
+                      color: '#666',
+                      lineHeight: '1.5'
+                    }}>
+                      Preencha os horários que deseja registrar para a data selecionada. 
+                      Se já existir um registro para esta data, ele será atualizado.
+                    </p>
+                    
+                    {registroExistente && (
                       <div style={{
-                        backgroundColor: '#fef2f2',
-                        border: '1px solid #fecaca',
+                        backgroundColor: '#f0f9ff',
+                        border: '1px solid #0ea5e9',
                         borderRadius: '6px',
                         padding: '8px 12px',
-                        marginTop: '12px',
+                        marginBottom: '16px',
                         fontSize: '12px',
-                        color: '#dc2626'
+                        color: '#0369a1'
                       }}>
-                        ⚠️ Preencha a data e pelo menos um horário para salvar o registro.
+                        ℹ️ Já existe um registro para {formData.data}. Os dados serão atualizados.
                       </div>
                     )}
-                  </div>
-                </motion.div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      {/* Data */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#333' }}>
+                          Data do Registro *
+                        </label>
+                        <input
+                          type="date"
+                          value={formData.data ? (() => {
+                            const [day, month, year] = formData.data.split('/')
+                            return `${year}-${month}-${day}`
+                          })() : ''}
+                          onChange={(e) => {
+                            const date = new Date(e.target.value)
+                            const day = date.getDate().toString().padStart(2, '0')
+                            const month = (date.getMonth() + 1).toString().padStart(2, '0')
+                            const year = date.getFullYear().toString()
+                            setFormData(prev => ({ ...prev, data: `${day}/${month}/${year}` }))
+                          }}
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            border: '1px solid #ddd',
+                            borderRadius: '8px',
+                            fontSize: '14px',
+                            backgroundColor: '#fff'
+                          }}
+                          required
+                        />
+                        <small style={{ color: '#666', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                          Selecione a data para a qual deseja adicionar o registro de ponto
+                        </small>
+                      </div>
+
+                      {/* Entrada */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#333' }}>
+                          Horário de Entrada
+                        </label>
+                        <input
+                          type="time"
+                          value={formData.entrada || ''}
+                          onChange={(e) => setFormData(prev => ({ ...prev, entrada: e.target.value }))}
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            border: '1px solid #ddd',
+                            borderRadius: '8px',
+                            fontSize: '14px'
+                          }}
+                          placeholder="Ex: 08:00"
+                        />
+                      </div>
+
+                      {/* Saída Almoço */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#333' }}>
+                          Horário de Saída para Almoço
+                        </label>
+                        <input
+                          type="time"
+                          value={formData.saidaAlmoco}
+                          onChange={(e) => setFormData(prev => ({ ...prev, saidaAlmoco: e.target.value }))}
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            border: '1px solid #ddd',
+                            borderRadius: '8px',
+                            fontSize: '14px'
+                          }}
+                          placeholder="Ex: 12:00"
+                        />
+                      </div>
+
+                      {/* Retorno Almoço */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#333' }}>
+                          Horário de Retorno do Almoço
+                        </label>
+                        <input
+                          type="time"
+                          value={formData.retornoAlmoco}
+                          onChange={(e) => setFormData(prev => ({ ...prev, retornoAlmoco: e.target.value }))}
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            border: '1px solid #ddd',
+                            borderRadius: '8px',
+                            fontSize: '14px'
+                          }}
+                          placeholder="Ex: 13:00"
+                        />
+                      </div>
+
+                      {/* Saída */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#333' }}>
+                          Horário de Saída
+                        </label>
+                        <input
+                          type="time"
+                          value={formData.saida || ''}
+                          onChange={(e) => setFormData(prev => ({ ...prev, saida: e.target.value }))}
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            border: '1px solid #ddd',
+                            borderRadius: '8px',
+                            fontSize: '14px'
+                          }}
+                          placeholder="Ex: 18:00"
+                        />
+                      </div>
+
+                      {/* Botões */}
+                      <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
+                        <button
+                          onClick={fecharFormulario}
+                          disabled={saving}
+                          style={{
+                            flex: 1,
+                            padding: '12px',
+                            border: '1px solid #ddd',
+                            borderRadius: '8px',
+                            backgroundColor: '#fff',
+                            color: saving ? '#ccc' : '#333',
+                            cursor: saving ? 'not-allowed' : 'pointer',
+                            fontSize: '14px',
+                            fontWeight: '500'
+                          }}
+                        >
+                          Cancelar
+                        </button>
+                        <button
+                          onClick={salvarRegistro}
+                          disabled={saving || !isFormValid()}
+                          style={{
+                            flex: 1,
+                            padding: '12px',
+                            border: 'none',
+                            borderRadius: '8px',
+                            backgroundColor: saving ? '#ccc' : (isFormValid() ? '#000' : '#e5e5e5'),
+                            color: '#fff',
+                            cursor: (saving || !isFormValid()) ? 'not-allowed' : 'pointer',
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '8px'
+                          }}
+                        >
+                          {saving ? (
+                            <>
+                              <div style={{
+                                width: '16px',
+                                height: '16px',
+                                border: '2px solid #fff',
+                                borderTop: '2px solid transparent',
+                                borderRadius: '50%',
+                                animation: 'spin 1s linear infinite'
+                              }} />
+                              Salvando...
+                            </>
+                          ) : (
+                            'Salvar Registro'
+                          )}
+                        </button>
+                      </div>
+                      
+                      {!isFormValid() && (
+                        <div style={{
+                          backgroundColor: '#fef2f2',
+                          border: '1px solid #fecaca',
+                          borderRadius: '6px',
+                          padding: '8px 12px',
+                          marginTop: '12px',
+                          fontSize: '12px',
+                          color: '#dc2626'
+                        }}>
+                          ⚠️ Preencha a data e pelo menos um horário para salvar o registro.
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+            </section>
+          </motion.div>
+          <BottomNav />
+        </div>
+        {/* Modal de confirmação para limpar linha */}
+        {linhaParaDeletar && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1100
+          }}>
+            <div style={{
+              background: '#fff',
+              borderRadius: '12px',
+              padding: '32px',
+              maxWidth: '90vw',
+              width: '100%',
+              maxWidth: '400px',
+              textAlign: 'center',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+            }}>
+              <p style={{ fontSize: '16px', marginBottom: '24px' }}>
+                Tem certeza que deseja <b>limpar este registro</b>?<br />Esta ação não pode ser desfeita.
+              </p>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                <button
+                  onClick={() => setLinhaParaDeletar(null)}
+                  style={{
+                    flex: 1,
+                    padding: '12px',
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    backgroundColor: '#fff',
+                    color: '#333',
+                    cursor: 'pointer',
+                    fontWeight: '500'
+                  }}
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={async () => {
+                    if (linhaParaDeletar) {
+                      // Converter data do formato DD/MM/YYYY para YYYY-MM-DD
+                      const [day, month, year] = linhaParaDeletar.split('/');
+                      const dateString = `${year}-${month}-${day}`;
+                      await registroService.deletarRegistrosDaData(dateString);
+                      setLinhaParaDeletar(null);
+                      await recarregarDados();
+                    }
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: '12px',
+                    border: 'none',
+                    borderRadius: '8px',
+                    backgroundColor: '#dc2626',
+                    color: '#fff',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Limpar
+                </button>
               </div>
-            )}
-          </section>
-        </motion.div>
-        <BottomNav />
-      </div>
-  )
-}
+            </div>
+          </div>
+        )}
+        {/* Modal de confirmação para limpar registros */}
+        {showConfirmDelete && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1100
+          }}>
+            <div style={{
+              background: '#fff',
+              borderRadius: '12px',
+              padding: '32px',
+              maxWidth: '90vw',
+              width: '100%',
+              maxWidth: '400px',
+              textAlign: 'center',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+            }}>
+              <p style={{ fontSize: '16px', marginBottom: '24px' }}>
+                Tem certeza que deseja <b>limpar todos os registros</b> deste dia?<br />Esta ação não pode ser desfeita.
+              </p>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                <button
+                  onClick={() => setShowConfirmDelete(false)}
+                  style={{
+                    flex: 1,
+                    padding: '12px',
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    backgroundColor: '#fff',
+                    color: '#333',
+                    cursor: 'pointer',
+                    fontWeight: '500'
+                  }}
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={limparRegistrosDaData}
+                  style={{
+                    flex: 1,
+                    padding: '12px',
+                    border: 'none',
+                    borderRadius: '8px',
+                    backgroundColor: '#dc2626',
+                    color: '#fff',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Limpar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    )
+  }

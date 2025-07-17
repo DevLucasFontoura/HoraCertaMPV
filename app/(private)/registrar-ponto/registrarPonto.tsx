@@ -7,7 +7,7 @@ import { CONSTANTES } from '../../common/constantes';
 import BottomNav from '../../components/Menu/menu';
 import styles from './registrarPonto.module.css';
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Switch } from '@mui/material';
 import { registroService, TimeRecord } from '../../services/registroService';
 
@@ -15,6 +15,15 @@ interface TimeState {
   hours: string;
   minutes: string;
   seconds: string;
+}
+
+interface ConfettiPiece {
+  id: number;
+  x: number;
+  y: number;
+  rotation: number;
+  color: string;
+  size: number;
 }
 
 const timeDisplayVariants = {
@@ -29,6 +38,63 @@ const timeDisplayVariants = {
   }
 };
 
+// Componente de Confete
+const Confetti = ({ isVisible }: { isVisible: boolean }) => {
+  const colors = ['#225E', '#3B82F6', '#F59424', '#EF4444', '#8B5CF6', '#06B6D4'];
+  const confettiPieces: ConfettiPiece[] = Array.from({ length: 150 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    rotation: Math.random() * 360,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    size: Math.random() * 8 + 4
+  }));
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          className={styles.confettiContainer}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {confettiPieces.map((piece) => (
+            <motion.div
+              key={piece.id}
+              className={styles.confettiPiece}
+              style={{
+                left: `${piece.x}%`,
+                backgroundColor: piece.color,
+                width: `${piece.size}px`,
+                height: `${piece.size}px`,
+              }}
+              initial={{
+                y: -100,
+                x: piece.x,
+                rotate: 0,
+                opacity: 0
+              }}
+              animate={{
+                y: window.innerHeight + 100,
+                x: piece.x + (Math.random() - 0.5) * 100,
+                rotate: piece.rotation + 360,
+                opacity: [0, 1, 1, 0]
+              }}
+              transition={{
+                duration: 3,
+                delay: Math.random() * 0.5,
+                ease: "easeOut"
+              }}
+            />
+          ))}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 export default function RegistrarPonto() {
   const [currentTime, setCurrentTime] = useState<TimeState>({
     hours: '00',
@@ -39,6 +105,7 @@ export default function RegistrarPonto() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [todayRecords, setTodayRecords] = useState<TimeRecord[]>([]);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Estado para controlar quais botões estão habilitados
   const [todayRecord, setTodayRecord] = useState({
@@ -119,6 +186,12 @@ export default function RegistrarPonto() {
         });
         
         setSuccess('Ponto registrado com sucesso!');
+        
+        // Mostrar confete
+        setShowConfetti(true);
+        setTimeout(() => {
+          setShowConfetti(false);
+        }, 3000); // 3 segundos de duração do confete
       } else {
         setError('Erro ao registrar ponto. Tente novamente.');
       }
@@ -137,6 +210,8 @@ export default function RegistrarPonto() {
   return (
     <PageTransition>
       <div className={styles.pageContainer}>
+        <Confetti isVisible={showConfetti} />
+        
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>{CONSTANTES.TITULO_REGISTRO_DE_PONTO}</h1>
           <p className={styles.pageSubtitle}>{CONSTANTES.SUBTITULO_REGISTRO_DE_PONTO}</p>

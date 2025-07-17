@@ -38,8 +38,8 @@ import {
 } from "../ui/drawer"
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
 
@@ -60,6 +60,7 @@ import {
 } from "../ui/table"
 import { cn } from "@/lib/utils"
 import { TimeCalculationService } from "../../services/timeCalculationService"
+import { FaEllipsisV, FaTrash } from 'react-icons/fa';
 
 export const historicoSchema = z.object({
   id: z.string(),
@@ -77,12 +78,14 @@ export function HistoricoTable({
   pageSize = 10,
   onRowClick,
   workConfig,
+  onDeleteRow, // nova prop
 }: {
   data: z.infer<typeof historicoSchema>[]
   showHeaderControls?: boolean
   pageSize?: number
   onRowClick?: (row: z.infer<typeof historicoSchema>) => void
   workConfig?: { dailyWorkHours: number; lunchBreakHours: number }
+  onDeleteRow?: (date: string) => void // nova prop
 }) {
 
   const [selectedYear, setSelectedYear] = React.useState<number>(new Date().getFullYear())
@@ -412,6 +415,40 @@ export function HistoricoTable({
         );
       },
     },
+    {
+      id: 'acao',
+      header: () => 'Ação',
+      cell: ({ row }) => (
+        row.original.id.startsWith('empty_') ? null : (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button 
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <FaEllipsisV />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteRow && onDeleteRow(row.original.data);
+                }}
+                style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: 8, backgroundColor: '#fff' }}
+              >
+                <FaTrash /> Limpar linha
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 60,
+      minSize: 60,
+      maxSize: 80,
+    },
   ]
 
   const table = useReactTable({
@@ -514,7 +551,7 @@ export function HistoricoTable({
                   .filter((column) => column.getCanHide())
                   .map((column) => {
                     return (
-                      <DropdownMenuCheckboxItem
+                      <DropdownMenuItem
                         key={column.id}
                         className="capitalize"
                         checked={column.getIsVisible()}
@@ -523,7 +560,7 @@ export function HistoricoTable({
                         }
                       >
                         {column.id}
-                      </DropdownMenuCheckboxItem>
+                      </DropdownMenuItem>
                     )
                   })}
               </DropdownMenuContent>
@@ -696,7 +733,7 @@ export function HistoricoTable({
                 .filter((column) => column.getCanHide())
                 .map((column) => {
                   return (
-                    <DropdownMenuCheckboxItem
+                    <DropdownMenuItem
                       key={column.id}
                       className="capitalize"
                       checked={column.getIsVisible()}
@@ -705,7 +742,7 @@ export function HistoricoTable({
                       }
                     >
                       {column.id}
-                    </DropdownMenuCheckboxItem>
+                    </DropdownMenuItem>
                   )
                 })}
             </DropdownMenuContent>

@@ -436,3 +436,125 @@
 .statsValue.empty {
     color: #999999;
 }
+
+.statusCard {
+  background: #111;
+  color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  margin: 2rem 0 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.statusHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.statusIcon {
+  font-size: 2.5rem;
+  color: #22C55E;
+  filter: drop-shadow(0 2px 8px rgba(34,197,94,0.15));
+}
+.statusWorking .statusIcon {
+  color: #22C55E;
+}
+.statusLunch .statusIcon {
+  color: #3B82F6;
+}
+.statusFinished .statusIcon {
+  color: #F59E42;
+}
+.statusNotStarted .statusIcon {
+  color: #fff;
+  opacity: 0.7;
+}
+
+.statusText {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.statusWorking {
+  color: #22C55E;
+}
+.statusLunch {
+  color: #3B82F6;
+}
+.statusFinished {
+  color: #F59E42;
+}
+.statusNotStarted {
+  color: #fff;
+  opacity: 0.8;
+}
+
+.statusDescription {
+  font-size: 1rem;
+  color: #fff;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.quickActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.actionButton {
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.actionButton:hover {
+  background: #222;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+.secondaryButton {
+  background: #fff;
+  color: #111;
+  border: 2px solid #111;
+}
+.secondaryButton:hover {
+  background: #f3f3f3;
+  color: #111;
+}
+.actionIcon {
+  font-size: 1.5rem;
+  margin-right: 0.2rem;
+}
+
+@media (max-width: 600px) {
+  .statusCard {
+    padding: 1.2rem 0.7rem 1rem 0.7rem;
+  }
+  .actionButton {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+  }
+  .quickActions {
+    gap: 0.5rem;
+  }
+}

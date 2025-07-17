@@ -16,6 +16,7 @@ const ConditionalFooter = () => {
   const privateRoutes = [
     '/dashboard',
     '/relatorios',
+    '/historico',
     '/configuracao',
     '/registrar-ponto',
     '/bemvindo'

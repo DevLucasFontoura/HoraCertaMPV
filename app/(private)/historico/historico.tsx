@@ -2,18 +2,18 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { CircularProgress, Alert } from '@mui/material'
-import { HistoricoTable, historicoSchema } from '../../../../components/Table/historicoTable'
+import { HistoricoTable, historicoSchema } from '../../components/Table/historicoTable'
 import { z } from 'zod'
-import { registroService, DayRecord } from '../../../../services/registroService'
-import { TimeCalculationService } from '../../../../services/timeCalculationService'
-import { useAuth } from '../../../../hooks/useAuth'
-import { useIsMobile } from '../../../../hooks/use-mobile'
+import { registroService, DayRecord } from '../../services/registroService'
+import { TimeCalculationService } from '../../services/timeCalculationService'
+import { useAuth } from '../../hooks/useAuth'
+import { useIsMobile } from '../../hooks/use-mobile'
 import { useRouter } from 'next/navigation'
-import BottomNav from '../../../../components/Menu/menu'
-import { CONSTANTES } from '../../../../common/constantes'
-import { FaHistory, FaArrowLeft, FaPlus, FaTimes } from 'react-icons/fa'
+import BottomNav from '../../components/Menu/menu'
+import { CONSTANTES } from '../../common/constantes'
+import { FaHistory, FaPlus, FaTimes } from 'react-icons/fa'
 import { motion } from 'framer-motion'
-import styles from './historico.module.css'
+import styles from './historico.module.css';
 import mobileStyles from './historicoMobile.module.css'
 
 export default function Historico() {
@@ -218,82 +218,40 @@ export default function Historico() {
   }, [])
 
   return (
-    <>
+    <div className={styles.containerWrapper}>
       <style jsx>{`
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
       `}</style>
-      <div
-        className={`${styles.containerWrapper} ${isMobile ? mobileStyles.containerWrapper : ''}`}
-        style={isMobile ? { paddingLeft: 16, paddingRight: 16 } : {}}
-      >
-        <div className={`${styles.backgroundIcon} ${isMobile ? mobileStyles.backgroundIcon : ''}`}>
-          <FaHistory size={200} color="rgba(0,0,0,0.10)" />
+      <header className={styles.header}>
+        <div>
+          <motion.h1 
+            className={styles.title}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            Histórico
+          </motion.h1>
+          <motion.p 
+            className={styles.subtitle}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.8 }}
+          >
+            Acompanhe seus registros de ponto
+          </motion.p>
         </div>
-        
-        <motion.div 
-          className={`${styles.container} ${isMobile ? mobileStyles.container : ''}`}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
-            marginBottom: '24px',
-            gap: '16px',
-            flexWrap: 'wrap'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <button 
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  padding: '8px',
-                  cursor: 'pointer',
-                  color: '#666',
-                  transition: 'color 0.2s'
-                }}
-                onClick={() => router.push(CONSTANTES.ROUTE_CONFIGURACAO)}
-              >
-                <FaArrowLeft size={20} />
-              </button>
-              <div>
-                <h1 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#333', margin: 0 }}>
-                  {CONSTANTES.TITULO_CONFIGURACAO_HISTORICO}
-                </h1>
-                <p style={{ fontSize: '0.875rem', color: '#666', margin: '4px 0 0 0' }}>
-                  {CONSTANTES.SUBTITULO_CONFIGURACAO_HISTORICO}
-                </p>
-              </div>
-            </div>
-            <button 
-              onClick={abrirFormulario}
-              style={{
-                backgroundColor: '#000',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '12px 20px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                fontSize: '14px',
-                fontWeight: '500',
-                whiteSpace: 'nowrap',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                minWidth: 'fit-content'
-              }}
-            >
-              <FaPlus size={16} />
-              Adicionar Ponto
-            </button>
-          </div>
-
-          <section className={`${styles.section} ${isMobile ? mobileStyles.section : ''}`}>
+      </header>
+      <div className={`${styles.backgroundIcon} ${isMobile ? mobileStyles.backgroundIcon : ''}`}>
+        <FaHistory size={200} color="rgba(0,0,0,0.10)" />
+      </div>
+      <motion.div 
+        className={`${styles.container} ${isMobile ? mobileStyles.container : ''}`}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <section className={`${styles.section} ${isMobile ? mobileStyles.section : ''}`}>
             {loading ? (
               <div className={`${styles.loadingContainer} ${isMobile ? mobileStyles.loadingContainer : ''}`}>
                 <CircularProgress />
@@ -581,9 +539,7 @@ export default function Historico() {
             )}
           </section>
         </motion.div>
-        
         <BottomNav />
       </div>
-    </>
   )
 }

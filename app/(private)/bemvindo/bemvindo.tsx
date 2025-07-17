@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import BottomNav from '../../components/Menu/menu';
 import styles from './bemvindo.module.css';
 import { motion } from 'framer-motion';
@@ -20,6 +21,7 @@ interface BankHours {
 }
 
 const BemVindo = () => {
+  const router = useRouter();
   const { userData, loading } = useAuth();
   const [todayStats, setTodayStats] = useState<TodayStats>({ hoursWorked: 0, isComplete: false });
   const [bankHours, setBankHours] = useState<BankHours>({ total: 0, positive: 0, negative: 0 });
@@ -76,6 +78,10 @@ const BemVindo = () => {
       fetchStats();
     }
   }, [loading, userData]);
+
+  const handleHistoricoClick = () => {
+    router.push('/configuracao/telas/historico');
+  };
 
   return (
     <div className={styles.container}>
@@ -140,6 +146,19 @@ const BemVindo = () => {
             </div>
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <button 
+            onClick={handleHistoricoClick}
+            className={styles.historicoButton}
+          >
+            Ver Histórico Completo
+          </button>
+        </motion.div>
       </div>
       <BottomNav />
     </div>

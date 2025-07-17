@@ -38,7 +38,7 @@ const BottomNav = () => {
         <button className={styles.addButton} onClick={handleAddButtonClick}> 
           <FiPlusCircle size={32} />
         </button>
-        <Link href="/relatorios" className={isActive('/relatorios') ? styles.active : ''}> 
+        <Link href="/historico" className={isActive('/historico') ? styles.active : ''}> 
           <IoStatsChartOutline size={24} /> 
           <span>{CONSTANTES.TITULO_MENU_RELATORIOS}</span>
         </Link>
@@ -62,7 +62,7 @@ const BottomNav = () => {
           <button className={styles.addButton} onClick={handleAddButtonClick}> 
             <FiPlusCircle size={32} /> 
           </button>
-          <Link href="/relatorios" className={isActive('/relatorios') ? styles.active : ''}> 
+          <Link href="/historico" className={isActive('/historico') ? styles.active : ''}> 
             <IoStatsChartOutline size={24} /> 
             <span>{CONSTANTES.TITULO_MENU_RELATORIOS}</span>
           </Link>

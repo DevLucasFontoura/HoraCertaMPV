@@ -282,7 +282,6 @@ const BemVindo = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
-              whileHover={{ y: -5 }}
             >
               <div className={styles.timeRemainingHeader}>
                 <FiClock className={styles.timeRemainingIcon} />
@@ -301,7 +300,6 @@ const BemVindo = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
-              whileHover={{ y: -5 }}
             >
               <div className={styles.statsHeader}>
                 <FiClock className={styles.statsIcon} />
@@ -321,7 +319,6 @@ const BemVindo = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            whileHover={{ y: -5 }}
           >
             <div className={styles.statsHeader}>
               <FiPlus className={styles.statsIcon} />
@@ -341,7 +338,6 @@ const BemVindo = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.6 }}
-          whileHover={{ y: -5 }}
         >
           <div className={styles.statsHeader}>
             {getStatusIcon(todayStats.currentStatus)}

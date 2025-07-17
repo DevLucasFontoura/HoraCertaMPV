@@ -224,13 +224,13 @@ const BemVindo = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'working':
-        return <FiClock className={styles.statusIcon} />;
+        return <FiClock className={styles.statsIcon} />;
       case 'lunch':
-        return <FiAlertCircle className={styles.statusIcon} />;
+        return <FiAlertCircle className={styles.statsIcon} />;
       case 'finished':
-        return <FiCheckCircle className={styles.statusIcon} />;
+        return <FiCheckCircle className={styles.statsIcon} />;
       default:
-        return <FiCalendar className={styles.statusIcon} />;
+        return <FiCalendar className={styles.statsIcon} />;
     }
   };
 
@@ -337,19 +337,20 @@ const BemVindo = () => {
         </div>
 
         <motion.div
-          className={styles.statusCard}
+          className={styles.statsCard}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.6 }}
-          whileHover={{ y: -3 }}
+          whileHover={{ y: -5 }}
         >
-          <div className={styles.statusHeader}>
+          <div className={styles.statsHeader}>
             {getStatusIcon(todayStats.currentStatus)}
-            <span className={`${styles.statusText} ${getStatusColor(todayStats.currentStatus)}`}>
-              {todayStats.nextAction}
-            </span>
+            <span className={styles.statsLabel}>Próxima Ação</span>
           </div>
-          <div className={styles.statusDescription}>
+          <div className={`${styles.statsValue} ${getStatusColor(todayStats.currentStatus)}`}>
+            {todayStats.nextAction}
+          </div>
+          <div className={styles.statsSubtext}>
             {todayStats.currentStatus === 'working' && 'Continue com o bom trabalho!'}
             {todayStats.currentStatus === 'lunch' && 'Aproveite seu almoço!'}
             {todayStats.currentStatus === 'finished' && 'Ótimo trabalho hoje!'}

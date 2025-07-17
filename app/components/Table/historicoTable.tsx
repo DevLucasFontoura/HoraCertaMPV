@@ -60,6 +60,7 @@ import {
 } from "../ui/table"
 import { cn } from "@/lib/utils"
 import { TimeCalculationService } from "../../services/timeCalculationService"
+import { registroService } from "../../services/registroService"
 import { FaEllipsisV, FaTrash } from 'react-icons/fa';
 
 export const historicoSchema = z.object({
@@ -102,6 +103,7 @@ export function HistoricoTable({
     pageSize: pageSize,
   })
   const isMobile = useIsMobile()
+  const [deleteLoadingId, setDeleteLoadingId] = React.useState<string | null>(null);
 
   // Memoizar anos únicos dos dados
   const years = React.useMemo(() => {
@@ -420,34 +422,87 @@ export function HistoricoTable({
       header: () => 'Ação',
       cell: ({ row }) => (
         row.original.id.startsWith('empty_') ? null : (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button 
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <FaEllipsisV />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
+          <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+            {/* Botão Ver detalhes para mobile */}
+            {isMobile && (
+              <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDeleteRow && onDeleteRow(row.original.data);
+                  onRowClick?.(row.original);
                 }}
-                style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: 8, backgroundColor: '#fff' }}
+                style={{
+                  background: '#3B82F6',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '6px 8px',
+                  color: '#fff',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  minWidth: 40,
+                }}
               >
-                <FaTrash /> Limpar linha
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                Ver detalhes
+              </button>
+            )}
+            
+            {/* Botão Editar para mobile */}
+            {isMobile && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRowClick?.(row.original);
+                }}
+                style={{
+                  background: '#111',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '6px 8px',
+                  color: '#fff',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  minWidth: 40,
+                }}
+              >
+                Editar
+              </button>
+            )}
+            
+            {/* Menu dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button 
+                  style={{
+                    background: 'none', 
+                    border: 'none', 
+                    cursor: 'pointer', 
+                    padding: isMobile ? '8px' : '4px',
+                    fontSize: isMobile ? '16px' : '14',
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <FaEllipsisV />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeleteRow && onDeleteRow(row.original.data);
+                  }}
+                  style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: 8, backgroundColor: '#fff' }}
+                >
+                  <FaTrash /> Limpar linha
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         )
       ),
       enableSorting: false,
-      enableHiding: false,
-      size: 60,
-      minSize: 60,
-      maxSize: 80,
+      enableHiding: false, // Garantir que a coluna não seja ocultada
+      size: isMobile ? 120 : 60, // Tamanho maior no mobile para facilitar o toque
+      minSize: isMobile ? 120 : 60,
+      maxSize: isMobile ? 150 : 80,
     },
   ]
 
@@ -553,11 +608,8 @@ export function HistoricoTable({
                     return (
                       <DropdownMenuItem
                         key={column.id}
-                        className="capitalize"
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) =>
-                          column.toggleVisibility(!!value)
-                        }
+                        className={cn('capitalize', column.getIsVisible() ? 'font-bold' : '')}
+                        onClick={() => column.toggleVisibility(!column.getIsVisible())}
                       >
                         {column.id}
                       </DropdownMenuItem>
@@ -634,8 +686,41 @@ export function HistoricoTable({
                   </div>
                 </div>
                 <DrawerFooter>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => onRowClick?.(row.original)}
+                    className="w-full mb-2"
+                  >
+                    Editar
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    onClick={async () => {
+                      setDeleteLoadingId(row.original.id);
+                      try {
+                        // Converter data do formato DD/MM/YYYY para YYYY-MM-DD
+                        const [day, month, year] = row.original.data.split('/');
+                        const dateString = `${year}-${month}-${day}`;
+                        await registroService.deletarRegistrosDaData(dateString);
+                        if (onDeleteRow) onDeleteRow(row.original.data);
+                      } catch (error) {
+                        console.error('Erro ao deletar registro:', error);
+                        alert('Erro ao deletar registro. Tente novamente.');
+                      } finally {
+                        setDeleteLoadingId(null);
+                        // Fechar o Drawer programaticamente
+                        const closeBtn = document.querySelector('[data-radix-drawer-close]') as HTMLButtonElement;
+                        if (closeBtn) closeBtn.click();
+                      }
+                    }}
+                    className="w-full mb-2"
+                    style={{ backgroundColor: '#fecaca', color: '#b91c1c', border: 'none' }}
+                    disabled={deleteLoadingId === row.original.id}
+                  >
+                    {deleteLoadingId === row.original.id ? 'Limpando...' : 'Limpar linha'}
+                  </Button>
                   <DrawerClose asChild>
-                    <Button variant="outline">Fechar</Button>
+                    <Button variant="outline" className="w-full">Fechar</Button>
                   </DrawerClose>
                 </DrawerFooter>
               </DrawerContent>
@@ -735,11 +820,8 @@ export function HistoricoTable({
                   return (
                     <DropdownMenuItem
                       key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
+                      className={cn('capitalize', column.getIsVisible() ? 'font-bold' : '')}
+                      onClick={() => column.toggleVisibility(!column.getIsVisible())}
                     >
                       {column.id}
                     </DropdownMenuItem>
@@ -788,10 +870,9 @@ export function HistoricoTable({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => onRowClick?.(row.original)}
-                  style={{ cursor: onRowClick ? 'pointer' : 'default' }}
+                  // Remover o onClick da linha para evitar abertura automática do modal
+                  style={{ cursor: 'default' }}
                   className={cn(
-                    onRowClick ? 'hover:bg-gray-50' : '',
                     (() => {
                       try {
                         const [day, month, year] = row.original.data.split('/')

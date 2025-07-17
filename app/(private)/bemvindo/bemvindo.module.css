@@ -417,6 +417,17 @@
   .statsSubtext {
     font-size: 0.75rem;
   }
+
+  .actionButton {
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    flex: 1;
+  }
+
+  .quickActions {
+    gap: 0.5rem;
+    width: 100%;
+  }
 }
 
 .emptyState {
@@ -510,6 +521,7 @@
   justify-content: center;
   margin-top: 1.5rem;
   flex-wrap: wrap;
+  flex-direction: row;
 }
 
 .actionButton {
@@ -553,8 +565,12 @@
   .actionButton {
     padding: 0.8rem 1.2rem;
     font-size: 1rem;
+    flex: 1;
+    min-width: 0;
   }
   .quickActions {
     gap: 0.5rem;
+    flex-direction: row;
+    width: 100%;
   }
 }

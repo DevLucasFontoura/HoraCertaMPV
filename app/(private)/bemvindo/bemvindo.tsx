@@ -39,7 +39,8 @@ const BemVindo = () => {
     return new Date().toLocaleDateString('pt-BR', {
       weekday: 'long',
       day: 'numeric',
-      month: 'long'
+      month: 'long',
+      year: 'numeric'
     });
   };
 

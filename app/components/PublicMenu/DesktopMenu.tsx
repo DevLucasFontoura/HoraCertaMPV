@@ -17,7 +17,7 @@ const DesktopMenu = () => {
           <Link className={styles.navLink} href="/recursos">{CONSTANTES.TITULO_MENU_RECURSOS}</Link>
           <Link className={styles.navLink} href="/precos">{CONSTANTES.TITULO_MENU_PRECOS}</Link>
           <Link className={styles.navLink} href="/como-funciona">{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</Link>
-          <Link className={styles.primaryButton} href="/registro">{CONSTANTES.BOTAO_COMECAR}</Link>
+          <Link className={styles.primaryButton} href="/login">{CONSTANTES.TEXT_BOTAO_LOGIN}</Link>
         </div>
       </div>
     </nav>

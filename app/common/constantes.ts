@@ -64,7 +64,7 @@ export const CONSTANTES = {
     TEXT_SENHA_LOGIN: 'Senha',
     PLACEHOLDER_SENHA_LOGIN: '••••••••',
     TEXT_ESQUECEU_SUA_SENHA: 'Esqueceu sua senha?',
-    TEXT_BOTAO_LOGIN: 'Entrar',
+    TEXT_BOTAO_LOGIN: 'Entrar →',
     TEXT_BOTAO_CADASTRO: 'Não tem uma conta? Cadastre-se',
     TEXT_ENTRANDO: 'Entrando...',
     TEXT_BOTAO_LOGIN_DISABLED: 'Entrar →',

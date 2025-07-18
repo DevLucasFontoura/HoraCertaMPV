@@ -187,15 +187,15 @@ const LandingPage = () => {
                     {CONSTANTES.TITULO_MENU_COMO_FUNCIONA}
                   </Link>
                 </motion.div>
-                                  <motion.div variants={{
-                    closed: { opacity: 0, y: 20 },
-                    open: { opacity: 1, y: 0 }
-                  }}>
-                    <Link className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>
-                      {CONSTANTES.BOTAO_COMECAR}
-                    </Link>
-                  </motion.div>
+                <motion.div variants={{
+                  closed: { opacity: 0, y: 20 },
+                  open: { opacity: 1, y: 0 }
+                }}>
+                  <Link className={styles.mobilePrimaryButton} href="/login" onClick={toggleMenu}>
+                    {CONSTANTES.TEXT_BOTAO_LOGIN}
+                  </Link>
                 </motion.div>
+              </motion.div>
                 
                 {/* Footer do menu */}
                 <div className={styles.mobileMenuFooter}>

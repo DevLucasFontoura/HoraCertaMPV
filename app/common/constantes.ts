@@ -68,7 +68,7 @@ export const CONSTANTES = {
     TEXT_BOTAO_CADASTRO: 'Não tem uma conta? Cadastre-se',
     TEXT_ENTRANDO: 'Entrando...',
     TEXT_BOTAO_LOGIN_DISABLED: 'Entrar →',
-    TEXT_AINDA_NAO_TEM_CONTA: 'Ainda não tem uma conta?',
+    TEXT_AINDA_NAO_TEM_CONTA: 'Ainda não tem uma conta? ',
     TEXT_CRIAR_CONTA_GRATUITA: 'Criar conta gratuita',
 
     // -------------------------- PAGINA CADASTRO --------------------------
@@ -76,8 +76,10 @@ export const CONSTANTES = {
     SUBTITULO_CADASTRO: 'Faça seu cadastro para começar a usar o HoraCerta',
 
     // -------------------------- PAGINA HOME --------------------------
-    TITULO_PRINCIPAL: 'Controle de ponto que seus colaboradores vão adorar usar',
+    // TITULO_PRINCIPAL: 'Controle de ponto que seus colaboradores vão adorar usar',
+    TITULO_PRINCIPAL: 'Seu ponto, seu controle.',
     SUBTITULO_PRINCIPAL: 'Uma ferramenta simples e intuitiva para registro e gestão de ponto. Sem complicações, sem burocracias.',
+    // SUBTITULO_PRINCIPAL: 'Registre suas horas com agilidade e confiança.',
     BOTAO_COMECAR: 'Começar gratuitamente',
     BOTAO_LOGIN: 'Já tem uma conta? Faça login',
     TITULO_RECURSOS: 'Recursos que facilitam sua gestão',

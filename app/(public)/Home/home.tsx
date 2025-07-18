@@ -254,11 +254,6 @@ const LandingPage = () => {
                 <AiOutlineArrowRight size={16} style={{ marginLeft: '8px' }} />
               </Link>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Link className={styles.secondaryButton} href="/login">
-                {CONSTANTES.BOTAO_LOGIN}
-              </Link>
-            </motion.div>
           </motion.div>
         </motion.div>
       </div>

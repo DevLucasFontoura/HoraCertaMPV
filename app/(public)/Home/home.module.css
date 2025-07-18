@@ -75,7 +75,7 @@
   align-items: center;
   justify-content: center;
   padding: 0.875rem 1.75rem;
-  background-color: var(--color-accent);
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
   color: white;
   text-decoration: none;
   border-radius: var(--radius-md);
@@ -88,9 +88,9 @@
 }
 
 .primaryButton:hover {
-  background-color: var(--color-accent-hover);
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #db2777 100%);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
 }
 
 .secondaryButton {

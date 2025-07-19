@@ -17,6 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Hora Certa",
   description: "Controle de ponto.",
+  icons: {
+    icon: "/clock-icon.svg",
+    shortcut: "/clock-icon.svg",
+    apple: "/clock-icon.svg",
+  },
 };
 
 export default function RootLayout({

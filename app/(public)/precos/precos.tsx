@@ -58,10 +58,10 @@ const Precos = () => {
                     closed: {}
                   }}
                 >
-                  <Link className={styles.mobileNavLink} href="/como-funciona" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</Link>
-                  <Link className={styles.mobileNavLink} href="/recursos" onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</Link>
-                  <Link className={styles.mobileNavLink} href="/" onClick={toggleMenu}>{CONSTANTES.TITULO_HOME}</Link>
-                  <Link className={styles.mobilePrimaryButton} href="/registro" onClick={toggleMenu}>{CONSTANTES.BOTAO_CADASTRAR_GRATUITAMENTE}</Link>
+                  <Link className={styles.mobileNavLink} href={CONSTANTES.ROUTE_COMO_FUNCIONA} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_COMO_FUNCIONA}</Link>
+                  <Link className={styles.mobileNavLink} href={CONSTANTES.ROUTE_RECURSOS} onClick={toggleMenu}>{CONSTANTES.TITULO_MENU_RECURSOS}</Link>
+                  <Link className={styles.mobileNavLink} href={CONSTANTES.ROUTE_HOME} onClick={toggleMenu}>{CONSTANTES.TITULO_HOME}</Link>
+                  <Link className={styles.mobilePrimaryButton} href={CONSTANTES.ROUTE_REGISTRO} onClick={toggleMenu}>{CONSTANTES.BOTAO_CADASTRAR_GRATUITAMENTE}</Link>
                 </motion.div>
               </motion.div>
             </>
@@ -90,7 +90,7 @@ const Precos = () => {
             </li>
             <li className={styles.planFeature}><AiOutlineCheckCircle /> {CONSTANTES.CARD_PRECOS_01_ITEM_03}</li>
           </ul>
-          <Link className={styles.primaryButton} href="/registro">{CONSTANTES.TITULO_BOTAO_COMECAR}</Link>
+          <Link className={styles.primaryButton} href={CONSTANTES.ROUTE_REGISTRO}>{CONSTANTES.TITULO_BOTAO_COMECAR}</Link>
         </div>
 
         <div className={styles.pricingCard}>
@@ -110,7 +110,7 @@ const Precos = () => {
             <li className={styles.planFeature}><AiOutlineCheckCircle /> {CONSTANTES.CARD_PRECOS_02_ITEM_02}</li>
             <li className={styles.planFeature}><AiOutlineCheckCircle /> {CONSTANTES.CARD_PRECOS_02_ITEM_03}</li>
           </ul>
-          <Link className={styles.primaryButton} href="/registro">{CONSTANTES.TITULO_BOTAO_COMECAR}</Link>
+          <Link className={styles.primaryButton} href={CONSTANTES.ROUTE_REGISTRO}>{CONSTANTES.TITULO_BOTAO_COMECAR}</Link>
         </div>
 
         <div className={styles.pricingCard}>

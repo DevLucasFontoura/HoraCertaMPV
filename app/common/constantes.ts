@@ -169,8 +169,8 @@ export const CONSTANTES = {
     TITULO_BOTAO_COMECAR: 'Começar agora',
     TITULO_BOTAO_FALE_CONOSCO: 'Fale conosco',
     // ---- CARD PREÇOS 02 ----
-    CARD_PRECOS_02_TITULO: 'Básico',
-    CARD_PRECOS_02_VALOR: 'R$ 9,99',
+    CARD_PRECOS_02_TITULO: 'Pro',
+    CARD_PRECOS_02_VALOR: 'R$ 10,90',
     CARD_PRECOS_02_VALOR_MES: '/mês',
     CARD_PRECOS_02_ITEM_01: 'Edição completa de registros',
     CARD_PRECOS_02_ITEM_02: 'Histórico de alterações',

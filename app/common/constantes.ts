@@ -44,6 +44,7 @@ export const CONSTANTES = {
     ROUTE_DASHBOARD: '/dashboard',
     ROUTE_CONFIGURACAO: '/configuracao',
     ROUTE_CONFIGURACAO_PERFIL: '/configuracao/telas/perfil',
+    ROUTE_CONFIGURACAO_UPGRADE_PLANO: '/configuracao/telas/upgradePlano',
     ROUTE_CONFIGURACAO_NOTIFICACOES: '/configuracao/telas/notificacoes',
     ROUTE_CONFIGURACAO_JORNADA: '/configuracao/telas/jornada',
     ROUTE_CONFIGURACAO_FERIADOS: '/configuracao/telas/feriados',
@@ -301,6 +302,10 @@ export const CONSTANTES = {
     SUBTITULO_CONFIGURACAO_HISTORICO: 'Visualize todos os seus registros de ponto organizados por data',
     CAMINHO_CONFIGURACAO_FERIADOS: '/configuracao/telas/feriados',
     CAMINHO_CONFIGURACAO_HISTORICO: '/configuracao/telas/historico',
+    // ---- PLANO ----
+    TITULO_CONFIGURACAO_PLANO: 'Gerenciar Plano',
+    SUBTITULO_CONFIGURACAO_PLANO: 'Faça upgrade do seu plano atual',
+    CAMINHO_CONFIGURACAO_PLANO: '/configuracao/telas/upgradePlano',
     // ---- TUTORIAL DO APP ----
     TITULO_CONFIGURACAO_TUTORIAL: 'Tutorial do App',
     SUBTITULO_CONFIGURACAO_TUTORIAL: 'Aprenda a usar todas as funcionalidades',
@@ -377,6 +382,13 @@ export const CONSTANTES = {
     TEXT_EMAIL_PERFIL: 'E-mail',
     BOTAO_EDITAR_PERFIL: 'Editar perfil',
     BOTAO_SALVAR_PERFIL: 'Salvar alterações',
+    TEXT_PLANO_ATUAL: 'Plano atual',
+    TEXT_FAZER_UPGRADE: 'Fazer upgrade',
+    TEXT_VER_PLANOS: 'Ver todos os planos',
+    TEXT_PLANO_GRATUITO: 'Gratuito',
+    TEXT_PLANO_PRO: 'Pro',
+    TEXT_PLANO_EMPRESARIAL: 'Empresarial',
+    TEXT_UPGRADE_DESCRICAO: 'Desbloqueie recursos avançados com nossos planos premium',
 
     // -------------------------- PAGINA PERGUNTAS FREQUENTES --------------------------
     TITULO_PERGUNTAS_FREQUENTES: 'Perguntas Frequentes',

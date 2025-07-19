@@ -101,7 +101,9 @@ export default function ProfileScreen() {
           </div>
         </div>
 
+        {/* Seção de Informações Pessoais */}
         <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Informações Pessoais</h2>
           <div className={styles.fieldContainer}>
             <div className={styles.labelContainer}>
               <FaUser className={styles.fieldIcon} />

@@ -2,7 +2,7 @@
     min-height: 100vh;
     background-color: #f5f5f5;
     position: relative;
-    padding-bottom: 70px;
+    padding-bottom: 120px;
   }
   
   .backgroundIcon {
@@ -60,6 +60,13 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     margin-bottom: 24px;
   }
+
+  .sectionTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 20px 0;
+  }
   
   .fieldContainer {
     margin-bottom: 20px;
@@ -99,8 +106,8 @@
   
   .input:focus {
     outline: none;
-    border-color: #4B7BF5;
-    box-shadow: 0 0 0 2px rgba(75, 123, 245, 0.1);
+    border-color: #000000;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   }
   
   .inputDisabled {
@@ -108,13 +115,15 @@
     color: #666;
     cursor: not-allowed;
   }
+
+
   
   .actionButton {
     width: 100%;
     padding: 14px;
     border: none;
     border-radius: 8px;
-    background-color: #4B7BF5;
+    background-color: #000000;
     color: white;
     font-size: 1rem;
     font-weight: 500;
@@ -123,7 +132,7 @@
   }
   
   .actionButton:hover {
-    background-color: #3960c8;
+    background-color: #333333;
   }
   
   .saveButton {
@@ -146,4 +155,26 @@
 
   .errorState {
     color: #dc2626;
+  }
+
+  /* Responsividade */
+  @media (max-width: 480px) {
+    .container {
+      padding: 16px;
+    }
+
+    .planHeader {
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .upgradeButton {
+      align-self: stretch;
+      justify-content: center;
+    }
+
+    .section {
+      padding: 20px;
+    }
   }

@@ -154,3 +154,16 @@ html {
     padding-right: 0;
   }
 }
+
+/* Variáveis CSS para adaptação automática de ícones */
+:root {
+  --icon-filter: none;
+  --icon-opacity: 0.8;
+}
+
+/* Classe para ícones que se adaptam ao tema */
+.theme-aware-icon {
+  filter: var(--icon-filter);
+  opacity: var(--icon-opacity);
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}

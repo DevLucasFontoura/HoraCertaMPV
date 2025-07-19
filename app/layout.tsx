@@ -18,9 +18,7 @@ export const metadata: Metadata = {
   title: "Hora Certa",
   description: "Controle de ponto.",
   icons: {
-    icon: "/clock-icon.svg",
-    shortcut: "/clock-icon.svg",
-    apple: "/clock-icon.svg",
+    icon: "/favicon.svg",
   },
 };
 
@@ -31,6 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/favicon.svg" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

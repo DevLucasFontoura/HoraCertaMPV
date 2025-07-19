@@ -45,6 +45,8 @@ export default function UpgradePlanoScreen() {
     }
   };
 
+  const currentPlan = userData?.plan || 'free';
+  
   const plans: PlanInfo[] = [
     {
       id: 'free',
@@ -57,7 +59,7 @@ export default function UpgradePlanoScreen() {
         'Exportação em PDF',
         'Histórico básico'
       ],
-      current: userData?.plan === 'free' || !userData?.plan
+      current: currentPlan === 'free'
     },
     {
       id: 'pro',
@@ -73,7 +75,7 @@ export default function UpgradePlanoScreen() {
         'Validação por gestor'
       ],
       popular: true,
-      current: userData?.plan === 'pro'
+      current: currentPlan === 'pro'
     },
     {
       id: 'enterprise',
@@ -88,7 +90,7 @@ export default function UpgradePlanoScreen() {
         'API completa',
         'Suporte dedicado'
       ],
-      current: userData?.plan === 'enterprise'
+      current: currentPlan === 'enterprise'
     }
   ];
 
@@ -154,7 +156,9 @@ export default function UpgradePlanoScreen() {
           <div className={styles.currentPlanHeader}>
             <FaCrown className={styles.currentPlanIcon} />
             <h2 className={styles.currentPlanTitle}>Seu plano atual:</h2>
-            <p className={styles.currentPlanName}>{getPlanDisplayName(userData.plan || 'free')}</p>
+            <p className={styles.currentPlanName}>
+              {getPlanDisplayName(currentPlan)}
+            </p>
           </div>
         </section>
 

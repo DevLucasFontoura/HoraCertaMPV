@@ -356,4 +356,15 @@
     .planName {
         font-size: 1.125rem;
     }
+
+    .popularBadge {
+        top: 16px;
+        right: 16px;
+        left: auto;
+        transform: none;
+        border-radius: 16px;
+        padding: 4px 12px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
 }

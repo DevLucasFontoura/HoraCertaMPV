@@ -612,9 +612,14 @@ export function HistoricoTable({
               </DrawerTrigger>
               <DrawerContent>
                 <DrawerHeader>
-                  <DrawerTitle>Detalhes do Registro</DrawerTitle>
+                  <DrawerTitle>
+                    {row.original.id.startsWith('empty_') ? 'Adicionar Registro' : 'Detalhes do Registro'}
+                  </DrawerTitle>
                   <DrawerDescription>
-                    Informações completas do registro de ponto
+                    {row.original.id.startsWith('empty_') 
+                      ? 'Adicione os horários de ponto para este dia'
+                      : 'Informações completas do registro de ponto'
+                    }
                   </DrawerDescription>
                 </DrawerHeader>
                 <div className="p-4 space-y-4">
@@ -663,34 +668,36 @@ export function HistoricoTable({
                     onClick={() => onRowClick?.(row.original)}
                     className="w-full mb-2"
                   >
-                    Editar
+                    {row.original.id.startsWith('empty_') ? 'Adicionar Registro' : 'Editar'}
                   </Button>
-                  <Button 
-                    variant="destructive" 
-                    onClick={async () => {
-                      setDeleteLoadingId(row.original.id);
-                      try {
-                        // Converter data do formato DD/MM/YYYY para YYYY-MM-DD
-                        const [day, month, year] = row.original.data.split('/');
-                        const dateString = `${year}-${month}-${day}`;
-                        await registroService.deletarRegistrosDaData(dateString);
-                        if (onDeleteRow) onDeleteRow(row.original.data);
-                      } catch (error) {
-                        console.error('Erro ao deletar registro:', error);
-                        alert('Erro ao deletar registro. Tente novamente.');
-                      } finally {
-                        setDeleteLoadingId(null);
-                        // Fechar o Drawer programaticamente
-                        const closeBtn = document.querySelector('[data-radix-drawer-close]') as HTMLButtonElement;
-                        if (closeBtn) closeBtn.click();
-                      }
-                    }}
-                    className="w-full mb-2"
-                    style={{ backgroundColor: '#fecaca', color: '#b91c1c', border: 'none' }}
-                    disabled={deleteLoadingId === row.original.id}
-                  >
-                    {deleteLoadingId === row.original.id ? 'Limpando...' : 'Limpar linha'}
-                  </Button>
+                  {!row.original.id.startsWith('empty_') && (
+                    <Button 
+                      variant="destructive" 
+                      onClick={async () => {
+                        setDeleteLoadingId(row.original.id);
+                        try {
+                          // Converter data do formato DD/MM/YYYY para YYYY-MM-DD
+                          const [day, month, year] = row.original.data.split('/');
+                          const dateString = `${year}-${month}-${day}`;
+                          await registroService.deletarRegistrosDaData(dateString);
+                          if (onDeleteRow) onDeleteRow(row.original.data);
+                        } catch (error) {
+                          console.error('Erro ao deletar registro:', error);
+                          alert('Erro ao deletar registro. Tente novamente.');
+                        } finally {
+                          setDeleteLoadingId(null);
+                          // Fechar o Drawer programaticamente
+                          const closeBtn = document.querySelector('[data-radix-drawer-close]') as HTMLButtonElement;
+                          if (closeBtn) closeBtn.click();
+                        }
+                      }}
+                      className="w-full mb-2"
+                      style={{ backgroundColor: '#fecaca', color: '#b91c1c', border: 'none' }}
+                      disabled={deleteLoadingId === row.original.id}
+                    >
+                      {deleteLoadingId === row.original.id ? 'Limpando...' : 'Limpar linha'}
+                    </Button>
+                  )}
                   <DrawerClose asChild>
                     <Button variant="outline" className="w-full">Fechar</Button>
                   </DrawerClose>
@@ -843,11 +850,9 @@ export function HistoricoTable({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => {
-                    if (!row.original.id.startsWith('empty_')) {
-                      onRowClick?.(row.original);
-                    }
+                    onRowClick?.(row.original);
                   }}
-                  style={{ cursor: row.original.id.startsWith('empty_') ? 'default' : 'pointer' }}
+                  style={{ cursor: 'pointer' }}
                   className={cn(
                     (() => {
                       try {
@@ -859,7 +864,7 @@ export function HistoricoTable({
                         return ''
                       }
                     })(),
-                    !row.original.id.startsWith('empty_') && 'hover:bg-gray-50'
+                    'hover:bg-gray-50'
                   )}
                 >
                   {row.getVisibleCells().map((cell) => (

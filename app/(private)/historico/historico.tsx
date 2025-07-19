@@ -341,6 +341,7 @@ export default function Historico() {
                     }}>
                       Preencha os horários que deseja registrar para a data selecionada. 
                       Se já existir um registro para esta data, ele será atualizado.
+                      {!formData.data && ' Selecione uma data para começar.'}
                     </p>
                     
                     {registroExistente && (
@@ -379,15 +380,23 @@ export default function Historico() {
                           style={{
                             width: '100%',
                             padding: '12px',
-                            border: '1px solid #ddd',
+                            border: formData.data ? '1px solid #ddd' : '1px solid #dc2626',
                             borderRadius: '8px',
                             fontSize: '14px',
                             backgroundColor: '#fff'
                           }}
                           required
                         />
-                        <small style={{ color: '#666', fontSize: '12px', marginTop: '4px', display: 'block' }}>
-                          Selecione a data para a qual deseja adicionar o registro de ponto
+                        <small style={{ 
+                          color: formData.data ? '#666' : '#dc2626', 
+                          fontSize: '12px', 
+                          marginTop: '4px', 
+                          display: 'block' 
+                        }}>
+                          {formData.data 
+                            ? 'Data selecionada para o registro de ponto'
+                            : '⚠️ Selecione uma data para continuar'
+                          }
                         </small>
                       </div>
 
@@ -537,7 +546,10 @@ export default function Historico() {
                           fontSize: '12px',
                           color: '#dc2626'
                         }}>
-                          ⚠️ Preencha a data e pelo menos um horário para salvar o registro.
+                          ⚠️ {!formData.data 
+                            ? 'Selecione uma data para continuar.' 
+                            : 'Preencha pelo menos um horário para salvar o registro.'
+                          }
                         </div>
                       )}
                     </div>

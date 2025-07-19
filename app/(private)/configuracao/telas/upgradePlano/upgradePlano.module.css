@@ -66,6 +66,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    flex-direction: row;
 }
 
 .currentPlanIcon {
@@ -77,13 +78,12 @@
     font-size: 1.125rem;
     font-weight: 600;
     margin: 0;
-    color: white;
+    color: white !important;
 }
 
 .currentPlanName {
     font-size: 1.5rem;
     font-weight: 700;
-    margin: 4px 0 0 0;
     color: white;
 }
 
@@ -329,6 +329,10 @@
         flex-direction: column;
         text-align: center;
         gap: 12px;
+    }
+    
+    .currentPlanName {
+        margin: 4px 0 0 0;
     }
 
     .popularPlan {

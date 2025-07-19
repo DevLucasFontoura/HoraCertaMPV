@@ -153,10 +153,8 @@ export default function UpgradePlanoScreen() {
         <section className={styles.currentPlanSection}>
           <div className={styles.currentPlanHeader}>
             <FaCrown className={styles.currentPlanIcon} />
-            <div>
-              <h2 className={styles.currentPlanTitle}>Seu plano atual</h2>
-              <p className={styles.currentPlanName}>{getPlanDisplayName(userData.plan || 'free')}</p>
-            </div>
+            <h2 className={styles.currentPlanTitle}>Seu plano atual:</h2>
+            <p className={styles.currentPlanName}>{getPlanDisplayName(userData.plan || 'free')}</p>
           </div>
         </section>
 

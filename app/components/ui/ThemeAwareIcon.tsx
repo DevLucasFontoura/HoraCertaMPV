@@ -2,14 +2,11 @@ interface ThemeAwareIconProps {
   icon: string;
   size?: number;
   className?: string;
-  alt?: string;
 }
 
-export const ThemeAwareIcon = ({ icon, size = 24, className = '', alt = 'Icon' }: ThemeAwareIconProps) => {
+export const ThemeAwareIcon = ({ icon, size = 24, className = '' }: ThemeAwareIconProps) => {
   return (
-    <img 
-      src={icon} 
-      alt={alt}
+    <svg 
       width={size} 
       height={size}
       className={`theme-aware-icon ${className}`}
@@ -18,6 +15,10 @@ export const ThemeAwareIcon = ({ icon, size = 24, className = '', alt = 'Icon' }
         filter: 'var(--icon-filter, none)',
         opacity: 'var(--icon-opacity, 0.8)'
       }}
-    />
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <use href={icon} />
+    </svg>
   );
 }; 

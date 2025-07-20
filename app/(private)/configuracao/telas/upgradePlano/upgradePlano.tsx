@@ -8,7 +8,7 @@ import styles from './upgradePlano.module.css';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../../hooks/useAuth';
-import { AuthService, UserData } from '../../../../services/authService';
+import { UserData } from '../../../../services/authService';
 
 interface PlanInfo {
   id: string;
@@ -22,7 +22,7 @@ interface PlanInfo {
 
 export default function UpgradePlanoScreen() {
   const router = useRouter();
-  const { user, userData: authUserData, loading: authLoading } = useAuth();
+  const { userData: authUserData, loading: authLoading } = useAuth();
   const [userData, setUserData] = useState<UserData | null>(null);
 
   // Carregar dados do usuário quando o hook de autenticação estiver pronto

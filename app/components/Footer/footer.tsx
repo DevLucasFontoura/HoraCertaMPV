@@ -18,32 +18,33 @@ const Footer = () => {
     empresa: {
       title: 'Empresa',
       links: [
-        { text: 'Sobre', href: '/sobre' },
-        { text: 'Status', href: '/status' },
+        { text: 'Sobre', href: CONSTANTES.ROUTE_SOBRE },
+        { text: 'Como Funciona', href: CONSTANTES.ROUTE_COMO_FUNCIONA },
+        { text: 'Recursos', href: CONSTANTES.ROUTE_RECURSOS },
       ],
     },
     legal: {
       title: 'Legal',
       links: [
-        { text: 'Termos de Uso', href: '/termos' },
-        { text: 'Privacidade', href: '/privacidade' },
-        { text: 'Segurança', href: '/seguranca' },
+        { text: 'Termos de Uso', href: CONSTANTES.ROUTE_TERMOS_DE_USO },
+        { text: 'Política de Privacidade', href: CONSTANTES.ROUTE_CONFIGURACAO_POLITICA },
+        { text: 'Segurança', href: CONSTANTES.ROUTE_SEGURANCA },
       ],
     },
     suporte: {
       title: 'Suporte',
       links: [
-        { text: 'Central de Ajuda', href: '/ajuda' },
-        { text: 'Comunidade', href: '/comunidade' },
+        { text: 'Central de Ajuda', href: CONSTANTES.ROUTE_CENTRAL_DE_AJUDA },
+        { text: 'Perguntas Frequentes', href: CONSTANTES.ROUTE_CONFIGURACAO_PERGUNTAS },
         { text: 'Blog', href: '/blog' },
       ],
     },
     produto: {
       title: 'Produto',
       links: [
-        { text: 'Preços', href: '/precos' },
-        { text: 'Integrações', href: '/integracoes' },
-        { text: 'Download App', href: '/mobile' },
+        { text: 'Preços', href: CONSTANTES.ROUTE_PRECOS },
+        { text: 'Tutorial', href: CONSTANTES.ROUTE_CONFIGURACAO_TUTORIAL },
+        { text: 'Sobre o App', href: CONSTANTES.ROUTE_CONFIGURACAO_SOBRE },
       ],
     },
   };
@@ -91,8 +92,8 @@ const Footer = () => {
             <button className={styles.languageButton}>
               🌐 Português
             </button>
-            <a href="/privacidade">Não vender minhas informações</a>
-            <a href="/cookies">Configurações de cookies</a>
+            <a href={CONSTANTES.ROUTE_CONFIGURACAO_POLITICA}>Política de Privacidade</a>
+            <a href={CONSTANTES.ROUTE_TERMOS_DE_USO}>Termos de Uso</a>
           </div>
         </div>
       </div>

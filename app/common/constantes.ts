@@ -84,23 +84,23 @@ export const CONSTANTES = {
     BOTAO_COMECAR: 'Começar gratuitamente',
     BOTAO_LOGIN: 'Já tem uma conta? Faça login',
     TITULO_RECURSOS: 'Recursos que facilitam sua gestão',
-    SUBTITULO_RECURSOS: 'Tudo que você precisa para gerenciar o ponto dos seus terceirizados',
+    SUBTITULO_RECURSOS: 'Tudo que você precisa para gerenciar seu ponto pessoal',
     TITULO_CARDS: 'Recursos que facilitam sua gestão',
-    SUBTITULO_CARDS: 'Tudo que você precisa para gerenciar o ponto dos seus terceirizados',
+    SUBTITULO_CARDS: 'Tudo que você precisa para gerenciar seu ponto pessoal',
     CARD_RECURSOS_01_TITULO: 'Registro Simplificado',
     CARD_RECURSOS_01_SUBTITULO: 'Registre o ponto de forma rápida e intuitiva, sem complicações ou burocracias.',
     CARD_RECURSOS_02_TITULO: 'Edição Flexível',
-    CARD_RECURSOS_02_SUBTITULO: 'Faça ajustes nos registros quando necessário, com histórico completo de alterações.',
+    CARD_RECURSOS_02_SUBTITULO: 'Faça ajustes nos registros quando necessário.',
     CARD_RECURSOS_03_TITULO: 'Relatórios Detalhados',
     CARD_RECURSOS_03_SUBTITULO: 'Gere relatórios personalizados e exporte em PDF ou Excel.',
-    CARD_RECURSOS_04_TITULO: 'Integração com Sistemas Externos',
-    CARD_RECURSOS_04_SUBTITULO: 'Conecte-se a sistemas de RH, controle de acesso e outros para uma gestão mais eficiente.',
+    CARD_RECURSOS_04_TITULO: 'Acesso Multiplataforma',
+    CARD_RECURSOS_04_SUBTITULO: 'Acesse seus registros de qualquer dispositivo, sempre sincronizados e seguros.',
     CARD_RECURSOS_05_TITULO: 'Segurança e Confidencialidade',
     CARD_RECURSOS_05_SUBTITULO: 'Seus dados são protegidos com criptografia e segurança avançada.',
-    CARD_RECURSOS_06_TITULO: 'Suporte ao Colaborador',
-    CARD_RECURSOS_06_SUBTITULO: 'Ofereça suporte ao colaborador com relatórios de ponto e acesso aos dados.',
-    TITULO_EMPRESA: 'HoraCerta para Empresas',
-    SUBTITULO_EMPRESA: 'Soluções personalizadas para grandes empresas. Integração com sistemas existentes, suporte dedicado e muito mais.',
+    CARD_RECURSOS_06_TITULO: 'Suporte Completo',
+    CARD_RECURSOS_06_SUBTITULO: 'Acesse relatórios detalhados e mantenha controle total sobre seus dados.',
+    TITULO_EMPRESA: 'HoraCerta Pro',
+    SUBTITULO_EMPRESA: 'Versão avançada com recursos extras para usuários que precisam de mais funcionalidades.',
     ICONE_EMPRESA: '🏢',
 
     // -------------------------- PAGINA RECURSOS --------------------------
@@ -150,7 +150,7 @@ export const CONSTANTES = {
     CARD_RELATORIOS_E_EXPORTACAO_03_ITEM_03: 'Conformidade com LGPD',
     // ---- PRONTO PARA COMEÇAR ----
     TITULO_PRONTO_PARA_COMECAR: 'Pronto para começar?',
-    SUBTITULO_PRONTO_PARA_COMECAR: 'Experimente gratuitamente e veja como é fácil gerenciar o ponto dos seus terceirizados',
+    SUBTITULO_PRONTO_PARA_COMECAR: 'Experimente gratuitamente e veja como é fácil gerenciar seu ponto pessoal',
     BOTAO_CADASTRAR_GRATUITAMENTE: 'Criar conta gratuita',
     BOTAO_VER_PLANOS: 'Ver planos',
 
@@ -181,9 +181,9 @@ export const CONSTANTES = {
     CARD_PRECOS_02_ITEM_03_INFO: '• Possibilidade de adicionar anexos',
     CARD_PRECOS_02_ITEM_04_INFO: '• Validação por gestor',
     // ---- CARD PREÇOS 03 ----
-    CARD_PRECOS_03_TITULO: 'Empresarial',
+    CARD_PRECOS_03_TITULO: 'Premium',
     CARD_PRECOS_03_VALOR: 'Personalizado',
-    CARD_PRECOS_03_ITEM_01: 'Multi-empresas',
+    CARD_PRECOS_03_ITEM_01: 'Recursos avançados',
     CARD_PRECOS_03_ITEM_02: 'Edição e validação customizada',
     CARD_PRECOS_03_ITEM_03: 'Integrações personalizadas',
     CARD_PRECOS_03_ITEM_04: 'API completa',
@@ -194,10 +194,10 @@ export const CONSTANTES = {
 
     // -------------------------- PAGINA COMO FUNCIONA --------------------------
     TITULO_COMO_FUNCIONA: 'Como funciona o HoraCerta?',
-    SUBTITULO_COMO_FUNCIONA: 'Simples e eficiente para gerenciar o ponto dos seus terceirizados',
+    SUBTITULO_COMO_FUNCIONA: 'Simples e eficiente para gerenciar seu ponto pessoal',
 
     TITULO_ITEM_01: '1. Registro de Ponto',
-    DESCRICAO_ITEM_01: 'O terceirizado registra seu ponto diretamente no sistema, de forma simples e rápida. Pode ser feito via computador, tablet ou celular.',
+    DESCRICAO_ITEM_01: 'Você registra seu ponto diretamente no sistema, de forma simples e rápida. Pode ser feito via computador, tablet ou celular.',
     TITULO_ITEM_02: '2. Gestão de Registros',
     DESCRICAO_ITEM_02: 'Visualize todos os registros em um só lugar. Faça ajustes quando necessário, adicione justificativas e mantenha tudo organizado.',
     TITULO_ITEM_03: '3. Relatórios e Exportação',
@@ -253,11 +253,11 @@ export const CONSTANTES = {
     DESCRICAO_ITEM_03_NOSSOS_VALORES: 'Garantimos a segurança e precisão dos dados, mantendo a confiança dos nossos clientes.',
     // ITEM 04 - EFICIENCIA
     TITULO_ITEM_04_NOSSOS_VALORES: 'Eficiência',
-    DESCRICAO_ITEM_04_NOSSOS_VALORES: 'Nosso objetivo é otimizar processos e economizar tempo para empresas e colaboradores.',
+    DESCRICAO_ITEM_04_NOSSOS_VALORES: 'Nosso objetivo é otimizar processos e economizar tempo para todos os usuários.',
     // ---- NOSSA HISTORIA ----
     TITULO_NOSSA_HISTORIA: 'Nossa História',
-    DESCRICAO_NOSSA_HISTORIA_01: 'Fundada em 2024, o Hora Certa surgiu da necessidade de modernizar o sistema de registro de ponto tradicional. Percebemos que muitas empresas ainda utilizavam métodos arcaicos e burocráticos para gerenciar as horas trabalhadas de seus colaboradores, o que gerava perda de tempo e recursos.',
-    DESCRICAO_NOSSA_HISTORIA_02: 'Com uma equipe apaixonada por tecnologia e inovação, desenvolvemos uma solução completa que atende às necessidades tanto das empresas quanto dos colaboradores, oferecendo uma plataforma moderna, segura e fácil de usar.',
+    DESCRICAO_NOSSA_HISTORIA_01: 'Fundada em 2024, o Hora Certa surgiu da necessidade de modernizar o sistema de registro de ponto tradicional. Percebemos que muitas pessoas ainda utilizavam métodos arcaicos e burocráticos para gerenciar suas horas trabalhadas, o que gerava perda de tempo e recursos.',
+    DESCRICAO_NOSSA_HISTORIA_02: 'Com uma equipe apaixonada por tecnologia e inovação, desenvolvemos uma solução completa que atende às necessidades de todos os usuários, oferecendo uma plataforma moderna, segura e fácil de usar.',
     // ---- O QUE NOS DIFERENCIA ----
     TITULO_O_QUE_NOS_DIFERENCIA: 'O Que Nos Diferencia',
     // ITEM 01 - INTERFACE INTUITIVA
@@ -274,7 +274,7 @@ export const CONSTANTES = {
     DESCRICAO_ITEM_04_O_QUE_NOS_DIFERENCIA: 'Melhorias contínuas baseadas no feedback dos usuários.', 
     // ---- EQUIPE ----
     TITULO_EQUIPE: 'Nossa Equipe',
-    DESCRICAO_EQUIPE: 'Contamos com uma equipe diversificada de profissionais apaixonados por tecnologia e inovação. Nossos desenvolvedores, designers e especialistas em RH trabalham juntos para criar a melhor experiência possível para nossos usuários.',
+    DESCRICAO_EQUIPE: 'Contamos com uma equipe diversificada de profissionais apaixonados por tecnologia e inovação. Nossos desenvolvedores e designers trabalham juntos para criar a melhor experiência possível para nossos usuários.',
 
     // -------------------------- PAGINA CONFIGURACAO --------------------------
     TITULO_CONFIGURACAO: 'Configurações',
@@ -387,7 +387,7 @@ export const CONSTANTES = {
     TEXT_VER_PLANOS: 'Ver todos os planos',
     TEXT_PLANO_GRATUITO: 'Gratuito',
     TEXT_PLANO_PRO: 'Pro',
-    TEXT_PLANO_EMPRESARIAL: 'Empresarial',
+    TEXT_PLANO_EMPRESARIAL: 'Premium',
     TEXT_UPGRADE_DESCRICAO: 'Desbloqueie recursos avançados com nossos planos premium',
 
     // -------------------------- PAGINA PERGUNTAS FREQUENTES --------------------------
@@ -447,6 +447,106 @@ export const CONSTANTES = {
     SUPORTE_03_DESCRICAO: 'Nossa equipe responderá em até 48 horas úteis',
     SUPORTE_04: 'FAQ',
     SUPORTE_04_DESCRICAO: 'Consulte nossa página de perguntas frequentes',
+
+    // -------------------------- PAGINA TERMOS DE USO --------------------------
+    TITULO_TERMOS_DE_USO: 'Termos de Uso',
+    SUBTITULO_TERMOS_DE_USO: 'Leia nossos termos de uso',
+    
+    TERMOS_01: 'Aceitação dos Termos',
+    TERMOS_01_DESCRICAO: 'Ao usar o HoraCerta, você concorda com estes termos de uso. Se não concordar, não use o serviço.',
+    
+    TERMOS_02: 'Uso do Serviço',
+    TERMOS_02_DESCRICAO: 'O HoraCerta é um sistema de controle de ponto pessoal. Você é responsável por manter a precisão dos seus registros.',
+    
+    TERMOS_03: 'Conta do Usuário',
+    TERMOS_03_DESCRICAO: 'Você é responsável por manter a confidencialidade de sua conta e senha. Notifique-nos imediatamente sobre qualquer uso não autorizado.',
+    
+    TERMOS_04: 'Privacidade',
+    TERMOS_04_DESCRICAO: 'Sua privacidade é importante. Consulte nossa Política de Privacidade para entender como coletamos e usamos suas informações.',
+    
+    TERMOS_05: 'Limitações de Responsabilidade',
+    TERMOS_05_DESCRICAO: 'O HoraCerta é fornecido "como está". Não garantimos que o serviço será ininterrupto ou livre de erros.',
+    
+    TERMOS_06: 'Modificações',
+    TERMOS_06_DESCRICAO: 'Podemos modificar estes termos a qualquer momento. As mudanças entrarão em vigor imediatamente após a publicação.',
+    
+    TERMOS_07: 'Encerramento',
+    TERMOS_07_DESCRICAO: 'Podemos encerrar ou suspender sua conta a qualquer momento, com ou sem aviso prévio.',
+    
+    TERMOS_08: 'Lei Aplicável',
+    TERMOS_08_DESCRICAO: 'Estes termos são regidos pelas leis brasileiras. Qualquer disputa será resolvida nos tribunais brasileiros.',
+    
+    TERMOS_ULTIMA_ATUALIZACAO: 'Última atualização: Janeiro de 2025',
+
+    // -------------------------- PAGINA SEGURANÇA --------------------------
+    TITULO_SEGURANCA: 'Segurança',
+    SUBTITULO_SEGURANCA: 'Como protegemos seus dados',
+    
+    SEGURANCA_01: 'Criptografia de Dados',
+    SEGURANCA_01_DESCRICAO: 'Todos os seus dados são criptografados usando padrões de segurança avançados (AES-256) tanto em trânsito quanto em repouso.',
+    
+    SEGURANCA_02: 'Autenticação Segura',
+    SEGURANCA_02_DESCRICAO: 'Utilizamos autenticação de dois fatores e senhas fortes para proteger sua conta contra acessos não autorizados.',
+    
+    SEGURANCA_03: 'Backup Automático',
+    SEGURANCA_03_DESCRICAO: 'Seus dados são automaticamente copiados e armazenados em servidores seguros para garantir que nunca sejam perdidos.',
+    
+    SEGURANCA_04: 'Conformidade LGPD',
+    SEGURANCA_04_DESCRICAO: 'Nosso sistema está em conformidade com a Lei Geral de Proteção de Dados (LGPD), garantindo seus direitos como usuário.',
+    
+    SEGURANCA_05: 'Monitoramento 24/7',
+    SEGURANCA_05_DESCRICAO: 'Nossa infraestrutura é monitorada constantemente para detectar e prevenir qualquer tentativa de acesso não autorizado.',
+    
+    SEGURANCA_06: 'Atualizações de Segurança',
+    SEGURANCA_06_DESCRICAO: 'Regularmente atualizamos nossos sistemas com as mais recentes correções de segurança para manter sua proteção sempre atualizada.',
+
+    // -------------------------- PAGINA CENTRAL DE AJUDA --------------------------
+    TITULO_CENTRAL_DE_AJUDA: 'Central de Ajuda',
+    SUBTITULO_CENTRAL_DE_AJUDA: 'Encontre respostas e dicas para usar o HoraCerta',
+    
+    // Dicas do Sistema
+    DICAS_TITULO: 'Dicas para Usar o HoraCerta',
+    
+    DICA_01_TITULO: 'Registre seu ponto sempre no mesmo horário',
+    DICA_01_DESCRICAO: 'Manter uma rotina ajuda a não esquecer de registrar o ponto e facilita o controle das suas horas.',
+    
+    DICA_02_TITULO: 'Use as notificações como lembrete',
+    DICA_02_DESCRICAO: 'Configure lembretes para não esquecer de registrar entrada e saída. Vá em Configurações > Notificações.',
+    
+    DICA_03_TITULO: 'Revise seus registros semanalmente',
+    DICA_03_DESCRICAO: 'Faça uma revisão semanal dos seus registros para identificar possíveis inconsistências ou esquecimentos.',
+    
+    DICA_04_TITULO: 'Configure sua jornada de trabalho corretamente',
+    DICA_04_DESCRICAO: 'Defina sua carga horária diária e tempo de almoço em Configurações > Jornada de Trabalho para cálculos precisos.',
+    
+    DICA_05_TITULO: 'Use o histórico para análises',
+    DICA_05_DESCRICAO: 'O histórico detalhado permite visualizar padrões e identificar oportunidades de melhorar sua gestão de tempo.',
+    
+    DICA_06_TITULO: 'Exporte relatórios regularmente',
+    DICA_06_DESCRICAO: 'Mantenha backup dos seus relatórios exportando-os em PDF ou Excel periodicamente.',
+    
+    // Formulário de Contato
+    FORMULARIO_TITULO: 'Precisa de Ajuda?',
+    FORMULARIO_SUBTITULO: 'Envie sua dúvida ou sugestão',
+    
+    FORM_NOME: 'Nome completo',
+    FORM_EMAIL: 'E-mail',
+    FORM_ASSUNTO: 'Assunto',
+    FORM_MENSAGEM: 'Mensagem',
+    FORM_BOTAO_ENVIAR: 'Enviar mensagem',
+    FORM_ENVIANDO: 'Enviando...',
+    FORM_SUCESSO: 'Mensagem enviada com sucesso!',
+    FORM_ERRO: 'Erro ao enviar mensagem. Tente novamente.',
+    
+    FORM_PLACEHOLDER_NOME: 'Digite seu nome completo',
+    FORM_PLACEHOLDER_EMAIL: 'seu@email.com',
+    FORM_PLACEHOLDER_ASSUNTO: 'Digite o assunto da sua mensagem',
+    FORM_PLACEHOLDER_MENSAGEM: 'Descreva sua dúvida ou sugestão...',
+
+    // -------------------------- ROUTES ADICIONAIS --------------------------
+    ROUTE_TERMOS_DE_USO: '/termosDeUso',
+    ROUTE_SEGURANCA: '/seguranca',
+    ROUTE_CENTRAL_DE_AJUDA: '/centralDeAjuda',
     TEXTO_SUPORTE_01: 'Estamos aqui para ajudar você com qualquer dúvida ou problema que possa ter. Entre em contato conosco pelo e-mail ou pelo telefone de atendimento.',
 
     // -------------------------- PAGINA TUTORIAL --------------------------

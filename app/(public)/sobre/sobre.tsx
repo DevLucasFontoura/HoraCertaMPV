@@ -5,6 +5,7 @@ import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CONSTANTES } from '../../common/constantes';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './sobre.module.css';
 import { useState } from 'react';
 
@@ -73,7 +74,7 @@ const Sobre = () => {
         <hr className={styles.sectionDivider} />
 
         <section className={styles.sectionRow}>
-          <img src={CONSTANTES.IMAGE_SOBRE_01} className={styles.sectionImage} alt="Nossa missão" />
+          <Image src={CONSTANTES.IMAGE_SOBRE_01} className={styles.sectionImage} alt="Nossa missão" width={500} height={300} />
           <div className={styles.sectionText}><h2 className={styles.equipeTitulo}>{CONSTANTES.TITULO_MISSAO}</h2><p>{CONSTANTES.DESCRICAO_MISSAO}</p></div>
         </section>
 
@@ -93,7 +94,7 @@ const Sobre = () => {
 
         <section className={styles.sectionRowReverse}>
           <div className={styles.sectionText}> <h2 className={styles.equipeTitulo}>{CONSTANTES.TITULO_NOSSA_HISTORIA}</h2> <p>{CONSTANTES.DESCRICAO_NOSSA_HISTORIA_01}</p> <p>{CONSTANTES.DESCRICAO_NOSSA_HISTORIA_02}</p> </div>
-          <img src={CONSTANTES.IMAGE_SOBRE_02} className={styles.sectionImage} alt="Nossa história" />
+          <Image src={CONSTANTES.IMAGE_SOBRE_02} className={styles.sectionImage} alt="Nossa história" width={500} height={300} />
         </section>
 
         <hr className={styles.sectionDivider} />
@@ -111,7 +112,7 @@ const Sobre = () => {
         <hr className={styles.sectionDivider} />
 
         <section className={styles.sectionRow}>
-          <img src={CONSTANTES.IMAGE_SOBRE_03} className={styles.sectionImage} alt="Nossa equipe" />
+          <Image src={CONSTANTES.IMAGE_SOBRE_03} className={styles.sectionImage} alt="Nossa equipe" width={500} height={300} />
           <div className={styles.sectionText}> <h2 className={styles.equipeTitulo}>{CONSTANTES.TITULO_EQUIPE}</h2> <p>{CONSTANTES.DESCRICAO_EQUIPE}</p></div>
         </section>
       </div>

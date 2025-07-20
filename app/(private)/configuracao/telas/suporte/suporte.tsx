@@ -13,12 +13,11 @@ interface SupportItem {
   description: string;
   icon: React.ReactNode;
   path?: string;
-  isEmail?: boolean;
 }
 
 const supportItems: SupportItem[] = [
   {title: CONSTANTES.SUPORTE_01, description: CONSTANTES.SUPORTE_01_DESCRICAO, icon: <FaClock size={24} />},
-  {title: CONSTANTES.SUPORTE_02, description: CONSTANTES.EMAIL_SUPORTE, icon: <FaEnvelope size={24} />, isEmail: true},
+  {title: CONSTANTES.SUPORTE_02, description: CONSTANTES.EMAIL_SUPORTE, icon: <FaEnvelope size={24} />},
   {title: CONSTANTES.SUPORTE_03, description: CONSTANTES.SUPORTE_03_DESCRICAO, icon: <FaClock size={24} />},
   {title: CONSTANTES.SUPORTE_04, description: CONSTANTES.SUPORTE_04_DESCRICAO, icon: <FaQuestionCircle size={24} />, path: CONSTANTES.ROUTE_CONFIGURACAO_PERGUNTAS},
 ];
@@ -27,9 +26,7 @@ export default function SupportScreen() {
   const router = useRouter();
 
   const handleItemClick = (item: SupportItem) => {
-    if (item.isEmail) {
-      window.location.href = `mailto:${CONSTANTES.EMAIL_SUPORTE}`;
-    } else if (item.path) {
+    if (item.path) {
       router.push(item.path);
     }
   };
@@ -67,7 +64,7 @@ export default function SupportScreen() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
               onClick={() => handleItemClick(item)}
-              style={{ cursor: (item.path || item.isEmail) ? 'pointer' : 'default' }}
+              style={{ cursor: item.path ? 'pointer' : 'default' }}
             >
               <div className={styles.iconContainer}>
                 {item.icon}
@@ -75,6 +72,17 @@ export default function SupportScreen() {
               <div className={styles.itemContent}>
                 <h3 className={styles.itemTitle}>{item.title}</h3>
                 <p className={styles.itemDescription}>{item.description}</p>
+                {item.title === CONSTANTES.SUPORTE_02 && (
+                  <button 
+                    className={styles.contactLink}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.open(CONSTANTES.ROUTE_CENTRAL_DE_AJUDA, '_blank');
+                    }}
+                  >
+                    Acessar formulário de contato
+                  </button>
+                )}
               </div>
             </motion.div>
           ))}

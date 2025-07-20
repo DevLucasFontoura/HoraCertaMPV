@@ -113,3 +113,19 @@
     margin-top: 24px;
     line-height: 1.5;
 }
+
+.contactLink {
+    background: none;
+    border: none;
+    color: #4B7BF5;
+    text-decoration: underline;
+    font-size: 0.875rem;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 8px;
+    transition: color 0.2s;
+}
+
+.contactLink:hover {
+    color: #3B5BC7;
+}

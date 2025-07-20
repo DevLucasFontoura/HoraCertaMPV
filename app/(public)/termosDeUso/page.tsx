@@ -1,5 +1,5 @@
-import TermosDeUso from './termosDeUso'
+import TermosDeUso from './termosDeUso';
 
 export default function TermosDeUsoPage() {
-  return <TermosDeUso />
+  return <TermosDeUso />;
 } 

@@ -96,7 +96,7 @@ export const CONSTANTES = {
     CARD_RECURSOS_04_TITULO: 'Acesso Multiplataforma',
     CARD_RECURSOS_04_SUBTITULO: 'Acesse seus registros de qualquer dispositivo, sempre sincronizados e seguros.',
     CARD_RECURSOS_05_TITULO: 'Segurança e Confidencialidade',
-    CARD_RECURSOS_05_SUBTITULO: 'Seus dados são protegidos com criptografia e segurança avançada.',
+    CARD_RECURSOS_05_SUBTITULO: 'Seus dados sempre protegidos e confidenciais.',
     CARD_RECURSOS_06_TITULO: 'Suporte Completo',
     CARD_RECURSOS_06_SUBTITULO: 'Acesse relatórios detalhados e mantenha controle total sobre seus dados.',
     TITULO_EMPRESA: 'HoraCerta Pro',
@@ -476,7 +476,7 @@ export const CONSTANTES = {
     TERMOS_08: 'Lei Aplicável',
     TERMOS_08_DESCRICAO: 'Estes termos são regidos pelas leis brasileiras. Qualquer disputa será resolvida nos tribunais brasileiros.',
     
-    TERMOS_ULTIMA_ATUALIZACAO: 'Última atualização: Janeiro de 2025',
+    TERMOS_ULTIMA_ATUALIZACAO: 'Última atualização: Julho de 2025',
 
     // -------------------------- PAGINA SEGURANÇA --------------------------
     TITULO_SEGURANCA: 'Segurança',

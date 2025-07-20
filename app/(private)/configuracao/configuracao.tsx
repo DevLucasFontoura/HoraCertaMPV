@@ -10,6 +10,8 @@ import { AuthService } from '../../services/authService';
 import { useAuth } from '../../hooks/useAuth';
 import DeleteAccountModal from '../../components/PopUpConfirmacao/DeleteAccountModal';
 import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { FaExclamationTriangle } from 'react-icons/fa';
+import { useEffect, useRef } from 'react';
 
 interface SettingOption {
   title: string;
@@ -24,6 +26,26 @@ export default function SettingsScreen() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDangerZoneModal, setShowDangerZoneModal] = useState(false);
+  const [showDangerZoneDropdown, setShowDangerZoneDropdown] = useState(false);
+  const dangerZoneRef = useRef<HTMLDivElement>(null);
+
+  // Detectar cliques fora do dropdown para fechá-lo
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dangerZoneRef.current && !dangerZoneRef.current.contains(event.target as Node)) {
+        setShowDangerZoneDropdown(false);
+      }
+    };
+
+    if (showDangerZoneDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDangerZoneDropdown]);
 
   // Memoizar as opções de configuração para evitar recriações desnecessárias
   const settingsOptions = useMemo(() => ({
@@ -108,7 +130,12 @@ export default function SettingsScreen() {
 
   const handleDeleteAccount = useCallback(() => {
     setShowDeleteModal(true);
+    setShowDangerZoneDropdown(false);
   }, []);
+
+  const handleOpenDangerZone = useCallback(() => {
+    setShowDangerZoneDropdown(!showDangerZoneDropdown);
+  }, [showDangerZoneDropdown]);
 
   const handleConfirmDelete = useCallback(async (password: string) => {
     setIsDeleting(true);
@@ -149,6 +176,14 @@ export default function SettingsScreen() {
       setDeleteError(null);
     }
   }, [isDeleting]);
+
+  const handleCloseDangerZoneModal = useCallback(() => {
+    setShowDangerZoneModal(false);
+  }, []);
+
+  const handleCloseDangerZoneDropdown = useCallback(() => {
+    setShowDangerZoneDropdown(false);
+  }, []);
 
   const renderSection = useCallback((title: string, icon: React.ReactNode, options: SettingOption[]) => (
     <section className={styles.section}>
@@ -194,26 +229,38 @@ export default function SettingsScreen() {
           {renderSection('Ajuda', <FaQuestionCircle size={24} />, settingsOptions.help)}
           {renderSection('Sobre', <FaInfoCircle size={24} />, settingsOptions.about)}
 
-          <section className={styles.section}>
-            <div className={styles.dangerZone}>
-              <h3 className={styles.dangerTitle}>{CONSTANTES.CONFIGURACAO_ZONA_DE_PERIGO}</h3>
-              <p className={styles.dangerDescription}>
-                {CONSTANTES.CONFIGURACAO_ZONA_DE_PERIGO_DESCRICAO}
-              </p>
-              {deleteError && (
-                <p className={styles.errorMessage} style={{ color: 'red', marginBottom: '10px' }}>
-                  {deleteError}
-                </p>
-              )}
-              <button 
-                className={styles.dangerButton} 
-                onClick={handleDeleteAccount}
-                disabled={isDeleting}
-              >
-                {CONSTANTES.CONFIGURACAO_ZONA_DE_PERIGO_BOTAO}
-              </button>
-            </div>
-          </section>
+          <div className={styles.dangerZoneContainer} ref={dangerZoneRef}>
+            <button 
+              className={styles.dangerZoneButton}
+              onClick={handleOpenDangerZone}
+            >
+              <FaExclamationTriangle size={16} />
+              <span>Zona de Perigo</span>
+            </button>
+            
+            {showDangerZoneDropdown && (
+              <div className={styles.dangerZoneDropdown}>
+                <div className={styles.dangerZoneContent}>
+                  <h3 className={styles.dangerTitle}>{CONSTANTES.CONFIGURACAO_ZONA_DE_PERIGO}</h3>
+                  <p className={styles.dangerDescription}>
+                    {CONSTANTES.CONFIGURACAO_ZONA_DE_PERIGO_DESCRICAO}
+                  </p>
+                  {deleteError && (
+                    <p className={styles.errorMessage}>
+                      {deleteError}
+                    </p>
+                  )}
+                  <button 
+                    className={styles.dangerButton} 
+                    onClick={handleDeleteAccount}
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? 'Deletando...' : CONSTANTES.CONFIGURACAO_ZONA_DE_PERIGO_BOTAO}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
 
           <button 
             className={`${styles.outlineButton} ${styles.logoutButton}`}
@@ -233,6 +280,8 @@ export default function SettingsScreen() {
         isDeleting={isDeleting}
         error={deleteError}
       />
+
+
     </div>
   );
 }

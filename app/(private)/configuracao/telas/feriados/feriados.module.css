@@ -63,12 +63,39 @@
 
 .addHolidayContainer {
     display: flex;
-    gap: 12px;
+    flex-direction: column;
+    gap: 16px;
     margin-bottom: 24px;
+}
+
+.holidayText {
+    width: 100%;
+}
+
+.holidayTitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 8px 0;
+}
+
+.holidayDescription {
+    font-size: 0.875rem;
+    color: #666;
+    margin: 0 0 12px 0;
+    line-height: 1.4;
+}
+
+.holidayControls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
 }
 
 .dateInput {
     flex: 1;
+    width: 100%;
     padding: 12px;
     border: 1px solid #eaeaea;
     border-radius: 8px;
@@ -96,6 +123,48 @@
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s;
+    white-space: nowrap;
+    flex: 1;
+    width: 100%;
+}
+
+.addButton.disabled {
+    background-color: #e0e0e0;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.dateInput.disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+    border-color: #e0e0e0;
+}
+
+.deleteButton.disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.helpButton.disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.comingSoonContainer {
+    display: inline-block;
+    background-color: #EEF2FF;
+    padding: 4px 8px;
+    border-radius: 12px;
+    margin-top: 8px;
+}
+
+.comingSoon {
+    font-size: 0.75rem;
+    color: #4B7BF5;
+    font-weight: 500;
 }
 
 .addButton:hover {

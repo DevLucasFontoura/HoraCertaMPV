@@ -218,7 +218,7 @@ export function HistoricoTable({
 
   const handleDownloadXLSX = () => {
     // Criar dados para download
-        const downloadData = filteredData.map((record, index) => {
+    const downloadData = filteredData.map((record, index) => {
       return {
         'Item': index + 1,
         'Data': record.data, // Usar a data já formatada
@@ -249,6 +249,131 @@ export function HistoricoTable({
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+  }
+
+  const handleDownloadPDF = () => {
+    // Criar dados para PDF
+    const downloadData = filteredData.map((record, index) => {
+      return {
+        'Item': index + 1,
+        'Data': record.data,
+        'Entrada': record.entrada || '-',
+        'Saída Almoço': record.saidaAlmoco || '-',
+        'Retorno Almoço': record.retornoAlmoco || '-',
+        'Saída': record.saida || '-',
+        'Total Horas': record.totalHoras ? `${record.totalHoras.toFixed(2)}h` : '-'
+      }
+    })
+
+    // Criar conteúdo HTML para PDF com estilo otimizado para impressão
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Histórico de Ponto</title>
+          <style>
+            @media print {
+              body { margin: 0; padding: 20px; }
+              .no-print { display: none; }
+            }
+            body { 
+              font-family: Arial, sans-serif; 
+              margin: 20px; 
+              background: white;
+              color: black;
+            }
+            table { 
+              width: 100%; 
+              border-collapse: collapse; 
+              margin-top: 20px; 
+              page-break-inside: auto;
+            }
+            th, td { 
+              border: 1px solid #000; 
+              padding: 8px; 
+              text-align: left; 
+              font-size: 12px;
+            }
+            th { 
+              background-color: #f0f0f0; 
+              font-weight: bold; 
+              text-align: center;
+            }
+            h1 { 
+              color: #000; 
+              text-align: center; 
+              margin-bottom: 10px;
+              font-size: 18px;
+            }
+            .header { 
+              text-align: center; 
+              margin-bottom: 20px; 
+              border-bottom: 2px solid #000;
+              padding-bottom: 10px;
+            }
+            .periodo { 
+              font-size: 14px; 
+              color: #000; 
+              margin-bottom: 10px; 
+              font-weight: bold;
+            }
+            .print-button {
+              background: #007bff;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 5px;
+              cursor: pointer;
+              margin-bottom: 20px;
+            }
+            .print-button:hover {
+              background: #0056b3;
+            }
+          </style>
+        </head>
+        <body>
+          <button class="print-button no-print" onclick="window.print()">Imprimir / Salvar como PDF</button>
+          <div class="header">
+            <h1>Histórico de Ponto</h1>
+            <div class="periodo">Período: ${selectedYear}${selectedMonth ? ` - ${new Date(2000, selectedMonth - 1).toLocaleDateString('pt-BR', { month: 'long' })}` : ''}</div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Data</th>
+                <th>Entrada</th>
+                <th>Saída Almoço</th>
+                <th>Retorno Almoço</th>
+                <th>Saída</th>
+                <th>Total Horas</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${downloadData.map(row => `
+                <tr>
+                  <td style="text-align: center;">${row['Item']}</td>
+                  <td>${row['Data']}</td>
+                  <td style="text-align: center;">${row['Entrada']}</td>
+                  <td style="text-align: center;">${row['Saída Almoço']}</td>
+                  <td style="text-align: center;">${row['Retorno Almoço']}</td>
+                  <td style="text-align: center;">${row['Saída']}</td>
+                  <td style="text-align: center;">${row['Total Horas']}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `
+
+    // Abrir em nova janela para impressão/PDF
+    const newWindow = window.open('', '_blank')
+    if (newWindow) {
+      newWindow.document.write(htmlContent)
+      newWindow.document.close()
+    }
   }
 
   const columns: ColumnDef<z.infer<typeof historicoSchema>>[] = [
@@ -736,9 +861,9 @@ export function HistoricoTable({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" style={{ overflow: 'hidden' }}>
       {showHeaderControls && (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between" style={{ position: 'relative', zIndex: 10 }}>
           <div className="flex items-center space-x-2">
             <Select value={selectedYear.toString()} onValueChange={(value) => handleYearChange(parseInt(value))}>
               <SelectTrigger className="w-32 bg-white">
@@ -775,23 +900,41 @@ export function HistoricoTable({
               </SelectContent>
             </Select>
             
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleDownloadXLSX}
-            >
-              <IconDownload className="mr-2 h-4 w-4" />
-              Baixar XLSX
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" style={{ position: 'relative' }}>
+                  <IconDownload className="mr-2 h-4 w-4" />
+                  Baixar
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-white" sideOffset={5} style={{ position: 'absolute', zIndex: 1000 }}>
+                <DropdownMenuItem onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleDownloadXLSX();
+                }}>
+                  <IconDownload className="mr-2 h-4 w-4" />
+                  Baixar XLSX
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleDownloadPDF();
+                }}>
+                  <IconDownload className="mr-2 h-4 w-4" />
+                  Baixar PDF
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
+              <Button variant="outline" style={{ position: 'relative' }}>
                 <IconLayoutColumns className="mr-2 h-4 w-4" />
                 Colunas
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="start" className="bg-white" sideOffset={5} style={{ position: 'absolute', zIndex: 1000 }}>
               {table
                 .getAllColumns()
                 .filter((column) => column.getCanHide())
@@ -800,7 +943,11 @@ export function HistoricoTable({
                     <DropdownMenuItem
                       key={column.id}
                       className={cn('capitalize', column.getIsVisible() ? 'font-bold' : '')}
-                      onClick={() => column.toggleVisibility(!column.getIsVisible())}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        column.toggleVisibility(!column.getIsVisible());
+                      }}
                     >
                       {column.id}
                     </DropdownMenuItem>

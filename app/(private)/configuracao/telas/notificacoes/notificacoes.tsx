@@ -10,12 +10,8 @@ import { useState } from 'react';
 
 export default function NotificationsScreen() {
   const router = useRouter();
-  const [pointReminder, setPointReminder] = useState(false);
+  const [pointReminder] = useState(false);
   const [emailNotifications] = useState(false);
-
-  const handlePointReminderToggle = (value: boolean) => {
-    setPointReminder(value);
-  };
 
   return (
     <div className={styles.containerWrapper}>
@@ -48,14 +44,18 @@ export default function NotificationsScreen() {
               <p className={styles.notificationDescription}>
                 {CONSTANTES.NOTIFICACAO_LEMBRETE_PONTO_DESCRICAO}
               </p>
+              <div className={styles.comingSoonContainer}>
+                <span className={styles.comingSoon}>{CONSTANTES.COMING_SOON}</span>
+              </div>
             </div>
             <label className={styles.switch}>
               <input
                 type="checkbox"
                 checked={pointReminder}
-                onChange={(e) => handlePointReminderToggle(e.target.checked)}
+                onChange={() => {}}
+                disabled
               />
-              <span className={styles.slider}></span>
+              <span className={`${styles.slider} ${styles.disabled}`}></span>
             </label>
           </div>
 

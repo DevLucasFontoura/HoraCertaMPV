@@ -15,26 +15,16 @@ interface Holiday {
 
 export default function HolidayScreen() {
   const router = useRouter();
-  const [holidays, setHolidays] = useState<Holiday[]>([]);
-  const [showHelpModal, setShowHelpModal] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [holidays] = useState<Holiday[]>([]);
+  const [showHelpModal] = useState(false);
+  const [selectedDate] = useState<string>('');
 
   const addHoliday = () => {
-    if (!selectedDate) return;
-    
-    const date = new Date(selectedDate);
-    const isSaturday = date.getDay() === 6;
-    const newHoliday: Holiday = {
-      date,
-      description: 'Feriado',
-      affectsWeekHours: isSaturday
-    };
-    setHolidays([...holidays, newHoliday]);
-    setSelectedDate('');
+    // Funcionalidade desabilitada
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedDate(e.target.value);
+    // Funcionalidade desabilitada
   };
 
   return (
@@ -65,20 +55,33 @@ export default function HolidayScreen() {
 
         <section className={styles.section}>
           <div className={styles.addHolidayContainer}>
-            <input
-              type="date"
-              className={styles.dateInput}
-              value={selectedDate}
-              onChange={handleDateChange}
-            />
-            <button 
-              className={styles.addButton}
-              onClick={addHoliday}
-              disabled={!selectedDate}
-            >
-              <FaPlus size={16} />
-              <span>{CONSTANTES.ADICIONAR_FERIADO}</span>
-            </button>
+            <div className={styles.holidayText}>
+              <h3 className={styles.holidayTitle}>Adicionar Feriado</h3>
+              <p className={styles.holidayDescription}>
+                Configure feriados para ajustar automaticamente sua jornada de trabalho
+              </p>
+              <div className={styles.comingSoonContainer}>
+                <span className={styles.comingSoon}>{CONSTANTES.COMING_SOON}</span>
+              </div>
+            </div>
+            <div className={styles.holidayControls}>
+              <input
+                type="text"
+                className={`${styles.dateInput} ${styles.disabled}`}
+                value=""
+                onChange={handleDateChange}
+                disabled
+                placeholder="00/00/0000"
+              />
+              <button 
+                className={`${styles.addButton} ${styles.disabled}`}
+                onClick={addHoliday}
+                disabled
+              >
+                <FaPlus size={16} />
+                <span>{CONSTANTES.ADICIONAR_FERIADO}</span>
+              </button>
+            </div>
           </div>
 
           <div className={styles.holidayList}>
@@ -100,11 +103,9 @@ export default function HolidayScreen() {
                   </span>
                 </div>
                 <button 
-                  className={styles.deleteButton}
-                  onClick={() => {
-                    const newHolidays = holidays.filter((_, i) => i !== index);
-                    setHolidays(newHolidays);
-                  }}
+                  className={`${styles.deleteButton} ${styles.disabled}`}
+                  onClick={() => {}}
+                  disabled
                 >
                   <FaTrash size={16} />
                 </button>
@@ -114,8 +115,9 @@ export default function HolidayScreen() {
         </section>
 
         <button 
-          className={styles.helpButton}
-          onClick={() => setShowHelpModal(true)}
+          className={`${styles.helpButton} ${styles.disabled}`}
+          onClick={() => {}}
+          disabled
         >
           <FaQuestionCircle size={16} />
           <span>Como funciona?</span>
@@ -132,7 +134,7 @@ export default function HolidayScreen() {
                 <h2 className={styles.modalTitle}>{CONSTANTES.TITULO_COMO_FUNCIONA_FERIADOS}</h2>
                 <button 
                   className={styles.closeButton}
-                  onClick={() => setShowHelpModal(false)}
+                  onClick={() => {}}
                 >
                   <FaTimes size={20} />
                 </button>

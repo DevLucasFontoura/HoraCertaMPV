@@ -7,7 +7,7 @@ import { CONSTANTES } from '../../common/constantes';
 import Link from 'next/link';
 import styles from './centralDeAjuda.module.css';
 import { useState } from 'react';
-import { FaLightbulb, FaClock, FaBell, FaHistory, FaCog, FaFileExport } from 'react-icons/fa';
+import { FaClock, FaBell, FaHistory, FaCog, FaFileExport } from 'react-icons/fa';
 
 const CentralDeAjuda = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -78,7 +78,7 @@ const CentralDeAjuda = () => {
       window.open(mailtoLink);
       setSubmitStatus('success');
       setFormData({ nome: '', email: '', assunto: '', mensagem: '' });
-    } catch (error) {
+    } catch {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);

@@ -26,7 +26,6 @@ export default function SettingsScreen() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showDangerZoneModal, setShowDangerZoneModal] = useState(false);
   const [showDangerZoneDropdown, setShowDangerZoneDropdown] = useState(false);
   const dangerZoneRef = useRef<HTMLDivElement>(null);
 
@@ -177,13 +176,7 @@ export default function SettingsScreen() {
     }
   }, [isDeleting]);
 
-  const handleCloseDangerZoneModal = useCallback(() => {
-    setShowDangerZoneModal(false);
-  }, []);
 
-  const handleCloseDangerZoneDropdown = useCallback(() => {
-    setShowDangerZoneDropdown(false);
-  }, []);
 
   const renderSection = useCallback((title: string, icon: React.ReactNode, options: SettingOption[]) => (
     <section className={styles.section}>

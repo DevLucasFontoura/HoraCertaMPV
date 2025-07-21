@@ -17,13 +17,11 @@ export default function HolidayScreen() {
   const router = useRouter();
   const [holidays] = useState<Holiday[]>([]);
   const [showHelpModal] = useState(false);
-  const [selectedDate] = useState<string>('');
-
   const addHoliday = () => {
     // Funcionalidade desabilitada
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateChange = () => {
     // Funcionalidade desabilitada
   };
 

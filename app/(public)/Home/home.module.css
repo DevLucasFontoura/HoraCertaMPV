@@ -37,6 +37,15 @@
   padding-top: 15vh; /* Move o conteúdo para cima */
 }
 
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 2rem;
+}
+
 .gradient {
   position: absolute;
   top: 50%;
@@ -73,6 +82,9 @@
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
 }
 
 .primaryButton {
@@ -630,9 +642,24 @@
 
   .hero {
     padding: 0 1.5rem;
-    padding-top: 12vh; /* Ajustado para mobile */
-    text-align: left;
-    min-height: calc(100vh - 70px);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    padding-top: 20vh;
+    padding-bottom: 5vh;
+  }
+
+  .heroContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 3rem;
+    margin-top: -2vh;
   }
 
   .gradient {
@@ -643,9 +670,24 @@
     border-radius: 0;
   }
 
+  .heroTitle {
+    font-size: clamp(2.5rem, 7vw, 3.5rem);
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+
+  .heroSubtitle {
+    font-size: clamp(1rem, 4vw, 1.25rem);
+    margin-bottom: 3rem;
+    text-align: center;
+    max-width: 100%;
+  }
+
   .buttonGroup {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
+    width: 100%;
+    max-width: 300px;
   }
 
   .primaryButton,
@@ -655,82 +697,164 @@
   }
 
   .features {
-    padding: 3rem 1.5rem 4rem;
+    padding: 4rem 1.5rem;
+    text-align: center;
+  }
+
+  .sectionTitle {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    margin-bottom: 1rem;
+  }
+
+  .sectionSubtitle {
+    font-size: clamp(1rem, 3vw, 1.125rem);
+    margin-bottom: 3rem;
   }
 
   .featureGrid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 2rem;
+    max-width: 500px;
+    margin: 0 auto;
   }
 
   .featureCard {
-    padding: 1.5rem;
+    padding: 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .featureIcon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 0.5rem;
+  }
+
+  .featureCard h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .featureCard p {
+    font-size: 1rem;
+    line-height: 1.6;
   }
 
   .mobileMenu {
     width: 100%;
   }
 
-
-
   .howItWorks {
     padding: 4rem 1.5rem;
+    text-align: center;
   }
 
   .stepsContainer {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 2.5rem;
+    max-width: 500px;
+    margin: 0 auto;
   }
 
   .benefits {
     padding: 4rem 1.5rem;
+    text-align: center;
   }
 
   .benefitsGrid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.5rem;
+    max-width: 500px;
+    margin: 0 auto;
   }
 
   .testimonials {
     padding: 4rem 1.5rem;
+    text-align: center;
   }
 
   .testimonialsGrid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 2rem;
+    max-width: 500px;
+    margin: 0 auto;
   }
 
   .ctaSection {
     padding: 4rem 1.5rem;
+    text-align: center;
   }
 
   .ctaButtons {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
+    max-width: 300px;
+    margin: 0 auto;
   }
 }
 
 @media (max-width: 480px) {
   .hero {
     padding: 0 1rem;
-    padding-top: 10vh; /* Ajustado para mobile pequeno */
-    min-height: calc(100vh - 60px);
+    min-height: 100vh;
+    padding-top: 18vh;
+    padding-bottom: 3vh;
+  }
+
+  .heroContent {
+    gap: 2.5rem;
+    margin-top: -1vh;
+  }
+
+  .heroTitle {
+    font-size: clamp(2rem, 8vw, 3rem);
+    margin-bottom: 2rem;
+  }
+
+  .heroSubtitle {
+    font-size: clamp(0.875rem, 4vw, 1.125rem);
+    margin-bottom: 4.5rem;
+  }
+
+  .buttonGroup {
+    max-width: 280px;
   }
 
   .features {
-    padding: 2rem 1rem 3rem;
+    padding: 3rem 1rem;
+  }
+
+  .featureGrid {
+    gap: 1.5rem;
+    max-width: 100%;
   }
 
   .featureCard {
+    padding: 1.5rem;
+    text-align: center;
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.75rem;
   }
 
   .featureIcon {
-    width: 48px;
-    height: 48px;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 0.5rem;
+  }
+
+  .featureCard h3 {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .featureCard p {
+    font-size: 0.875rem;
+    line-height: 1.5;
   }
 
   .mobileMenu {
@@ -745,6 +869,13 @@
   .testimonials,
   .ctaSection {
     padding: 3rem 1rem;
+  }
+
+  .stepsContainer,
+  .benefitsGrid,
+  .testimonialsGrid {
+    max-width: 100%;
+    gap: 1.5rem;
   }
 
   .step {

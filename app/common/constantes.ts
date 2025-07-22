@@ -428,7 +428,7 @@ export const CONSTANTES = {
     // -------------------------- PAGINA SOBRE --------------------------
     TITULO_SOBRE: 'Sobre o App',
     SUBTITULO_SOBRE: 'Conheça mais sobre o HoraCerta',
-    SOBRE_01: 'HoraCerta v1.0.0',
+    SOBRE_01: 'HoraCerta v1.0.1',
     SOBRE_01_DESCRICAO: 'Desenvolvido para simplificar o controle de ponto e gerenciamento de horas trabalhadas.',
     SOBRE_02: 'Recursos',
     SOBRE_02_DESCRICAO: '- Registro de ponto digital\n- Controle de banco de horas\n- Relatórios detalhados\n- Notificações personalizáveis',

@@ -529,8 +529,15 @@ export function HistoricoTable({
           config
         });
         
-        const isPositive = balance >= 0;
-        const colorClass = isPositive ? "text-green-600" : "text-red-600";
+        // Determinar a cor baseada no saldo
+        let colorClass;
+        if (balance === 0) {
+          colorClass = "text-gray-500"; // Cinza para saldo zero
+        } else if (balance > 0) {
+          colorClass = "text-green-600"; // Verde para saldo positivo
+        } else {
+          colorClass = "text-red-600"; // Vermelho para saldo negativo
+        }
         
         // Usar o método de formatação do TimeCalculationService
         const formattedBalance = TimeCalculationService.formatBankHours(balance);

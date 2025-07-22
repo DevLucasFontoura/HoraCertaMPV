@@ -212,6 +212,21 @@ export default function Historico() {
     };
   }, []);
 
+  // Focar no primeiro input quando o modal abrir
+  useEffect(() => {
+    if (showForm) {
+      // Pequeno delay para garantir que o modal esteja renderizado
+      const timer = setTimeout(() => {
+        const firstInput = document.querySelector('input[type="date"]') as HTMLInputElement;
+        if (firstInput) {
+          firstInput.focus();
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [showForm]);
+
   useEffect(() => {
     let isMounted = true;
     
@@ -354,6 +369,7 @@ export default function Historico() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
+                    onClick={(e) => e.stopPropagation()}
                     style={{
                       backgroundColor: '#fff',
                       borderRadius: '12px',
@@ -425,13 +441,16 @@ export default function Historico() {
                             const year = date.getFullYear().toString()
                             setFormData(prev => ({ ...prev, data: `${day}/${month}/${year}` }))
                           }}
+                          onClick={(e) => (e.target as HTMLInputElement).focus()}
+                          onFocus={(e) => (e.target as HTMLInputElement).select()}
                           style={{
                             width: '100%',
                             padding: '12px',
                             border: formData.data ? '1px solid #ddd' : '1px solid #dc2626',
                             borderRadius: '8px',
                             fontSize: '14px',
-                            backgroundColor: '#fff'
+                            backgroundColor: '#fff',
+                            cursor: 'text'
                           }}
                           required
                         />
@@ -457,12 +476,15 @@ export default function Historico() {
                           type="time"
                           value={formData.entrada || ''}
                           onChange={(e) => setFormData(prev => ({ ...prev, entrada: e.target.value }))}
+                          onClick={(e) => (e.target as HTMLInputElement).focus()}
+                          onFocus={(e) => (e.target as HTMLInputElement).select()}
                           style={{
                             width: '100%',
                             padding: '12px',
                             border: '1px solid #ddd',
                             borderRadius: '8px',
-                            fontSize: '14px'
+                            fontSize: '14px',
+                            cursor: 'text'
                           }}
                           placeholder="Ex: 08:00"
                         />
@@ -477,12 +499,15 @@ export default function Historico() {
                           type="time"
                           value={formData.saidaAlmoco}
                           onChange={(e) => setFormData(prev => ({ ...prev, saidaAlmoco: e.target.value }))}
+                          onClick={(e) => (e.target as HTMLInputElement).focus()}
+                          onFocus={(e) => (e.target as HTMLInputElement).select()}
                           style={{
                             width: '100%',
                             padding: '12px',
                             border: '1px solid #ddd',
                             borderRadius: '8px',
-                            fontSize: '14px'
+                            fontSize: '14px',
+                            cursor: 'text'
                           }}
                           placeholder="Ex: 12:00"
                         />
@@ -497,12 +522,15 @@ export default function Historico() {
                           type="time"
                           value={formData.retornoAlmoco}
                           onChange={(e) => setFormData(prev => ({ ...prev, retornoAlmoco: e.target.value }))}
+                          onClick={(e) => (e.target as HTMLInputElement).focus()}
+                          onFocus={(e) => (e.target as HTMLInputElement).select()}
                           style={{
                             width: '100%',
                             padding: '12px',
                             border: '1px solid #ddd',
                             borderRadius: '8px',
-                            fontSize: '14px'
+                            fontSize: '14px',
+                            cursor: 'text'
                           }}
                           placeholder="Ex: 13:00"
                         />
@@ -517,12 +545,15 @@ export default function Historico() {
                           type="time"
                           value={formData.saida || ''}
                           onChange={(e) => setFormData(prev => ({ ...prev, saida: e.target.value }))}
+                          onClick={(e) => (e.target as HTMLInputElement).focus()}
+                          onFocus={(e) => (e.target as HTMLInputElement).select()}
                           style={{
                             width: '100%',
                             padding: '12px',
                             border: '1px solid #ddd',
                             borderRadius: '8px',
-                            fontSize: '14px'
+                            fontSize: '14px',
+                            cursor: 'text'
                           }}
                           placeholder="Ex: 18:00"
                         />

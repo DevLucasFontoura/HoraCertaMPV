@@ -806,7 +806,15 @@ export function HistoricoTable({
                 <DrawerFooter>
                   <Button 
                     variant="outline" 
-                    onClick={() => onRowClick?.(row.original)}
+                    onClick={() => {
+                      // Fechar o Drawer programaticamente antes de chamar onRowClick
+                      const closeBtn = document.querySelector('[data-radix-drawer-close]') as HTMLButtonElement;
+                      if (closeBtn) closeBtn.click();
+                      // Pequeno delay para garantir que o Drawer feche antes de abrir o modal
+                      setTimeout(() => {
+                        onRowClick?.(row.original);
+                      }, 100);
+                    }}
                     className="w-full mb-2"
                   >
                     {row.original.id.startsWith('empty_') ? 'Adicionar Registro' : 'Editar'}

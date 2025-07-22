@@ -142,6 +142,19 @@ export function HistoricoTable({
     }
   }, [years, selectedYear, selectedMonth])
 
+  // Cleanup effect para evitar vazamentos de memória
+  React.useEffect(() => {
+    return () => {
+      // Limpar estados quando o componente for desmontado
+      setRowSelection({})
+      setColumnVisibility({})
+      setColumnFilters([])
+      setSorting([])
+      setPagination({ pageIndex: 0, pageSize: pageSize })
+      setDeleteLoadingId(null)
+    }
+  }, [pageSize])
+
   // Memoizar todos os meses (1-12)
   const months = React.useMemo(() => {
     return Array.from({ length: 12 }, (_, i) => i + 1)

@@ -201,25 +201,49 @@ export default function Historico() {
     setLinhaParaDeletar(data);
   };
 
+  // Cleanup effect para limpar modais quando componente for desmontado
   useEffect(() => {
+    return () => {
+      setShowForm(false);
+      setShowConfirmDelete(false);
+      setLinhaParaDeletar(null);
+      setSaving(false);
+    };
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+    
     const carregarHistorico = async () => {
       try {
+        if (!isMounted) return;
         setLoading(true)
         setError('')
         
         // Buscar todos os registros
         const registrosData: DayRecord[] = await registroService.getAllRegistros()
         
-        setRegistros(registrosData)
+        if (isMounted) {
+          setRegistros(registrosData)
+        }
       } catch (error) {
-        console.error('Erro ao carregar histórico:', error)
-        setError('Erro ao carregar histórico de registros')
+        if (isMounted) {
+          console.error('Erro ao carregar histórico:', error)
+          setError('Erro ao carregar histórico de registros')
+        }
       } finally {
-        setLoading(false)
+        if (isMounted) {
+          setLoading(false)
+        }
       }
     }
 
     carregarHistorico()
+    
+    // Cleanup function para evitar vazamentos de memória
+    return () => {
+      isMounted = false;
+    }
   }, [])
 
   return (

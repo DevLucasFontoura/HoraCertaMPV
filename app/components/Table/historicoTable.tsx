@@ -536,14 +536,7 @@ export function HistoricoTable({
           balance = 0; // Arredondar para 8h exatas
         }
         
-        // Debug: log para verificar os valores
-        console.log(`Dia ${row.original.data}:`, {
-          workedHours,
-          expectedHours,
-          balance,
-          tolerance,
-          config
-        });
+
         
         // Determinar a cor baseada no saldo
         let colorClass;

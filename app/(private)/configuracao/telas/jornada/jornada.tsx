@@ -88,7 +88,7 @@ export default function WorkScheduleScreen() {
       const workHoursDecimal = workTime.getHours() + (workTime.getMinutes() / 60);
       const lunchHoursDecimal = lunchTime.getHours() + (lunchTime.getMinutes() / 60);
       
-      console.log('Salvando workHours:', workHoursDecimal, 'lunchHours:', lunchHoursDecimal); // Debug
+
       
       // Atualizar workHours e lunchHours no Firestore
       await AuthService.updateUserData(user.uid, {

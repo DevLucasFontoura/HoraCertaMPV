@@ -275,25 +275,27 @@ export default function Historico() {
           </div>
         </header>
         
-        {/* Toggle de modo de visualização */}
-        <motion.div 
-          className={styles.viewModeToggle}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <div className={styles.toggleContainer}>
-            <span className={styles.toggleLabel}>
-              {showFullTable ? 'Tabela Completa' : 'Versão Compacta'}
-            </span>
-            <button
-              className={`${styles.toggleButton} ${showFullTable ? styles.toggleActive : ''}`}
-              onClick={() => setShowFullTable(!showFullTable)}
-              type="button"
-            >
-              <div className={styles.toggleSlider} />
-            </button>
-          </div>
-        </motion.div>
+        {/* Toggle de modo de visualização - apenas mobile */}
+        {isMobile && (
+          <motion.div 
+            className={styles.viewModeToggle}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className={styles.toggleContainer}>
+              <span className={styles.toggleLabel}>
+                {showFullTable ? 'Tabela Completa' : 'Versão Compacta'}
+              </span>
+              <button
+                className={`${styles.toggleButton} ${showFullTable ? styles.toggleActive : ''}`}
+                onClick={() => setShowFullTable(!showFullTable)}
+                type="button"
+              >
+                <div className={styles.toggleSlider} />
+              </button>
+            </div>
+          </motion.div>
+        )}
         <div className={`${styles.backgroundIcon} ${isMobile ? mobileStyles.backgroundIcon : ''}`}>
           <FaHistory size={200} color="rgba(0,0,0,0.10)" />
         </div>
@@ -326,7 +328,7 @@ export default function Historico() {
                     onRowClick={preencherFormularioComLinha}
                     workConfig={workConfig}
                     onDeleteRow={handleDeleteRow}
-                    forceTableMode={showFullTable}
+                    forceTableMode={!isMobile || showFullTable}
                   />
                 </div>
               )}

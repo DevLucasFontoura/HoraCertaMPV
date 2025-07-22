@@ -28,6 +28,18 @@
 .timeInput input {
     font-size: 1.5rem;
     padding: 8px !important;
+    cursor: text !important;
+    user-select: text !important;
+}
+
+.timeInput input:focus {
+    outline: none !important;
+    border-color: #1976d2 !important;
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2) !important;
+}
+
+.timeInput input:hover {
+    border-color: #1976d2 !important;
 }
 
 .timeIcon {
@@ -46,14 +58,14 @@
 }
 
 .confirmButton {
-    background-color: #1976d2 !important;
+    background-color: #000000 !important;
     padding: 8px 24px !important;
     border-radius: 8px !important;
     font-weight: 500 !important;
 }
 
 .confirmButton:hover {
-    background-color: #1565c0 !important;
+    background-color: #333333 !important;
 }
 
 /* Estilos específicos para o modal de exclusão */

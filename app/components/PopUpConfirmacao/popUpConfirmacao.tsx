@@ -3,7 +3,7 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
 import { CONSTANTES } from '../../common/constantes';
 import styles from './popUpConfirmacao.module.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 
 interface TimeConfirmationModalProps {
@@ -19,38 +19,58 @@ export default function TimeConfirmationModal({
   onConfirm, 
   currentTime 
 }: TimeConfirmationModalProps) {
-  const [timeValue, setTimeValue] = useState(
-    currentTime.toLocaleTimeString(CONSTANTES.IDIOMA_PT_BR, { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: false
-    })
-  );
+  const [timeValue, setTimeValue] = useState('');
+  const hasInitialized = useRef(false);
 
   const handleConfirm = () => {
-    const [hours, minutes] = timeValue.split(':').map(Number);
-    const newDate = new Date(currentTime);
-    newDate.setHours(hours);
-    newDate.setMinutes(minutes);
-    newDate.setSeconds(0);
-    onConfirm(newDate);
+    if (!timeValue || timeValue.trim() === '') {
+      // Se não há valor, usar o horário atual
+      onConfirm(currentTime);
+    } else {
+      const [hours, minutes] = timeValue.split(':').map(Number);
+      const newDate = new Date(currentTime);
+      newDate.setHours(hours);
+      newDate.setMinutes(minutes);
+      newDate.setSeconds(0);
+      onConfirm(newDate);
+    }
+    onClose();
+  };
+
+  const handleClose = () => {
+    // Limpar foco antes de fechar
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     onClose();
   };
 
   useEffect(() => {
-    setTimeValue(currentTime.toLocaleTimeString(CONSTANTES.IDIOMA_PT_BR, { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: false
-    }));
-  }, [currentTime]);
+    // Só inicializar o timeValue quando o modal abrir pela primeira vez
+    if (open && !hasInitialized.current) {
+      setTimeValue(currentTime.toLocaleTimeString(CONSTANTES.IDIOMA_PT_BR, { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: false
+      }));
+      hasInitialized.current = true;
+    }
+    
+    // Reset quando o modal fechar
+    if (!open) {
+      hasInitialized.current = false;
+      setTimeValue('');
+    }
+  }, [open, currentTime]);
 
   return (
     <Dialog 
       open={open} 
-      onClose={onClose} 
+      onClose={handleClose} 
       maxWidth="sm" 
       fullWidth
+      disableRestoreFocus
+      disableAutoFocus
       PaperProps={{
         className: styles.dialog
       }}
@@ -59,23 +79,27 @@ export default function TimeConfirmationModal({
       <DialogContent className={styles.dialogContent}>
         <p className={styles.modalText}>{CONSTANTES.TXT_POPUP_CONFIRMACAO_DESCRICAO}</p>
         
-        <TextField
+        <input
           type="time"
           value={timeValue}
           onChange={(e) => setTimeValue(e.target.value)}
+          onClick={(e) => (e.target as HTMLInputElement).focus()}
+          onFocus={(e) => (e.target as HTMLInputElement).select()}
           className={styles.timePicker}
-          fullWidth
-          variant="outlined"
-          InputProps={{
-            className: styles.timeInput,
-            inputProps: {
-              className: styles.timeInputField
-            }
+          style={{
+            width: '100%',
+            padding: '12px',
+            fontSize: '1.5rem',
+            border: '1px solid #ddd',
+            borderRadius: '8px',
+            backgroundColor: '#f8f8f8',
+            cursor: 'text'
           }}
+          step={60}
         />
       </DialogContent>
       <DialogActions className={styles.dialogActions}>
-        <Button onClick={onClose} className={styles.cancelButton}>{CONSTANTES.TXT_POPUP_CONFIRMACAO_BOTAO_CANCELAR}</Button>
+        <Button onClick={handleClose} className={styles.cancelButton}>{CONSTANTES.TXT_POPUP_CONFIRMACAO_BOTAO_CANCELAR}</Button>
         <Button onClick={handleConfirm} variant="contained" className={styles.confirmButton}>{CONSTANTES.TXT_POPUP_CONFIRMACAO_BOTAO_CONFIRMAR}</Button>
       </DialogActions>
     </Dialog>

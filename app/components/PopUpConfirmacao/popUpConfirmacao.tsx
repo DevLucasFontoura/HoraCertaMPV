@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { CONSTANTES } from '../../common/constantes';
 import styles from './popUpConfirmacao.module.css';
 import { useState, useEffect, useRef } from 'react';

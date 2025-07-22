@@ -133,30 +133,13 @@ export function HistoricoTable({
     return result
   }, [initialData])
 
-  // Atualizar ano e mês selecionados quando os dados mudarem
+  // Inicializar ano selecionado apenas uma vez quando os dados estiverem disponíveis
   React.useEffect(() => {
     if (years.length > 0 && !years.includes(selectedYear)) {
       setSelectedYear(years[0])
     }
-    
-    // Garantir que o mês atual seja selecionado se não houver mês selecionado
-    if (selectedMonth === '') {
-      setSelectedMonth(new Date().getMonth() + 1)
-    }
-  }, [years, selectedYear, selectedMonth])
+  }, [years, selectedYear])
 
-  // Cleanup effect para evitar vazamentos de memória
-  React.useEffect(() => {
-    return () => {
-      // Limpar estados quando o componente for desmontado
-      setRowSelection({})
-      setColumnVisibility({})
-      setColumnFilters([])
-      setSorting([])
-      setPagination({ pageIndex: 0, pageSize: pageSize })
-      setDeleteLoadingId(null)
-    }
-  }, [pageSize])
 
   // Memoizar todos os meses (1-12)
   const months = React.useMemo(() => {

@@ -202,64 +202,23 @@ export default function Historico() {
     setLinhaParaDeletar(data);
   };
 
-  // Cleanup effect para limpar modais quando componente for desmontado
+  // Carregar dados apenas uma vez quando o componente montar
   useEffect(() => {
-    return () => {
-      setShowForm(false);
-      setShowConfirmDelete(false);
-      setLinhaParaDeletar(null);
-      setSaving(false);
-    };
-  }, []);
-
-  // Focar no primeiro input quando o modal abrir
-  useEffect(() => {
-    if (showForm) {
-      // Pequeno delay para garantir que o modal esteja renderizado
-      const timer = setTimeout(() => {
-        const firstInput = document.querySelector('input[type="date"]') as HTMLInputElement;
-        if (firstInput) {
-          firstInput.focus();
-        }
-      }, 100);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [showForm]);
-
-  useEffect(() => {
-    let isMounted = true;
-    
     const carregarHistorico = async () => {
       try {
-        if (!isMounted) return;
         setLoading(true)
         setError('')
-        
-        // Buscar todos os registros
         const registrosData: DayRecord[] = await registroService.getAllRegistros()
-        
-        if (isMounted) {
-          setRegistros(registrosData)
-        }
+        setRegistros(registrosData)
       } catch (error) {
-        if (isMounted) {
-          console.error('Erro ao carregar histórico:', error)
-          setError('Erro ao carregar histórico de registros')
-        }
+        console.error('Erro ao carregar histórico:', error)
+        setError('Erro ao carregar histórico de registros')
       } finally {
-        if (isMounted) {
-          setLoading(false)
-        }
+        setLoading(false)
       }
     }
 
     carregarHistorico()
-    
-    // Cleanup function para evitar vazamentos de memória
-    return () => {
-      isMounted = false;
-    }
   }, [])
 
   return (

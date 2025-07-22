@@ -80,6 +80,7 @@ export function HistoricoTable({
   onRowClick,
   workConfig,
   onDeleteRow, // nova prop
+  forceTableMode = false, // nova prop para forçar modo tabela
 }: {
   data: z.infer<typeof historicoSchema>[]
   showHeaderControls?: boolean
@@ -87,6 +88,7 @@ export function HistoricoTable({
   onRowClick?: (row: z.infer<typeof historicoSchema>) => void
   workConfig?: { dailyWorkHours: number; lunchBreakHours: number }
   onDeleteRow?: (date: string) => void // nova prop
+  forceTableMode?: boolean // nova prop para forçar modo tabela
 }) {
 
   const [selectedYear, setSelectedYear] = React.useState<number>(new Date().getFullYear())
@@ -102,7 +104,8 @@ export function HistoricoTable({
     pageIndex: 0,
     pageSize: pageSize,
   })
-  const isMobile = useIsMobile()
+  const isMobileDevice = useIsMobile()
+  const isMobile = isMobileDevice && !forceTableMode
   const [deleteLoadingId, setDeleteLoadingId] = React.useState<string | null>(null);
 
   // Memoizar anos únicos dos dados

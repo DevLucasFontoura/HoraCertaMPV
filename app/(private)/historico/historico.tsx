@@ -204,22 +204,47 @@ export default function Historico() {
 
   // Carregar dados apenas uma vez quando o componente montar
   useEffect(() => {
+    let isMounted = true;
+    
     const carregarHistorico = async () => {
       try {
+        if (!isMounted) return;
         setLoading(true)
         setError('')
         const registrosData: DayRecord[] = await registroService.getAllRegistros()
-        setRegistros(registrosData)
+        if (isMounted) {
+          setRegistros(registrosData)
+        }
       } catch (error) {
-        console.error('Erro ao carregar histórico:', error)
-        setError('Erro ao carregar histórico de registros')
+        if (isMounted) {
+          console.error('Erro ao carregar histórico:', error)
+          setError('Erro ao carregar histórico de registros')
+        }
       } finally {
-        setLoading(false)
+        if (isMounted) {
+          setLoading(false)
+        }
       }
     }
 
     carregarHistorico()
+    
+    // Cleanup function para evitar vazamentos de memória
+    return () => {
+      isMounted = false;
+    }
   }, [])
+
+  // Cleanup effect para limpar modais quando componente for desmontado
+  useEffect(() => {
+    return () => {
+      // Limpar estados de modal de forma segura
+      setShowForm(false);
+      setShowConfirmDelete(false);
+      setLinhaParaDeletar(null);
+      setSaving(false);
+    };
+  }, []);
 
   return (
     <>

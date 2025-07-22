@@ -31,6 +31,8 @@
   gap: 0.5rem;
   align-items: baseline;
   flex-wrap: wrap;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .welcomeText {
@@ -42,6 +44,10 @@
 .nameText {
   font-size: 1.4rem;
   font-weight: 700;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  line-height: 1.2;
 }
 
 .dateText {
@@ -308,6 +314,10 @@
 
   .nameText {
     font-size: 1.3rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    line-height: 1.2;
   }
 
   .dateText {
@@ -406,6 +416,10 @@
 
   .nameText {
     font-size: 1.2rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    line-height: 1.2;
   }
 
   .statsValue {

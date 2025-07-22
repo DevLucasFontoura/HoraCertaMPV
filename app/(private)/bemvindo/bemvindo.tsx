@@ -160,53 +160,83 @@ const BemVindo = () => {
   }, [getWorkTimeConfig]);
 
   useEffect(() => {
+    let isMounted = true;
+    
     const fetchStats = async () => {
       try {
+        if (!isMounted) return;
         setStatsLoading(true);
 
         const config = getWorkTimeConfig();
 
         // Buscar registros do dia atual
         const todayRecords = await registroService.getRegistrosDoDia();
+        if (!isMounted) return;
+        
         const todayStatus = calculateTodayStatus(todayRecords);
         const timeRemainingData = calculateTimeRemaining(todayRecords, config);
 
-        setTodayStats(todayStatus);
-        setTimeRemaining(timeRemainingData);
+        if (isMounted) {
+          setTodayStats(todayStatus);
+          setTimeRemaining(timeRemainingData);
+        }
 
         // Buscar todos os registros para calcular banco de horas
         const allRecords = await registroService.getAllRegistros();
+        if (!isMounted) return;
+        
         const last30Days = allRecords.slice(0, 30); // últimos 30 dias
         const bankHoursData = TimeCalculationService.calculateBankHours(last30Days, config);
 
-        setBankHours({
-          total: bankHoursData.total,
-          positive: bankHoursData.positive,
-          negative: bankHoursData.negative
-        });
+        if (isMounted) {
+          setBankHours({
+            total: bankHoursData.total,
+            positive: bankHoursData.positive,
+            negative: bankHoursData.negative
+          });
+        }
 
       } catch (error) {
-        console.error('Erro ao carregar estatísticas:', error);
+        if (isMounted) {
+          console.error('Erro ao carregar estatísticas:', error);
+        }
       } finally {
-        setStatsLoading(false);
+        if (isMounted) {
+          setStatsLoading(false);
+        }
       }
     };
 
     if (!loading) {
       fetchStats();
     }
+    
+    // Cleanup function para evitar vazamentos de memória
+    return () => {
+      isMounted = false;
+    };
   }, [loading, userData, calculateTodayStatus, getWorkTimeConfig, calculateTimeRemaining]);
 
   // Atualizar tempo restante a cada minuto
   useEffect(() => {
     if (todayStats.currentStatus !== 'not_started' && todayStats.currentStatus !== 'finished') {
+      let isMounted = true;
+      
       const updateTimeRemaining = () => {
+        if (!isMounted) return;
+        
         const config = getWorkTimeConfig();
         registroService.getRegistrosDoDia().then(todayRecords => {
+          if (!isMounted) return;
+          
           const timeRemainingData = calculateTimeRemaining(todayRecords, config);
-          setTimeRemaining(timeRemainingData);
+          if (isMounted) {
+            setTimeRemaining(timeRemainingData);
+          }
         }).catch(error => {
-          console.error('Erro ao atualizar tempo restante:', error);
+          if (isMounted) {
+            console.error('Erro ao atualizar tempo restante:', error);
+          }
         });
       };
 
@@ -217,7 +247,10 @@ const BemVindo = () => {
       const interval = setInterval(updateTimeRemaining, 60000); // 60000ms = 1 minuto
 
       // Limpar intervalo quando componente for desmontado
-      return () => clearInterval(interval);
+      return () => {
+        isMounted = false;
+        clearInterval(interval);
+      };
     }
   }, [todayStats.currentStatus, getWorkTimeConfig, calculateTimeRemaining]);
 
@@ -259,7 +292,11 @@ const BemVindo = () => {
           <div className={styles.welcomeHeader}>
             <span className={styles.welcomeText}>Bem vindo,</span>
             <span className={styles.nameText}>
-              {loading ? 'Carregando...' : (userData?.name || 'Visitante')}
+              {loading ? 'Carregando...' : (
+                userData?.name || 
+                localStorage.getItem('userName') || 
+                'Visitante'
+              )}
             </span>
           </div>
           <motion.p

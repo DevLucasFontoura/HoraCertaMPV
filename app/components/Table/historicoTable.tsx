@@ -140,6 +140,18 @@ export function HistoricoTable({
     }
   }, [years, selectedYear])
 
+  // Cleanup effect para limpar estados quando componente for desmontado
+  React.useEffect(() => {
+    return () => {
+      // Limpar estados quando o componente for desmontado
+      setRowSelection({})
+      setColumnVisibility({})
+      setColumnFilters([])
+      setSorting([])
+      setPagination({ pageIndex: 0, pageSize: pageSize })
+      setDeleteLoadingId(null)
+    }
+  }, [pageSize])
 
   // Memoizar todos os meses (1-12)
   const months = React.useMemo(() => {
@@ -486,8 +498,8 @@ export function HistoricoTable({
         const workedHours = row.original.totalHoras;
         let displayHours = workedHours;
         
-        // Aplicar a mesma tolerância de ±5 minutos para exibição
-        const tolerance = 5 / 60; // 5 minutos em horas
+        // Aplicar a mesma tolerância de ±10 minutos para exibição
+        const tolerance = 10 / 60; // 10 minutos em horas
         const balance = workedHours - expectedHours;
         if (Math.abs(balance) <= tolerance) {
           displayHours = expectedHours; // Mostrar 8h quando estiver dentro da tolerância
@@ -513,8 +525,8 @@ export function HistoricoTable({
         const workedHours = row.original.totalHoras;
         let balance = workedHours - expectedHours;
         
-        // Tolerância de ±5 minutos (0.0833 horas) para considerar como 8h exatas
-        const tolerance = 5 / 60; // 5 minutos em horas
+        // Tolerância de ±10 minutos (0.1667 horas) para considerar como 8h exatas
+        const tolerance = 10 / 60; // 10 minutos em horas
         if (Math.abs(balance) <= tolerance) {
           balance = 0; // Arredondar para 8h exatas
         }

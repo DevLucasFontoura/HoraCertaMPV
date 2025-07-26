@@ -2,7 +2,7 @@
 
 import { useAuth } from '../hooks/useAuth';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -12,12 +12,33 @@ interface AuthGuardProps {
 export const AuthGuard = ({ children, redirectTo = '/login' }: AuthGuardProps) => {
   const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !loading && !isAuthenticated) {
       router.push(redirectTo);
     }
-  }, [isAuthenticated, loading, router, redirectTo]);
+  }, [isAuthenticated, loading, router, redirectTo, mounted]);
+
+  // Evitar problemas de hidratação
+  if (!mounted) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '1.2rem',
+        color: '#666'
+      }}>
+        Carregando...
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -38,5 +59,5 @@ export const AuthGuard = ({ children, redirectTo = '/login' }: AuthGuardProps) =
     return null;
   }
 
-  return <>{children}</>;
+  return <div>{children}</div>;
 }; 

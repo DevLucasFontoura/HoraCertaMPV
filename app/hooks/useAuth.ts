@@ -7,8 +7,15 @@ export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       
@@ -18,8 +25,8 @@ export const useAuth = () => {
           const data = await AuthService.getUserData(user.uid);
           setUserData(data);
           
-          // Atualizar localStorage
-          if (data) {
+          // Atualizar localStorage apenas no cliente
+          if (typeof window !== 'undefined' && data) {
             localStorage.setItem('userEmail', data.email);
             localStorage.setItem('userName', data.name);
             localStorage.setItem('userData', JSON.stringify(data));
@@ -31,17 +38,19 @@ export const useAuth = () => {
       } else {
         // Limpar dados quando usuário faz logout
         setUserData(null);
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userData');
-        localStorage.removeItem('userUid');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('userEmail');
+          localStorage.removeItem('userName');
+          localStorage.removeItem('userData');
+          localStorage.removeItem('userUid');
+        }
       }
       
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [mounted]);
 
   const logout = async () => {
     try {

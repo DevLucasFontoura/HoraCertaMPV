@@ -63,10 +63,10 @@ export default function AboutScreen() {
                 <h3 className={styles.sectionTitle}>{section.title}</h3>
                 <p className={styles.sectionText}>
                   {section.content.split('\n').map((line, i) => (
-                    <React.Fragment key={i}>
+                    <span key={i}>
                       {line}
                       {i < section.content.split('\n').length - 1 && <br />}
-                    </React.Fragment>
+                    </span>
                   ))}
                 </p>
               </div>

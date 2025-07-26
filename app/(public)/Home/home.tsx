@@ -120,6 +120,26 @@ const LandingPage = () => {
         </motion.button>
       </nav>
 
+      {/* Badge Versão Beta */}
+      <motion.div 
+        className={styles.betaBadgeContainer}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+      >
+        <motion.a 
+          href="https://forms.gle/d677i9Psr5KF3Er16"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.betaBadgeLink}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <span className={styles.betaBadgeText}>{CONSTANTES.VERSAO_BETA} {CONSTANTES.VERSAO}</span>
+          <span className={styles.betaBadgeSubtext}>De a sua opinião</span>
+        </motion.a>
+      </motion.div>
+
       {/* Menu Mobile - Movido para fora do navbar */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -142,7 +162,7 @@ const LandingPage = () => {
               <div className={styles.mobileMenuHeader}>
                 <div className={styles.mobileMenuLogo}>
                   <AiOutlineClockCircle size={24} />
-                  <span>{CONSTANTES.TITULO_SITE}</span>
+                  <span>Versão Beta</span>
                 </div>
                 <button
                   className={styles.mobileMenuCloseButton}
@@ -234,6 +254,7 @@ const LandingPage = () => {
           >
             {CONSTANTES.TITULO_PRINCIPAL}
           </motion.h1>
+          
           <motion.p 
             className={styles.heroSubtitle}
             initial={{ opacity: 0, y: 30 }}

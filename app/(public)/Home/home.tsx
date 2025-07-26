@@ -6,6 +6,7 @@ import AnimatedClock from '../../components/AnimatedClock/AnimatedClock';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CONSTANTES } from '../../common/constantes';
 import DesktopMenu from '../../components/PublicMenu/DesktopMenu';
+import BetaBadge from '../../components/BetaBadge';
 import styles from './home.module.css';
 import Link from 'next/link';
 
@@ -121,24 +122,7 @@ const LandingPage = () => {
       </nav>
 
       {/* Badge Versão Beta */}
-      <motion.div 
-        className={styles.betaBadgeContainer}
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-      >
-        <motion.a 
-          href="https://forms.gle/d677i9Psr5KF3Er16"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.betaBadgeLink}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <span className={styles.betaBadgeText}>{CONSTANTES.VERSAO_BETA} {CONSTANTES.VERSAO}</span>
-          <span className={styles.betaBadgeSubtext}>De a sua opinião</span>
-        </motion.a>
-      </motion.div>
+      <BetaBadge />
 
       {/* Menu Mobile - Movido para fora do navbar */}
       <AnimatePresence>

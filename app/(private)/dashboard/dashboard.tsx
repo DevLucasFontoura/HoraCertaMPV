@@ -1,7 +1,5 @@
 "use client";
 
-import HabitTracker from '../../components/HabitTracker/HabitTracker';
-
 import LineChart from '../../components/Graficos/graficoDeLinha';
 import { CONSTANTES } from '../../common/constantes';
 import BottomNav from '../../components/Menu/menu';
@@ -14,9 +12,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { FiClock, FiCalendar, FiTrendingUp, FiAlertCircle, FiCheckCircle } from 'react-icons/fi';
 
 interface DashboardData {
-  weeklyHours: { data: number[]; labels: string[] } | null;
+  monthlyHours: { data: number[]; labels: string[] } | null;
   monthlyComparison: { data: number[]; labels: string[] } | null;
-  punchHistory: boolean[] | null;
   overtimeBank: { data: number[]; labels: string[] } | null;
 }
 
@@ -38,10 +35,11 @@ interface WeeklyStats {
 const Dashboard = () => {
   const { userData } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [chartLoading, setChartLoading] = useState(false);
+  const [showWeekends, setShowWeekends] = useState(false);
   const [dashboardData, setDashboardData] = useState<DashboardData>({
-    weeklyHours: null,
+    monthlyHours: null,
     monthlyComparison: null,
-    punchHistory: null,
     overtimeBank: null
   });
   const [todayStatus, setTodayStatus] = useState<TodayStatus>({
@@ -124,31 +122,53 @@ const Dashboard = () => {
   const generateChartData = useCallback((records: DayRecord[]) => {
     const config = getWorkTimeConfig();
     
-    // Dados semanais (últimos 7 dias)
-    const last7Days = records.slice(0, 7).reverse();
-    const weeklyData = last7Days.map(day => {
-      const workTime = TimeCalculationService.calculateWorkTime(day.records, config);
-      return workTime.workedHours;
-    });
+    // Gerar dados para todos os dias do mês atual
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
     
-    const weeklyLabels = last7Days.map(day => {
-      const date = new Date(day.date);
-      return date.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric' });
-    });
-
-    // Histórico de pontos (últimos 30 dias)
-    const last30Days = records.slice(0, 30).reverse();
-    const punchHistory = last30Days.map(day => {
-      const types = day.records.map(r => r.type);
-      return types.includes('entry') && types.includes('exit');
-    });
+    // Criar array com todos os dias do mês
+    const monthlyData: number[] = [];
+    const monthlyLabels: string[] = [];
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(currentYear, currentMonth, day);
+      const dateString = date.toISOString().split('T')[0];
+      
+      // Verificar se é final de semana (0 = domingo, 6 = sábado)
+      const dayOfWeek = date.getDay();
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+      
+      // Se não mostrar finais de semana e for final de semana, pular
+      if (!showWeekends && isWeekend) {
+        continue;
+      }
+      
+      // Buscar registros para este dia específico
+      const dayRecords = records.find(record => record.date === dateString);
+      
+      if (dayRecords) {
+        const workTime = TimeCalculationService.calculateWorkTime(dayRecords.records, config);
+        monthlyData.push(workTime.workedHours);
+      } else {
+        monthlyData.push(0);
+      }
+      
+      // Criar label para o dia com dia da semana
+      const label = date.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric' });
+      monthlyLabels.push(label);
+    }
 
     return {
-      weeklyHours: { data: weeklyData, labels: weeklyLabels },
-      punchHistory: punchHistory
+      monthlyHours: { data: monthlyData, labels: monthlyLabels }
     };
-  }, [getWorkTimeConfig]);
+  }, [getWorkTimeConfig, showWeekends]);
 
+  // Estado para armazenar todos os registros
+  const [allRecords, setAllRecords] = useState<DayRecord[]>([]);
+
+  // useEffect para carregar dados iniciais
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -162,20 +182,20 @@ const Dashboard = () => {
         setTodayStatus(todayStatus);
         
         // Buscar todos os registros para estatísticas
-        const allRecords = await registroService.getAllRegistros();
+        const allRecordsData = await registroService.getAllRegistros();
+        setAllRecords(allRecordsData);
         
         // Calcular estatísticas semanais (últimos 7 dias)
-        const weekRecords = allRecords.slice(0, 7);
+        const weekRecords = allRecordsData.slice(0, 7);
         const weeklyStats = calculateWeeklyStats(weekRecords);
         setWeeklyStats(weeklyStats);
         
         // Gerar dados dos gráficos
-        const chartData = generateChartData(allRecords);
+        const chartData = generateChartData(allRecordsData);
         
         setDashboardData({
-          weeklyHours: chartData.weeklyHours,
+          monthlyHours: chartData.monthlyHours,
           monthlyComparison: null, // Implementar quando necessário
-          punchHistory: chartData.punchHistory,
           overtimeBank: null // Implementar quando necessário
         });
         
@@ -187,7 +207,23 @@ const Dashboard = () => {
     };
 
     fetchDashboardData();
-  }, [calculateTodayStatus, calculateWeeklyStats, generateChartData]);
+  }, [calculateTodayStatus, calculateWeeklyStats]);
+
+  // useEffect separado para atualizar apenas o gráfico quando showWeekends mudar
+  useEffect(() => {
+    if (allRecords.length > 0) {
+      setChartLoading(true);
+      // Pequeno delay para mostrar o loading
+      setTimeout(() => {
+        const chartData = generateChartData(allRecords);
+        setDashboardData(prev => ({
+          ...prev,
+          monthlyHours: chartData.monthlyHours
+        }));
+        setChartLoading(false);
+      }, 100);
+    }
+  }, [showWeekends, generateChartData, allRecords]);
 
   const renderEmptyState = () => (
     <div className={styles.emptyState}>
@@ -331,40 +367,40 @@ const Dashboard = () => {
             </motion.section>
 
             <div className={styles.grid}>
-              <div className={styles.row}>
-                <motion.section 
-                  className={styles.section}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <h2 className={styles.sectionTitle}>Horas Semanais</h2>
-                  <div className={styles.chartContainer}>
-                    {dashboardData.weeklyHours ? (
-                      <LineChart 
-                        data={dashboardData.weeklyHours.data}
-                        labels={dashboardData.weeklyHours.labels}
-                        title="Horas Trabalhadas"
+              <motion.section 
+                className={styles.section}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <div className={styles.chartHeader}>
+                  <h2 className={styles.sectionTitle}>Horas do Mês</h2>
+                  <div className={styles.chartControls}>
+                    <label className={styles.weekendToggle}>
+                      <input
+                        type="checkbox"
+                        checked={showWeekends}
+                        onChange={(e) => setShowWeekends(e.target.checked)}
+                        className={styles.weekendCheckbox}
                       />
-                    ) : renderEmptyState()}
+                      <span className={styles.weekendLabel}>Mostrar finais de semana</span>
+                    </label>
                   </div>
-                </motion.section>
-
-                <motion.section 
-                  className={styles.section}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <h2 className={styles.sectionTitle}>Pontos Registrados</h2>
-                  <div className={styles.chartContainer}>
-                    {dashboardData.punchHistory ? (
-                      <HabitTracker 
-                        data={dashboardData.punchHistory}
-                        title="Pontos Registrados"
-                      />
-                    ) : renderEmptyState()}
-                  </div>
-                </motion.section>
-              </div>
+                </div>
+                <div className={styles.chartContainer}>
+                  {chartLoading ? (
+                    <div className={styles.chartLoading}>
+                      <div className={styles.loadingSpinner}></div>
+                      <span>Atualizando gráfico...</span>
+                    </div>
+                  ) : dashboardData.monthlyHours ? (
+                    <LineChart 
+                      data={dashboardData.monthlyHours.data}
+                      labels={dashboardData.monthlyHours.labels}
+                      title="Horas Trabalhadas"
+                    />
+                  ) : renderEmptyState()}
+                </div>
+              </motion.section>
             </div>
           </>
         )}

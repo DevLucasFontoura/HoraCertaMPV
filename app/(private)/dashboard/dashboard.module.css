@@ -212,16 +212,10 @@
 .grid {
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: 2rem;
   max-width: 1300px;
   margin: 0 auto;
   padding: 0 2rem;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  gap: 4rem;
 }
 
 .column {
@@ -266,7 +260,7 @@
 }
 
 .section {
-  width: calc(50% - 2rem);
+  width: 100%;
   background: white;
   padding: 2rem;
   border-radius: 16px;
@@ -274,7 +268,16 @@
   aspect-ratio: 16/9;
   display: flex;
   flex-direction: column;
-  max-height: 400px;
+  max-height: 500px;
+}
+
+@media (max-width: 768px) {
+  .section {
+    aspect-ratio: 1/1;
+    max-height: 600px;
+    min-height: 500px;
+    padding: 1rem;
+  }
 }
 
 .sectionTitle {
@@ -284,10 +287,71 @@
   margin-bottom: 1rem;
 }
 
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.chartControls {
+  display: flex;
+  align-items: center;
+}
+
+.weekendToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.875rem;
+  color: #666666;
+  transition: color 0.2s ease;
+}
+
+.weekendToggle:hover {
+  color: #111111;
+}
+
+.weekendCheckbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #111111;
+  cursor: pointer;
+}
+
+.weekendLabel {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 .chartContainer {
   flex: 1;
   position: relative;
   min-height: 0;
+}
+
+@media (max-width: 768px) {
+  .chartContainer {
+    min-height: 400px;
+  }
+  
+  .chartHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .chartControls {
+    width: 100%;
+  }
+  
+  .weekendToggle {
+    font-size: 0.8rem;
+  }
 }
 
 .loading {
@@ -324,15 +388,8 @@
   .grid {
     padding: 0;
   }
-  
-  .row {
-    flex-direction: column;
-    gap: 2rem;
-  }
 
-  .section {
-    width: 100%;
-  }
+
 
   .statusDetails {
     grid-template-columns: 1fr;
@@ -359,21 +416,13 @@
     width: 100%;
   }
 
-  .section {
-    aspect-ratio: 4/3;
-    max-height: none;
-  }
 
-  .chartContainer {
-    height: 200px;
-  }
 
   .statsValue {
     font-size: 2rem;
   }
 
   .grid {
-    grid-template-columns: 1fr;
     gap: 1rem;
   }
 
@@ -404,4 +453,6 @@
   .statValue {
     font-size: 1.25rem;
   }
-} 
+}
+
+ 

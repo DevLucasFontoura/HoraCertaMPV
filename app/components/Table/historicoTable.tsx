@@ -265,7 +265,7 @@ export function HistoricoTable({
   }
 
   const handleDeleteMonth = async () => {
-    if (!selectedMonth || selectedMonth === '') {
+    if (selectedMonth === '' || !selectedMonth) {
       alert('Selecione um mês específico para deletar os dados.');
       return;
     }

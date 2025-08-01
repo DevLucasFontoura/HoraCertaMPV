@@ -10,7 +10,7 @@ import { registroService, DayRecord, TimeRecord } from '../../services/registroS
 import { TimeCalculationService, WorkTimeConfig } from '../../services/timeCalculationService';
 import { useAuth } from '../../hooks/useAuth';
 import { FiAlertCircle, FiCheckCircle, FiClock } from 'react-icons/fi';
-import WeeklySummary, { WeeklyStats, MonthlyStats } from '../../components/WeeklySummary';
+import WeeklySummary, { MonthlyStats } from '../../components/WeeklySummary';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 import { cn } from '../../lib/utils';
 
@@ -45,12 +45,7 @@ const Dashboard = () => {
     lastPunch: '',
     isOnTime: true
   });
-  const [weeklyStats, setWeeklyStats] = useState<WeeklyStats>({
-    totalHours: 0,
-    averageHours: 0,
-    workedDays: 0,
-    overtimeHours: 0
-  });
+  // Removido weeklyStats pois não está sendo usado
   const [monthlyStats, setMonthlyStats] = useState<MonthlyStats>({
     totalHours: 0,
     averageHours: 0,
@@ -143,18 +138,7 @@ const Dashboard = () => {
     };
   }, [getWorkTimeConfig]);
 
-  // Função para calcular estatísticas semanais
-  const calculateWeeklyStats = useCallback((weekRecords: DayRecord[]): WeeklyStats => {
-    const config = getWorkTimeConfig();
-    const monthlyStats = TimeCalculationService.calculateMonthlyStats(weekRecords, config);
-    
-    return {
-      totalHours: monthlyStats.totalWorkedHours,
-      averageHours: monthlyStats.averageDailyHours,
-      workedDays: monthlyStats.workedDays,
-      overtimeHours: monthlyStats.totalOvertimeHours
-    };
-  }, [getWorkTimeConfig]);
+  // Removida função calculateWeeklyStats pois não está sendo usada
 
   // Função para calcular estatísticas do mês selecionado
   const calculateMonthlyStats = useCallback((allRecords: DayRecord[]): MonthlyStats => {
@@ -241,10 +225,7 @@ const Dashboard = () => {
         const allRecordsData = await registroService.getAllRegistros();
         setAllRecords(allRecordsData);
         
-        // Calcular estatísticas semanais (últimos 7 dias)
-        const weekRecords = allRecordsData.slice(0, 7);
-        const weeklyStats = calculateWeeklyStats(weekRecords);
-        setWeeklyStats(weeklyStats);
+        // Removido cálculo de estatísticas semanais pois não está sendo usado
         
         // Calcular estatísticas do mês atual
         const monthlyStats = calculateMonthlyStats(allRecordsData);
@@ -267,7 +248,7 @@ const Dashboard = () => {
     };
 
     fetchDashboardData();
-  }, [calculateTodayStatus, calculateWeeklyStats, calculateMonthlyStats]);
+  }, [calculateTodayStatus, calculateMonthlyStats, generateChartData]);
 
   // useEffect separado para atualizar apenas o gráfico quando showWeekends mudar
   useEffect(() => {
@@ -283,7 +264,7 @@ const Dashboard = () => {
         setChartLoading(false);
       }, 100);
     }
-  }, [showWeekends, generateChartData, allRecords]);
+  }, [showWeekends, selectedYear, selectedMonth, generateChartData, allRecords]);
 
   // useEffect para atualizar dados quando ano ou mês mudar
   useEffect(() => {

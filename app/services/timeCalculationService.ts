@@ -169,16 +169,23 @@ export class TimeCalculationService {
     averageDailyHours: number;
     totalDays: number;
     completeDays: number;
+    workedDays: number;
   } {
     let totalWorkedHours = 0;
     let totalOvertimeHours = 0;
     let totalDeficitHours = 0;
     let totalDays = 0;
     let completeDays = 0;
+    let workedDays = 0;
     
     records.forEach(day => {
       const workTime = this.calculateWorkTime(day.records, config);
       totalDays++;
+      
+      // Contar dias trabalhados (qualquer dia com pelo menos um registro)
+      if (day.records.length > 0) {
+        workedDays++;
+      }
       
       if (workTime.isComplete) {
         completeDays++;
@@ -196,7 +203,8 @@ export class TimeCalculationService {
       totalDeficitHours: Math.round(totalDeficitHours * 100) / 100,
       averageDailyHours: Math.round(averageDailyHours * 100) / 100,
       totalDays,
-      completeDays
+      completeDays,
+      workedDays
     };
   }
 } 

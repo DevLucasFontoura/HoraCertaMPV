@@ -9,7 +9,10 @@ import { motion } from 'framer-motion';
 import { registroService, DayRecord, TimeRecord } from '../../services/registroService';
 import { TimeCalculationService, WorkTimeConfig } from '../../services/timeCalculationService';
 import { useAuth } from '../../hooks/useAuth';
-import { FiClock, FiCalendar, FiTrendingUp, FiAlertCircle, FiCheckCircle } from 'react-icons/fi';
+import { FiAlertCircle, FiCheckCircle, FiClock } from 'react-icons/fi';
+import WeeklySummary, { WeeklyStats, MonthlyStats } from '../../components/WeeklySummary';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { cn } from '../../lib/utils';
 
 interface DashboardData {
   monthlyHours: { data: number[]; labels: string[] } | null;
@@ -23,13 +26,6 @@ interface TodayStatus {
   totalHoursToday: number;
   lastPunch: string;
   isOnTime: boolean;
-}
-
-interface WeeklyStats {
-  totalHours: number;
-  averageHours: number;
-  workedDays: number;
-  overtimeHours: number;
 }
 
 const Dashboard = () => {
@@ -55,6 +51,48 @@ const Dashboard = () => {
     workedDays: 0,
     overtimeHours: 0
   });
+  const [monthlyStats, setMonthlyStats] = useState<MonthlyStats>({
+    totalHours: 0,
+    averageHours: 0,
+    workedDays: 0,
+    overtimeHours: 0,
+    period: 'month'
+  });
+
+  // Estados para seleção de ano e mês
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth() + 1);
+
+  // Gerar arrays de anos e meses disponíveis
+  const generateYears = useCallback(() => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    // Gerar anos de 2020 até o ano atual + 1
+    for (let year = 2020; year <= currentYear + 1; year++) {
+      years.push(year);
+    }
+    return years;
+  }, []);
+
+  const generateMonths = useCallback(() => {
+    const months = [];
+    for (let month = 1; month <= 12; month++) {
+      months.push(month);
+    }
+    return months;
+  }, []);
+
+  const years = generateYears();
+  const months = generateMonths();
+
+  // Funções para lidar com mudanças de ano e mês
+  const handleYearChange = (year: number) => {
+    setSelectedYear(year);
+  };
+
+  const handleMonthChange = (month: number) => {
+    setSelectedMonth(month);
+  };
 
   // Obter configuração de jornada do usuário
   const getWorkTimeConfig = useCallback((): WorkTimeConfig => {
@@ -113,27 +151,45 @@ const Dashboard = () => {
     return {
       totalHours: monthlyStats.totalWorkedHours,
       averageHours: monthlyStats.averageDailyHours,
-      workedDays: monthlyStats.completeDays,
+      workedDays: monthlyStats.workedDays,
       overtimeHours: monthlyStats.totalOvertimeHours
     };
   }, [getWorkTimeConfig]);
+
+  // Função para calcular estatísticas do mês selecionado
+  const calculateMonthlyStats = useCallback((allRecords: DayRecord[]): MonthlyStats => {
+    const config = getWorkTimeConfig();
+    
+    // Filtrar registros do mês selecionado
+    const monthRecords = allRecords.filter(record => {
+      const recordDate = new Date(record.date);
+      return recordDate.getMonth() === selectedMonth - 1 && recordDate.getFullYear() === selectedYear;
+    });
+    
+    const stats = TimeCalculationService.calculateMonthlyStats(monthRecords, config);
+    
+    return {
+      totalHours: stats.totalWorkedHours,
+      averageHours: stats.averageDailyHours,
+      workedDays: stats.workedDays,
+      overtimeHours: stats.totalOvertimeHours,
+      period: 'month'
+    };
+  }, [getWorkTimeConfig, selectedYear, selectedMonth]);
 
   // Função para gerar dados dos gráficos
   const generateChartData = useCallback((records: DayRecord[]) => {
     const config = getWorkTimeConfig();
     
-    // Gerar dados para todos os dias do mês atual
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    // Gerar dados para todos os dias do mês selecionado
+    const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
     
     // Criar array com todos os dias do mês
     const monthlyData: number[] = [];
     const monthlyLabels: string[] = [];
     
     for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentYear, currentMonth, day);
+      const date = new Date(selectedYear, selectedMonth - 1, day);
       const dateString = date.toISOString().split('T')[0];
       
       // Verificar se é final de semana (0 = domingo, 6 = sábado)
@@ -163,7 +219,7 @@ const Dashboard = () => {
     return {
       monthlyHours: { data: monthlyData, labels: monthlyLabels }
     };
-  }, [getWorkTimeConfig, showWeekends]);
+  }, [getWorkTimeConfig, showWeekends, selectedYear, selectedMonth]);
 
   // Estado para armazenar todos os registros
   const [allRecords, setAllRecords] = useState<DayRecord[]>([]);
@@ -190,6 +246,10 @@ const Dashboard = () => {
         const weeklyStats = calculateWeeklyStats(weekRecords);
         setWeeklyStats(weeklyStats);
         
+        // Calcular estatísticas do mês atual
+        const monthlyStats = calculateMonthlyStats(allRecordsData);
+        setMonthlyStats(monthlyStats);
+        
         // Gerar dados dos gráficos
         const chartData = generateChartData(allRecordsData);
         
@@ -207,7 +267,7 @@ const Dashboard = () => {
     };
 
     fetchDashboardData();
-  }, [calculateTodayStatus, calculateWeeklyStats]);
+  }, [calculateTodayStatus, calculateWeeklyStats, calculateMonthlyStats]);
 
   // useEffect separado para atualizar apenas o gráfico quando showWeekends mudar
   useEffect(() => {
@@ -224,6 +284,27 @@ const Dashboard = () => {
       }, 100);
     }
   }, [showWeekends, generateChartData, allRecords]);
+
+  // useEffect para atualizar dados quando ano ou mês mudar
+  useEffect(() => {
+    if (allRecords.length > 0) {
+      setChartLoading(true);
+      // Pequeno delay para mostrar o loading
+      setTimeout(() => {
+        // Recalcular estatísticas do mês
+        const monthlyStats = calculateMonthlyStats(allRecords);
+        setMonthlyStats(monthlyStats);
+        
+        // Regenerar dados do gráfico
+        const chartData = generateChartData(allRecords);
+        setDashboardData(prev => ({
+          ...prev,
+          monthlyHours: chartData.monthlyHours
+        }));
+        setChartLoading(false);
+      }, 100);
+    }
+  }, [selectedYear, selectedMonth, allRecords, calculateMonthlyStats, generateChartData]);
 
   const renderEmptyState = () => (
     <div className={styles.emptyState}>
@@ -327,44 +408,49 @@ const Dashboard = () => {
               </div>
             </motion.section>
 
-            {/* Estatísticas semanais */}
+            {/* Seletor de ano e mês */}
             <motion.section 
-              className={styles.weeklyStats}
+              className={styles.monthSelector}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <h2 className={styles.sectionTitle}>Resumo Semanal</h2>
-              <div className={styles.statsGrid}>
-                <div className={styles.statCard}>
-                  <FiClock className={styles.statIcon} />
-                  <div className={styles.statContent}>
-                    <span className={styles.statValue}>{formatHours(weeklyStats.totalHours)}</span>
-                    <span className={styles.statLabel}>Total de horas</span>
-                  </div>
-                </div>
-                <div className={styles.statCard}>
-                  <FiTrendingUp className={styles.statIcon} />
-                  <div className={styles.statContent}>
-                    <span className={styles.statValue}>{formatHours(weeklyStats.averageHours)}</span>
-                    <span className={styles.statLabel}>Média diária</span>
-                  </div>
-                </div>
-                <div className={styles.statCard}>
-                  <FiCalendar className={styles.statIcon} />
-                  <div className={styles.statContent}>
-                    <span className={styles.statValue}>{weeklyStats.workedDays}</span>
-                    <span className={styles.statLabel}>Dias trabalhados</span>
-                  </div>
-                </div>
-                <div className={styles.statCard}>
-                  <FiClock className={styles.statIcon} />
-                  <div className={styles.statContent}>
-                    <span className={styles.statValue}>{formatHours(weeklyStats.overtimeHours)}</span>
-                    <span className={styles.statLabel}>Horas extras</span>
-                  </div>
+              <div className={styles.selectorHeader}>
+                <h2 className={styles.selectorTitle}>Período</h2>
+                <div className={styles.selectorControls}>
+                  <Select value={selectedYear.toString()} onValueChange={(value) => handleYearChange(parseInt(value))}>
+                    <SelectTrigger className={cn(styles.yearSelect)}>
+                      <SelectValue placeholder="Ano" />
+                    </SelectTrigger>
+                    <SelectContent className={cn(styles.selectContent)}>
+                      {years.map((year) => (
+                        <SelectItem key={year} value={year.toString()}>
+                          {year}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  
+                  <Select value={selectedMonth.toString()} onValueChange={(value) => handleMonthChange(parseInt(value))}>
+                    <SelectTrigger className={cn(styles.monthSelect)}>
+                      <SelectValue placeholder="Mês" />
+                    </SelectTrigger>
+                    <SelectContent className={cn(styles.selectContent)}>
+                      {months.map((month) => (
+                        <SelectItem key={month} value={month.toString()}>
+                          {new Date(2000, month - 1).toLocaleDateString('pt-BR', { month: 'long' })}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </motion.section>
+
+            {/* Estatísticas mensais */}
+            <WeeklySummary 
+              stats={monthlyStats} 
+              title={`Resumo de ${new Date(2000, selectedMonth - 1).toLocaleDateString('pt-BR', { month: 'long' })} de ${selectedYear}`}
+            />
 
             <div className={styles.grid}>
               <motion.section 
@@ -373,7 +459,7 @@ const Dashboard = () => {
                 animate={{ opacity: 1, y: 0 }}
               >
                 <div className={styles.chartHeader}>
-                  <h2 className={styles.sectionTitle}>Horas do Mês</h2>
+                  <h2 className={styles.sectionTitle}>Horas de {new Date(2000, selectedMonth - 1).toLocaleDateString('pt-BR', { month: 'long' })} de {selectedYear}</h2>
                   <div className={styles.chartControls}>
                     <label className={styles.weekendToggle}>
                       <input

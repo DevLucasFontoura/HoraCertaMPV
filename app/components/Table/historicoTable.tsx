@@ -20,6 +20,7 @@ import {
   IconChevronsRight,
   IconLayoutColumns,
   IconDownload,
+  IconTrash,
 } from "@tabler/icons-react"
 import { z } from "zod"
 
@@ -107,6 +108,7 @@ export function HistoricoTable({
   const isMobileDevice = useIsMobile()
   const isMobile = isMobileDevice && !forceTableMode
   const [deleteLoadingId, setDeleteLoadingId] = React.useState<string | null>(null);
+  const [deleteMonthLoading, setDeleteMonthLoading] = React.useState(false);
 
   // Memoizar anos únicos dos dados
   const years = React.useMemo(() => {
@@ -261,6 +263,56 @@ export function HistoricoTable({
     link.click()
     document.body.removeChild(link)
   }
+
+  const handleDeleteMonth = async () => {
+    if (!selectedMonth || selectedMonth === '') {
+      alert('Selecione um mês específico para deletar os dados.');
+      return;
+    }
+
+    const monthName = new Date(2000, selectedMonth - 1).toLocaleDateString('pt-BR', { month: 'long' });
+    const confirmMessage = `Tem certeza que deseja deletar TODOS os dados de ${monthName}/${selectedYear}?\n\nEsta ação não pode ser desfeita.`;
+    
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    setDeleteMonthLoading(true);
+    try {
+      // Obter todos os registros do mês selecionado
+      const monthRecords = filteredData.filter(record => {
+        try {
+          const [, month] = record.data.split('/');
+          return typeof selectedMonth === 'number' && parseInt(month) === selectedMonth;
+        } catch {
+          return false;
+        }
+      });
+
+      // Deletar cada registro do mês
+      for (const record of monthRecords) {
+        try {
+          const [day, month, year] = record.data.split('/');
+          const dateString = `${year}-${month}-${day}`;
+          await registroService.deletarRegistrosDaData(dateString);
+        } catch (error) {
+          console.error(`Erro ao deletar registro ${record.data}:`, error);
+        }
+      }
+
+      // Chamar callback para atualizar a interface
+      if (onDeleteRow) {
+        monthRecords.forEach(record => onDeleteRow(record.data));
+      }
+
+      alert(`Todos os dados de ${monthName}/${selectedYear} foram deletados com sucesso!`);
+    } catch (error) {
+      console.error('Erro ao deletar dados do mês:', error);
+      alert('Erro ao deletar dados do mês. Tente novamente.');
+    } finally {
+      setDeleteMonthLoading(false);
+    }
+  };
 
   const handleDownloadPDF = () => {
     // Criar dados para PDF
@@ -946,34 +998,47 @@ export function HistoricoTable({
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" style={{ position: 'relative' }}>
-                <IconLayoutColumns className="mr-2 h-4 w-4" />
-                Colunas
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="bg-white" sideOffset={5} style={{ position: 'absolute', zIndex: 1000 }}>
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuItem
-                      key={column.id}
-                      className={cn('capitalize', column.getIsVisible() ? 'font-bold' : '')}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        column.toggleVisibility(!column.getIsVisible());
-                      }}
-                    >
-                      {column.id}
-                    </DropdownMenuItem>
-                  )
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleDeleteMonth}
+              disabled={deleteMonthLoading || selectedMonth === ''}
+              style={{ backgroundColor: '#fecaca', color: '#b91c1c', border: 'none' }}
+            >
+              <IconTrash className="mr-2 h-4 w-4" />
+              {deleteMonthLoading ? 'Deletando...' : 'Deletar Mês'}
+            </Button>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" style={{ position: 'relative' }}>
+                  <IconLayoutColumns className="mr-2 h-4 w-4" />
+                  Colunas
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-white" sideOffset={5} style={{ position: 'absolute', zIndex: 1000 }}>
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuItem
+                        key={column.id}
+                        className={cn('capitalize', column.getIsVisible() ? 'font-bold' : '')}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          column.toggleVisibility(!column.getIsVisible());
+                        }}
+                      >
+                        {column.id}
+                      </DropdownMenuItem>
+                    )
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       )}
 

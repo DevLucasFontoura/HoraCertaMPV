@@ -58,6 +58,71 @@
   margin-right: auto;
 }
 
+/* Seletor de período */
+.monthSelector {
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.selectorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.selectorTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111111;
+  margin: 0;
+}
+
+.selectorControls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.yearSelect,
+.monthSelect {
+  min-width: 120px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: #111111;
+  transition: all 0.2s ease;
+}
+
+.yearSelect:hover,
+.monthSelect:hover {
+  border-color: #111111;
+}
+
+.yearSelect:focus,
+.monthSelect:focus {
+  outline: none;
+  border-color: #111111;
+  box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.1);
+}
+
+.selectContent {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
 .statusHeader {
   display: flex;
   justify-content: space-between;
@@ -147,67 +212,7 @@
   color: #EF4444;
 }
 
-/* Estatísticas semanais */
-.weeklyStats {
-  background: white;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  margin-bottom: 2rem;
-  max-width: 1300px;
-  margin-left: auto;
-  margin-right: auto;
-}
 
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.statCard {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  transition: all 0.2s ease;
-}
-
-.statCard:hover {
-  background-color: #f0f0f0;
-  transform: translateY(-2px);
-}
-
-.statIcon {
-  width: 24px;
-  height: 24px;
-  color: #111111;
-  flex-shrink: 0;
-}
-
-.statContent {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.statValue {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #111111;
-  line-height: 1;
-}
-
-.statLabel {
-  font-size: 0.75rem;
-  color: #6B7280;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
 
 .grid {
   display: flex;
@@ -395,9 +400,7 @@
     grid-template-columns: 1fr;
   }
 
-  .statsGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+
 }
 
 @media (max-width: 768px) {
@@ -442,17 +445,28 @@
     gap: 1rem;
   }
 
-  .statsGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .statCard {
+  .monthSelector {
     padding: 1rem;
   }
 
-  .statValue {
-    font-size: 1.25rem;
+  .selectorHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
+
+  .selectorControls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .yearSelect,
+  .monthSelect {
+    flex: 1;
+    min-width: 0;
+  }
+
+
 }
 
  

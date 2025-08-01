@@ -51,6 +51,10 @@ const BemVindo = () => {
     });
   };
 
+  const getCurrentMonthName = () => {
+    return new Date().toLocaleDateString('pt-BR', { month: 'long' });
+  };
+
   // Obter configuração de jornada do usuário
   const getWorkTimeConfig = useCallback((): WorkTimeConfig => {
     return TimeCalculationService.getWorkTimeConfig(userData);
@@ -181,12 +185,15 @@ const BemVindo = () => {
           setTimeRemaining(timeRemainingData);
         }
 
-        // Buscar todos os registros para calcular banco de horas
-        const allRecords = await registroService.getAllRegistros();
+        // Buscar registros do mês atual para calcular banco de horas
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth() + 1; // getMonth() retorna 0-11
+        
+        const monthRecords = await registroService.getRegistrosDoMes(currentYear, currentMonth);
         if (!isMounted) return;
         
-        const last30Days = allRecords.slice(0, 30); // últimos 30 dias
-        const bankHoursData = TimeCalculationService.calculateBankHours(last30Days, config);
+        const bankHoursData = TimeCalculationService.calculateBankHours(monthRecords, config);
 
         if (isMounted) {
           setBankHours({
@@ -216,6 +223,55 @@ const BemVindo = () => {
       isMounted = false;
     };
   }, [loading, userData, calculateTodayStatus, getWorkTimeConfig, calculateTimeRemaining]);
+
+  // Detectar mudança de mês e atualizar banco de horas
+  useEffect(() => {
+    let isMounted = true;
+    let currentMonth = new Date().getMonth();
+    
+    const checkMonthChange = async () => {
+      if (!isMounted || loading) return;
+      
+      const now = new Date();
+      const newMonth = now.getMonth();
+      
+      // Verificar se mudou o mês
+      if (newMonth !== currentMonth) {
+        currentMonth = newMonth;
+        
+        try {
+          const config = getWorkTimeConfig();
+          const currentYear = now.getFullYear();
+          const currentMonthNum = newMonth + 1;
+          
+          const monthRecords = await registroService.getRegistrosDoMes(currentYear, currentMonthNum);
+          if (!isMounted) return;
+          
+          const bankHoursData = TimeCalculationService.calculateBankHours(monthRecords, config);
+          
+          if (isMounted) {
+            setBankHours({
+              total: bankHoursData.total,
+              positive: bankHoursData.positive,
+              negative: bankHoursData.negative
+            });
+          }
+        } catch (error) {
+          if (isMounted) {
+            console.error('Erro ao atualizar banco de horas do mês:', error);
+          }
+        }
+      }
+    };
+
+    // Verificar mudança de mês a cada hora
+    const interval = setInterval(checkMonthChange, 3600000); // 1 hora
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [loading, userData, getWorkTimeConfig]);
 
   // Atualizar tempo restante a cada minuto
   useEffect(() => {
@@ -365,7 +421,7 @@ const BemVindo = () => {
               {statsLoading ? '--:--' : TimeCalculationService.formatBankHours(bankHours.total)}
             </div>
             <div className={styles.statsSubtext}>
-              {bankHours.total >= 0 ? 'Crédito' : 'Débito'} • 30 dias
+              {bankHours.total >= 0 ? 'Crédito' : 'Débito'} • {getCurrentMonthName()}
             </div>
           </motion.div>
         </div>

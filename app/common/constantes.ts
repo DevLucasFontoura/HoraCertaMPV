@@ -3,7 +3,7 @@ export const CONSTANTES = {
     // -------------------------- COMUNS --------------------------
     TITULO_SITE: 'HoraCerta',
     VERSAO_BETA: 'Versão Beta',
-    VERSAO: 'V1.0.5',
+    VERSAO: 'V1.0.7',
     IDIOMA_PT_BR: 'pt-BR',
     COMING_SOON: 'Em breve',
     TEXT_VOLTAR: 'Voltar',

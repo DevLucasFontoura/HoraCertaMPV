@@ -26,6 +26,9 @@ interface TodayStatus {
   totalHoursToday: number;
   lastPunch: string;
   isOnTime: boolean;
+  remainingHours: number;
+  overtimeHours: number;
+  isOvertime: boolean;
 }
 
 const Dashboard = () => {
@@ -43,8 +46,14 @@ const Dashboard = () => {
     nextAction: 'Registrar entrada',
     totalHoursToday: 0,
     lastPunch: '',
-    isOnTime: true
+    isOnTime: true,
+    remainingHours: 0,
+    overtimeHours: 0,
+    isOvertime: false
   });
+
+  // Estado para tempo atual em tempo real
+  const [currentTime, setCurrentTime] = useState(new Date());
   // Removido weeklyStats pois não está sendo usado
   const [monthlyStats, setMonthlyStats] = useState<MonthlyStats>({
     totalHours: 0,
@@ -124,6 +133,12 @@ const Dashboard = () => {
     const workTime = TimeCalculationService.calculateWorkTime(records, config);
     const totalHoursToday = workTime.workedHours;
 
+    // Calcular horas restantes e extras
+    const expectedHours = config.dailyWorkHours;
+    const remainingHours = Math.max(0, expectedHours - totalHoursToday);
+    const overtimeHours = Math.max(0, totalHoursToday - expectedHours);
+    const isOvertime = totalHoursToday > expectedHours;
+
     // Verificar se está no horário (entrada antes das 9h)
     const entryRecord = records.find(r => r.type === 'entry');
     const isOnTime = !types.includes('entry') || 
@@ -134,7 +149,10 @@ const Dashboard = () => {
       nextAction,
       totalHoursToday,
       lastPunch: lastRecord ? lastRecord.time : '',
-      isOnTime
+      isOnTime,
+      remainingHours,
+      overtimeHours,
+      isOvertime
     };
   }, [getWorkTimeConfig]);
 
@@ -207,6 +225,33 @@ const Dashboard = () => {
 
   // Estado para armazenar todos os registros
   const [allRecords, setAllRecords] = useState<DayRecord[]>([]);
+
+  // useEffect para atualizar tempo em tempo real
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // useEffect para atualizar status em tempo real quando necessário
+  useEffect(() => {
+    if (todayStatus.currentStatus === 'working' || todayStatus.currentStatus === 'lunch') {
+      const realTimeStatus = calculateRealTimeStatus();
+      
+      // Atualizar apenas se houver mudança significativa (mais de 1 minuto)
+      if (Math.abs(realTimeStatus.remainingHours - todayStatus.remainingHours) > 0.016 || 
+          Math.abs(realTimeStatus.overtimeHours - todayStatus.overtimeHours) > 0.016) {
+        setTodayStatus(prev => ({
+          ...prev,
+          remainingHours: realTimeStatus.remainingHours,
+          overtimeHours: realTimeStatus.overtimeHours,
+          isOvertime: realTimeStatus.isOvertime
+        }));
+      }
+    }
+  }, [currentTime, todayStatus.currentStatus, calculateRealTimeStatus]);
 
   // useEffect para carregar dados iniciais
   useEffect(() => {
@@ -323,6 +368,69 @@ const Dashboard = () => {
     return TimeCalculationService.formatHours(hours);
   };
 
+  // Função para calcular tempo restante ou horas extras em tempo real
+  const calculateRealTimeStatus = useCallback(() => {
+    if (todayStatus.currentStatus === 'not_started' || todayStatus.currentStatus === 'finished') {
+      return {
+        isOvertime: false,
+        remainingHours: 0,
+        overtimeHours: 0,
+        displayText: todayStatus.currentStatus === 'finished' ? 'Dia finalizado' : 'Não iniciado'
+      };
+    }
+
+    const config = getWorkTimeConfig();
+    
+    // Se não há registros de entrada, mostrar jornada completa
+    if (!todayStatus.lastPunch) {
+      return {
+        isOvertime: false,
+        remainingHours: config.dailyWorkHours,
+        overtimeHours: 0,
+        displayText: `Faltam ${formatHours(config.dailyWorkHours)}`
+      };
+    }
+
+    // Para dias finalizados, usar os dados calculados
+    if (todayStatus.currentStatus === 'finished') {
+      return {
+        isOvertime: todayStatus.isOvertime,
+        remainingHours: todayStatus.remainingHours,
+        overtimeHours: todayStatus.overtimeHours,
+        displayText: todayStatus.isOvertime 
+          ? `+${formatHours(todayStatus.overtimeHours)} extras`
+          : `Faltam ${formatHours(todayStatus.remainingHours)}`
+      };
+    }
+
+    // Para dias em andamento, calcular em tempo real
+    const now = currentTime;
+    const entryTime = new Date(`2000-01-01T${todayStatus.lastPunch}:00`);
+    
+    // Calcular tempo decorrido desde a entrada
+    const elapsedHours = (now.getTime() - entryTime.getTime()) / (1000 * 60 * 60);
+    
+    // Se está no almoço, usar o tempo trabalhado até o momento do almoço
+    let actualWorkedHours = elapsedHours;
+    if (todayStatus.currentStatus === 'lunch') {
+      actualWorkedHours = todayStatus.totalHoursToday;
+    }
+
+    const expectedHours = config.dailyWorkHours;
+    const remainingHours = Math.max(0, expectedHours - actualWorkedHours);
+    const overtimeHours = Math.max(0, actualWorkedHours - expectedHours);
+    const isOvertime = actualWorkedHours > expectedHours;
+
+    return {
+      isOvertime,
+      remainingHours,
+      overtimeHours,
+      displayText: isOvertime 
+        ? `+${formatHours(overtimeHours)} extras`
+        : `Faltam ${formatHours(remainingHours)}`
+    };
+  }, [todayStatus, currentTime, getWorkTimeConfig, formatHours]);
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -386,6 +494,26 @@ const Dashboard = () => {
                     {todayStatus.isOnTime ? 'Sim' : 'Não'}
                   </span>
                 </div>
+                <div className={styles.statusItem}>
+                  <span className={styles.statusLabel}>
+                    {todayStatus.isOvertime ? 'Horas extras:' : 'Tempo restante:'}
+                  </span>
+                  <span className={`${styles.statusValue} ${todayStatus.isOvertime ? styles.overtime : styles.remaining}`}>
+                    {todayStatus.isOvertime 
+                      ? `+${formatHours(todayStatus.overtimeHours)}`
+                      : formatHours(todayStatus.remainingHours)
+                    }
+                  </span>
+                </div>
+                {/* Contador em tempo real */}
+                {(todayStatus.currentStatus === 'working' || todayStatus.currentStatus === 'lunch') && (
+                  <div className={styles.statusItem}>
+                    <span className={styles.statusLabel}>Tempo atual:</span>
+                    <span className={`${styles.statusValue} ${styles.realTimeCounter} ${calculateRealTimeStatus().isOvertime ? styles.overtime : styles.remaining}`}>
+                      {calculateRealTimeStatus().displayText}
+                    </span>
+                  </div>
+                )}
               </div>
             </motion.section>
 

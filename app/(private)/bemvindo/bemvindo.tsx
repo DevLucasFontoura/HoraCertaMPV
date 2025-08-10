@@ -27,6 +27,9 @@ interface TimeRemaining {
   hours: number;
   minutes: number;
   isComplete: boolean;
+  isOvertime: boolean;
+  overtimeHours: number;
+  overtimeMinutes: number;
 }
 
 const BemVindo = () => {
@@ -39,7 +42,14 @@ const BemVindo = () => {
     currentStatus: 'not_started'
   });
   const [bankHours, setBankHours] = useState<BankHours>({ total: 0, positive: 0, negative: 0 });
-  const [timeRemaining, setTimeRemaining] = useState<TimeRemaining>({ hours: 0, minutes: 0, isComplete: false });
+  const [timeRemaining, setTimeRemaining] = useState<TimeRemaining>({ 
+    hours: 0, 
+    minutes: 0, 
+    isComplete: false, 
+    isOvertime: false, 
+    overtimeHours: 0, 
+    overtimeMinutes: 0 
+  });
   const [statsLoading, setStatsLoading] = useState(true);
 
   const formatDate = () => {
@@ -66,12 +76,26 @@ const BemVindo = () => {
     
     // Se não há entrada ou já foi finalizado, não há tempo restante
     if (!types.includes('entry') || types.includes('exit')) {
-      return { hours: 0, minutes: 0, isComplete: true };
+      return { 
+        hours: 0, 
+        minutes: 0, 
+        isComplete: true, 
+        isOvertime: false, 
+        overtimeHours: 0, 
+        overtimeMinutes: 0 
+      };
     }
     
     const entry = records.find((r: TimeRecord) => r.type === 'entry');
     if (!entry) {
-      return { hours: 0, minutes: 0, isComplete: false };
+      return { 
+        hours: 0, 
+        minutes: 0, 
+        isComplete: false, 
+        isOvertime: false, 
+        overtimeHours: 0, 
+        overtimeMinutes: 0 
+      };
     }
     
     // Calcular tempo já trabalhado
@@ -82,7 +106,14 @@ const BemVindo = () => {
     
     // Se ainda não chegou no horário de entrada
     if (now < entryTime) {
-      return { hours: config.dailyWorkHours, minutes: 0, isComplete: false };
+      return { 
+        hours: config.dailyWorkHours, 
+        minutes: 0, 
+        isComplete: false, 
+        isOvertime: false, 
+        overtimeHours: 0, 
+        overtimeMinutes: 0 
+      };
     }
     
     // Calcular tempo trabalhado até agora
@@ -118,14 +149,27 @@ const BemVindo = () => {
       }
     }
     
-    // Calcular tempo restante
+    // Calcular tempo restante ou horas extras
     const totalRequiredMinutes = config.dailyWorkHours * 60;
     const remainingMinutes = Math.max(0, totalRequiredMinutes - workedMinutes);
+    const overtimeMinutes = Math.max(0, workedMinutes - totalRequiredMinutes);
     
     const hours = Math.floor(remainingMinutes / 60);
     const minutes = Math.round(remainingMinutes % 60);
+    const overtimeHours = Math.floor(overtimeMinutes / 60);
+    const overtimeMinutesRemaining = Math.round(overtimeMinutes % 60);
+    const isOvertime = workedMinutes > totalRequiredMinutes;
     
-    return { hours, minutes, isComplete: false };
+
+    
+    return { 
+      hours, 
+      minutes, 
+      isComplete: false, 
+      isOvertime, 
+      overtimeHours, 
+      overtimeMinutes: overtimeMinutesRemaining 
+    };
   }, []);
 
   // Calcular status atual do dia
@@ -378,13 +422,18 @@ const BemVindo = () => {
             >
               <div className={styles.timeRemainingHeader}>
                 <FiClock className={styles.timeRemainingIcon} />
-                <span className={styles.timeRemainingTitle}>Tempo Restante</span>
+                <span className={styles.timeRemainingTitle}>
+                  {timeRemaining.isOvertime ? 'Horas Extras' : 'Tempo Restante'}
+                </span>
               </div>
-              <div className={styles.timeRemainingValue}>
-                {statsLoading ? '--:--' : `${timeRemaining.hours}h ${timeRemaining.minutes}m`}
+              <div className={`${styles.timeRemainingValue} ${timeRemaining.isOvertime ? styles.overtimeValue : ''}`}>
+                {statsLoading ? '--:--' : timeRemaining.isOvertime 
+                  ? `+${timeRemaining.overtimeHours}h ${timeRemaining.overtimeMinutes}m`
+                  : `${timeRemaining.hours}h ${timeRemaining.minutes}m`
+                }
               </div>
               <div className={styles.timeRemainingSubtext}>
-                Para completar sua jornada
+                {timeRemaining.isOvertime ? 'Tempo extra trabalhado' : 'Para completar sua jornada'}
               </div>
             </motion.div>
           ) : (

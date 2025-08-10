@@ -212,6 +212,32 @@
   color: #EF4444;
 }
 
+.overtime {
+  color: #EF4444;
+  font-weight: 700;
+}
+
+.remaining {
+  color: #3B82F6;
+  font-weight: 600;
+}
+
+.realTimeCounter {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 
 
 .grid {

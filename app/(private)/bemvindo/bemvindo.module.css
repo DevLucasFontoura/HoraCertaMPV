@@ -584,6 +584,15 @@
   animation: metallicShine 12s ease-in-out infinite;
 }
 
+.overtimeValue {
+  background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 20%, #3b82f6 40%, #1e40af 60%, #3b82f6 80%, #1d4ed8 100%) !important;
+  background-size: 300% 100% !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  animation: metallicShine 12s ease-in-out infinite !important;
+}
+
 .timeRemainingSubtext {
   font-size: 0.875rem;
   color: #666666;

@@ -1,0 +1,56 @@
+app/common/
+├── constantes/
+│   ├── index.ts              # Exporta todas as constantes
+│   ├── app.ts                # Configurações gerais do app
+│   ├── cores.ts              # Paleta de cores
+│   ├── rotas.ts              # Todas as rotas da aplicação
+│   ├── textos/
+│   │   ├── index.ts          # Exporta todos os textos
+│   │   ├── auth.ts           # Textos de autenticação
+│   │   ├── dashboard.ts      # Textos do dashboard
+│   │   ├── configuracao.ts   # Textos de configuração
+│   │   ├── home.ts           # Textos da página inicial
+│   │   ├── precos.ts         # Textos de preços
+│   │   └── suporte.ts        # Textos de suporte
+│   └── config/
+│       ├── index.ts          # Exporta todas as configs
+│       ├── jornada.ts        # Configurações de jornada
+│       └── notificacoes.ts   # Configurações de notificações
+
+
+
+------------------------------------------------------------------------------
+
+Exemplo:
+
+4. app/common/constantes/index.ts:
+
+export * from './app';
+export * from './cores';
+export * from './rotas';
+export * from './textos';
+export * from './config';
+
+3. app/common/constantes/textos/auth.ts:
+
+export const TEXTOS_AUTH = {
+    LOGIN: {
+        TITULO: 'Bem-vindo de volta',
+        SUBTITULO: 'Faça login para continuar',
+        // ...
+    },
+    REGISTRO: {
+        TITULO: 'Criar conta',
+        SUBTITULO: 'Faça seu cadastro para começar',
+        // ...
+    }
+} as const;
+
+------------------------------------------------------------------------------
+
+4. Benefícios Práticos
+Autocomplete melhor - TEXTOS_AUTH.LOGIN. mostra todas as opções
+Refatoração mais segura - Mudanças ficam isoladas
+Código mais legível - TEXTOS_AUTH.LOGIN.TITULO vs CONSTANTES.TITULO_LOGIN
+Organização lógica - Constantes relacionadas ficam juntas
+Type Safety - TypeScript entende melhor a estrutura

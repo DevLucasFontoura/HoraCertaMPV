@@ -716,10 +716,12 @@ export function HistoricoTable({
     return (
       <div className="space-y-4">
         {showHeaderControls && (
-          <div className="flex items-center justify-between">
+          <div className="space-y-3">
+
+            {/* Primeira linha: Ano / Mês / Baixar */}
             <div className="flex items-center space-x-2">
               <Select value={selectedYear.toString()} onValueChange={(value) => handleYearChange(parseInt(value))}>
-                <SelectTrigger className="w-32 bg-white">
+                <SelectTrigger className="flex-1 bg-white">
                   <SelectValue placeholder="Ano" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -738,7 +740,7 @@ export function HistoricoTable({
               </Select>
               
               <Select value={selectedMonth === '' ? 'todos' : selectedMonth.toString()} onValueChange={(value) => handleMonthChange(value === 'todos' ? '' : parseInt(value))}>
-                <SelectTrigger className="w-32 bg-white">
+                <SelectTrigger className="flex-1 bg-white">
                   <SelectValue placeholder="Mês" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -752,31 +754,73 @@ export function HistoricoTable({
                   ))}
                 </SelectContent>
               </Select>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="flex-1">
+                    <IconDownload className="mr-2 h-4 w-4" />
+                    Baixar
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="bg-white">
+                  <DropdownMenuItem onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleDownloadXLSX();
+                  }}>
+                    <IconDownload className="mr-2 h-4 w-4" />
+                    Baixar XLSX
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleDownloadPDF();
+                  }}>
+                    <IconDownload className="mr-2 h-4 w-4" />
+                    Baixar PDF
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="ml-auto">
-                  <IconLayoutColumns className="mr-2 h-4 w-4" />
-                  Colunas
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {table
-                  .getAllColumns()
-                  .filter((column) => column.getCanHide())
-                  .map((column) => {
-                    return (
-                      <DropdownMenuItem
-                        key={column.id}
-                        className={cn('capitalize', column.getIsVisible() ? 'font-bold' : '')}
-                        onClick={() => column.toggleVisibility(!column.getIsVisible())}
-                      >
-                        {column.id}
-                      </DropdownMenuItem>
-                    )
-                  })}
-              </DropdownMenuContent>
-            </DropdownMenu>
+
+            {/* Segunda linha: Colunas / Deletar Mês */}
+            <div className="grid grid-cols-2 gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="w-full">
+                    <IconLayoutColumns className="mr-2 h-4 w-4" />
+                    Colunas
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-white">
+                  {table
+                    .getAllColumns()
+                    .filter((column) => column.getCanHide())
+                    .map((column) => {
+                      return (
+                        <DropdownMenuItem
+                          key={column.id}
+                          className={cn('capitalize', column.getIsVisible() ? 'font-bold' : '')}
+                          onClick={() => column.toggleVisibility(!column.getIsVisible())}
+                        >
+                          {column.id}
+                        </DropdownMenuItem>
+                      )
+                    })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <Button
+                variant="destructive"
+                onClick={handleDeleteMonth}
+                disabled={deleteMonthLoading || selectedMonth === ''}
+                className="w-full"
+                style={{ backgroundColor: '#fecaca', color: '#b91c1c', border: 'none' }}
+              >
+                <IconTrash className="mr-2 h-4 w-4" />
+                {deleteMonthLoading ? 'Deletando...' : 'Deletar Mês'}
+              </Button>
+            </div>
           </div>
         )}
 

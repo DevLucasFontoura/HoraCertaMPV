@@ -46,12 +46,12 @@ class RegistroService {
     return `${userId}_${date}`;
   }
 
-  async registrarPonto(type: 'entry' | 'lunchOut' | 'lunchReturn' | 'exit'): Promise<boolean> {
+  async registrarPonto(type: 'entry' | 'lunchOut' | 'lunchReturn' | 'exit', adjustedTime?: Date): Promise<boolean> {
     try {
       const userId = this.getUserId();
       const date = this.getDateString();
       const docId = this.getDocId(userId, date);
-      const now = new Date();
+      const now = adjustedTime || new Date();
       
       const timeString = now.toLocaleTimeString('pt-BR', {
         hour: '2-digit',

@@ -161,15 +161,15 @@ export default function RegistrarPonto() {
     setIsModalOpen(true);
   };
 
-  const handleConfirmRegister = async () => {
+  const handleConfirmRegister = async (adjustedTime?: Date) => {
     if (!selectedRegisterType) return;
     
     setLoading(true);
     setError('');
     
     try {
-      // Registrar no Firebase
-      const success = await registroService.registrarPonto(selectedRegisterType);
+      // Registrar no Firebase com o horário ajustado se fornecido
+      const success = await registroService.registrarPonto(selectedRegisterType, adjustedTime);
       
       if (success) {
         // Recarregar registros do dia para sincronizar

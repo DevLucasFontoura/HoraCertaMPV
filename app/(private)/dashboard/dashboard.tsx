@@ -165,7 +165,7 @@ const Dashboard = () => {
     // Filtrar registros do mês selecionado
     const monthRecords = allRecords.filter(record => {
       // Parsear a data de forma mais robusta para evitar problemas de fuso horário
-      const [year, month, day] = record.date.split('-').map(Number);
+      const [year, month] = record.date.split('-').map(Number);
       const isInSelectedMonth = month === selectedMonth && year === selectedYear;
       
       return isInSelectedMonth;
@@ -238,9 +238,9 @@ const Dashboard = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const formatHours = (hours: number): string => {
+  const formatHours = useCallback((hours: number): string => {
     return TimeCalculationService.formatHours(hours);
-  };
+  }, []);
 
   // Função para calcular tempo restante ou horas extras em tempo real
   const calculateRealTimeStatus = useCallback(() => {
@@ -309,7 +309,7 @@ const Dashboard = () => {
         }));
       }
     }
-  }, [currentTime, todayStatus.currentStatus, calculateRealTimeStatus]);
+  }, [currentTime, todayStatus.currentStatus, calculateRealTimeStatus, todayStatus.remainingHours, todayStatus.overtimeHours]);
 
   // useEffect para carregar dados iniciais
   useEffect(() => {

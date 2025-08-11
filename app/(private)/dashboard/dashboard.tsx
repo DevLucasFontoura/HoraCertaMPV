@@ -164,8 +164,11 @@ const Dashboard = () => {
     
     // Filtrar registros do mês selecionado
     const monthRecords = allRecords.filter(record => {
-      const recordDate = new Date(record.date);
-      return recordDate.getMonth() === selectedMonth - 1 && recordDate.getFullYear() === selectedYear;
+      // Parsear a data de forma mais robusta para evitar problemas de fuso horário
+      const [year, month, day] = record.date.split('-').map(Number);
+      const isInSelectedMonth = month === selectedMonth && year === selectedYear;
+      
+      return isInSelectedMonth;
     });
     
     const stats = TimeCalculationService.calculateMonthlyStats(monthRecords, config);

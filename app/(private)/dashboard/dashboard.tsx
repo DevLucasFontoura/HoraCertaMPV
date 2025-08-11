@@ -235,6 +235,61 @@ const Dashboard = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const formatHours = (hours: number): string => {
+    return TimeCalculationService.formatHours(hours);
+  };
+
+  // Função para calcular tempo restante ou horas extras em tempo real
+  const calculateRealTimeStatus = useCallback(() => {
+    if (todayStatus.currentStatus === 'not_started' || todayStatus.currentStatus === 'finished') {
+      return {
+        isOvertime: false,
+        remainingHours: 0,
+        overtimeHours: 0,
+        displayText: todayStatus.currentStatus === 'finished' ? 'Dia finalizado' : 'Não iniciado'
+      };
+    }
+
+    const config = getWorkTimeConfig();
+    
+    // Se não há registros de entrada, mostrar jornada completa
+    if (!todayStatus.lastPunch) {
+      return {
+        isOvertime: false,
+        remainingHours: config.dailyWorkHours,
+        overtimeHours: 0,
+        displayText: `Faltam ${formatHours(config.dailyWorkHours)}`
+      };
+    }
+
+    // Para dias em andamento, calcular em tempo real
+    const now = currentTime;
+    const entryTime = new Date(`2000-01-01T${todayStatus.lastPunch}:00`);
+    
+    // Calcular tempo decorrido desde a entrada
+    const elapsedHours = (now.getTime() - entryTime.getTime()) / (1000 * 60 * 60);
+    
+    // Se está no almoço, usar o tempo trabalhado até o momento do almoço
+    let actualWorkedHours = elapsedHours;
+    if (todayStatus.currentStatus === 'lunch') {
+      actualWorkedHours = todayStatus.totalHoursToday;
+    }
+
+    const expectedHours = config.dailyWorkHours;
+    const remainingHours = Math.max(0, expectedHours - actualWorkedHours);
+    const overtimeHours = Math.max(0, actualWorkedHours - expectedHours);
+    const isOvertime = actualWorkedHours > expectedHours;
+
+    return {
+      isOvertime,
+      remainingHours,
+      overtimeHours,
+      displayText: isOvertime 
+        ? `+${formatHours(overtimeHours)} extras`
+        : `Faltam ${formatHours(remainingHours)}`
+    };
+  }, [todayStatus, currentTime, getWorkTimeConfig, formatHours]);
+
   // useEffect para atualizar status em tempo real quando necessário
   useEffect(() => {
     if (todayStatus.currentStatus === 'working' || todayStatus.currentStatus === 'lunch') {
@@ -363,73 +418,6 @@ const Dashboard = () => {
         return 'Não iniciado';
     }
   };
-
-  const formatHours = (hours: number): string => {
-    return TimeCalculationService.formatHours(hours);
-  };
-
-  // Função para calcular tempo restante ou horas extras em tempo real
-  const calculateRealTimeStatus = useCallback(() => {
-    if (todayStatus.currentStatus === 'not_started' || todayStatus.currentStatus === 'finished') {
-      return {
-        isOvertime: false,
-        remainingHours: 0,
-        overtimeHours: 0,
-        displayText: todayStatus.currentStatus === 'finished' ? 'Dia finalizado' : 'Não iniciado'
-      };
-    }
-
-    const config = getWorkTimeConfig();
-    
-    // Se não há registros de entrada, mostrar jornada completa
-    if (!todayStatus.lastPunch) {
-      return {
-        isOvertime: false,
-        remainingHours: config.dailyWorkHours,
-        overtimeHours: 0,
-        displayText: `Faltam ${formatHours(config.dailyWorkHours)}`
-      };
-    }
-
-    // Para dias finalizados, usar os dados calculados
-    if (todayStatus.currentStatus === 'finished') {
-      return {
-        isOvertime: todayStatus.isOvertime,
-        remainingHours: todayStatus.remainingHours,
-        overtimeHours: todayStatus.overtimeHours,
-        displayText: todayStatus.isOvertime 
-          ? `+${formatHours(todayStatus.overtimeHours)} extras`
-          : `Faltam ${formatHours(todayStatus.remainingHours)}`
-      };
-    }
-
-    // Para dias em andamento, calcular em tempo real
-    const now = currentTime;
-    const entryTime = new Date(`2000-01-01T${todayStatus.lastPunch}:00`);
-    
-    // Calcular tempo decorrido desde a entrada
-    const elapsedHours = (now.getTime() - entryTime.getTime()) / (1000 * 60 * 60);
-    
-    // Se está no almoço, usar o tempo trabalhado até o momento do almoço
-    let actualWorkedHours = elapsedHours;
-    if (todayStatus.currentStatus === 'lunch') {
-      actualWorkedHours = todayStatus.totalHoursToday;
-    }
-
-    const expectedHours = config.dailyWorkHours;
-    const remainingHours = Math.max(0, expectedHours - actualWorkedHours);
-    const overtimeHours = Math.max(0, actualWorkedHours - expectedHours);
-    const isOvertime = actualWorkedHours > expectedHours;
-
-    return {
-      isOvertime,
-      remainingHours,
-      overtimeHours,
-      displayText: isOvertime 
-        ? `+${formatHours(overtimeHours)} extras`
-        : `Faltam ${formatHours(remainingHours)}`
-    };
-  }, [todayStatus, currentTime, getWorkTimeConfig, formatHours]);
 
   return (
     <div className={styles.container}>

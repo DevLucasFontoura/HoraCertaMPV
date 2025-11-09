@@ -4,9 +4,16 @@ import { AiOutlineArrowRight } from 'react-icons/ai';
 import { CONSTANTES } from '../../common/constantes';
 import styles from './hero.module.css';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { FlipButton, FlipButtonFront, FlipButtonBack } from '../Buttons/FlipButton/flip';
 
 const Hero = () => {
+  const router = useRouter();
+
+  const handleStart = () => {
+    router.push('/registro');
+  };
+
   return (
     <div className={styles.hero}>
       {/* Background subtle pattern */}
@@ -46,13 +53,16 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          <Link 
-            className={styles.primaryButton} 
-            href="/registro"
-          >
-            <span>{CONSTANTES.BOTAO_COMECAR}</span>
-            <AiOutlineArrowRight className={styles.arrowIcon} />
-          </Link>
+          <FlipButton className={styles.flipButton} onClick={handleStart}>
+            <FlipButtonFront className={styles.primaryButton}>
+              <span>{CONSTANTES.BOTAO_COMECAR}</span>
+              <AiOutlineArrowRight className={styles.arrowIcon} />
+            </FlipButtonFront>
+            <FlipButtonBack className={`${styles.primaryButton} ${styles.primaryButtonBack}`}>
+              <span>{CONSTANTES.BOTAO_COMECAR}</span>
+              <AiOutlineArrowRight className={styles.arrowIcon} />
+            </FlipButtonBack>
+          </FlipButton>
         </motion.div>
       </motion.div>
     </div>

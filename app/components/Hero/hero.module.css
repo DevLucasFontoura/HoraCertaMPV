@@ -67,24 +67,46 @@
   margin-top: 1rem;
 }
 
+.flipButton {
+  border-radius: 999px;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
 .primaryButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   padding: 1rem 2rem;
-  background: #000000;
+  background: linear-gradient(135deg, #080808, #111113);
   color: #ffffff;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 999px;
+  font-family: inherit;
   font-size: 1rem;
   font-weight: 500;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid #000000;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 10px 25px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   position: relative;
   overflow: hidden;
   min-height: 48px;
+  backdrop-filter: blur(4px);
+}
+
+.primaryButtonBack {
+  background: linear-gradient(135deg, #ffffff, #f4f4f4);
+  color: #0d0d0f;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.04),
+    0 10px 25px rgba(0, 0, 0, 0.12);
+  font-family: inherit;
 }
 
 .primaryButton::before {
@@ -103,14 +125,36 @@
 }
 
 .primaryButton:hover {
-  background: rgba(0, 0, 0, 0.85);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #0c0c0d, #161618);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 16px 32px rgba(0, 0, 0, 0.25);
+}
+
+.primaryButtonBack::before {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.primaryButtonBack:hover {
+  background: linear-gradient(135deg, #fafafa, #eaeaea);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 12px 28px rgba(0, 0, 0, 0.18);
+  color: #050505;
 }
 
 .primaryButton:active {
   transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 8px 18px rgba(0, 0, 0, 0.18);
+}
+
+.primaryButtonBack:active {
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 6px 14px rgba(0, 0, 0, 0.16);
 }
 
 .arrowIcon {
@@ -152,7 +196,8 @@
     max-width: 100%;
   }
 
-  .primaryButton {
+  .primaryButton,
+  .primaryButtonBack {
     width: 100%;
     max-width: 320px;
     padding: 0.875rem 1.5rem;
@@ -183,7 +228,8 @@
     color: #000000 !important;
   }
 
-  .primaryButton {
+  .primaryButton,
+  .primaryButtonBack {
     font-size: 0.875rem;
     padding: 0.8125rem 1.375rem;
   }
@@ -203,6 +249,12 @@
     background: #ffffff;
     color: #000000;
     border-color: #ffffff;
+  }
+
+  .primaryButtonBack {
+    background: #000000;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
   }
 
   .primaryButton:hover {

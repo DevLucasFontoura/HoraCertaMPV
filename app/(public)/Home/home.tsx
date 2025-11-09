@@ -68,7 +68,7 @@ const LandingPage = () => {
           <MobileMenu />
         </nav>
 
-        <BetaBadge />
+        {/* <BetaBadge /> */}
         <Hero/>
         <Recursos />
         <ComoFunciona />

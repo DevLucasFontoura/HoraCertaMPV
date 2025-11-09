@@ -15,7 +15,7 @@ import {
   query,
   where
 } from 'firebase/firestore';
-import { auth, db } from '../lib/firebase';
+import { auth, db } from '../firebase';
 
 export interface UserData {
   createdAt: string;

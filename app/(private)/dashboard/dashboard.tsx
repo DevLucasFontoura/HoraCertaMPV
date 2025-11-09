@@ -1,17 +1,17 @@
 "use client";
 
-import LineChart from '../../components/Graficos/graficoDeLinha';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { TimeCalculationService, WorkTimeConfig } from '../../services/timeCalculationService';
+import { registroService, DayRecord, TimeRecord } from '../../services/registroService';
+import LineChart from '../../components/Graficos/graficoDeLinha/graficoDeLinha';
+import WeeklySummary, { MonthlyStats } from '../../components/WeeklySummary';
+import { FiAlertCircle, FiCheckCircle, FiClock } from 'react-icons/fi';
+import { useState, useEffect, useCallback } from 'react';
 import { CONSTANTES } from '../../common/constantes';
 import BottomNav from '../../components/Menu/menu';
-import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '../../hooks/useAuth';
 import styles from './dashboard.module.css';
 import { motion } from 'framer-motion';
-import { registroService, DayRecord, TimeRecord } from '../../services/registroService';
-import { TimeCalculationService, WorkTimeConfig } from '../../services/timeCalculationService';
-import { useAuth } from '../../hooks/useAuth';
-import { FiAlertCircle, FiCheckCircle, FiClock } from 'react-icons/fi';
-import WeeklySummary, { MonthlyStats } from '../../components/WeeklySummary';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 import { cn } from '../../lib/utils';
 
 interface DashboardData {

@@ -1,6 +1,6 @@
 "use client";
 
-import { AiOutlineArrowRight, AiOutlineStar, AiOutlineCheck } from 'react-icons/ai';
+import { AiOutlineArrowRight, AiOutlineCheck } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import { CONSTANTES } from '../../common/constantes';
 import DeskTopMenu from '../../components/Menus/PublicMenu/DeskTopMenu/deskTopMenu';
@@ -10,6 +10,7 @@ import Recursos from '../../components/Recursos/recursos';
 import ComoFunciona from '../../components/ComoFunciona/comoFunciona';
 import BetaBadge from '../../components/BetaBadge';
 import DotGrid from '../../components/DotGrid/dotGrid';
+import Comentarios from '../../components/Comentarios/comentarios';
 import styles from './home.module.css';
 import Link from 'next/link';
 
@@ -26,24 +27,39 @@ const LandingPage = () => {
   const testimonials = [
     {
       name: "Maria Silva",
-      role: "Desenvolvedora",
-      company: "Freelancer",
-      text: "O Hora Certa me ajudou a organizar melhor meus horários de trabalho. Agora tenho controle total do meu tempo.",
-      rating: 5
+      handle: "Desenvolvedora • Freelancer",
+      review: "O Hora Certa me ajudou a organizar melhor meus horários de trabalho. Agora tenho controle total do meu tempo.",
+      avatar: ""
     },
     {
       name: "João Santos",
-      role: "Consultor",
-      company: "Autônomo",
-      text: "Simples, eficiente e confiável. Perfeito para quem trabalha por conta própria e precisa registrar suas horas.",
-      rating: 5
+      handle: "Consultor • Autônomo",
+      review: "Simples, eficiente e confiável. Perfeito para quem trabalha por conta própria e precisa registrar suas horas.",
+      avatar: ""
     },
     {
       name: "Ana Costa",
-      role: "Designer",
-      company: "Remoto",
-      text: "A melhor ferramenta que encontrei para controlar meu ponto. Interface limpa e fácil de usar.",
-      rating: 5
+      handle: "Designer • Remoto",
+      review: "A melhor ferramenta que encontrei para controlar meu ponto. Interface limpa e fácil de usar.",
+      avatar: ""
+    },
+    {
+      name: "Fernanda Lopes",
+      handle: "Analista Financeira • PME",
+      review: "Os relatórios automáticos economizam horas do meu dia. Consigo acompanhar a equipe com muito mais clareza.",
+      avatar: ""
+    },
+    {
+      name: "Ricardo Pereira",
+      handle: "Coordenador de Projetos • Startup",
+      review: "Integração rápida, interface intuitiva e suporte sempre disponível. O Hora Certa virou parte essencial da nossa operação.",
+      avatar: ""
+    },
+    {
+      name: "Camila Rocha",
+      handle: "Product Designer • Remoto",
+      review: "Adoro como o sistema se adapta ao meu fluxo de trabalho e me lembra dos intervalos. A experiência é impecável.",
+      avatar: ""
     }
   ];
 
@@ -102,42 +118,15 @@ const LandingPage = () => {
           </div>
         </section>
 
-        {/* Testimonials Section */}
-        <section className={styles.testimonials}>
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true, margin: "-100px" }}
-          >
-            <h2 className={styles.sectionTitle}>O que nossos usuários dizem</h2>
-            <p className={styles.sectionSubtitle}>Depoimentos de quem já transformou sua gestão de tempo</p>
-          </motion.div>
-
-          <div className={styles.testimonialsGrid}>
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                className={styles.testimonialCard}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                viewport={{ once: true }}
-              >
-                <div className={styles.stars}>
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <AiOutlineStar key={i} size={16} className={styles.star} />
-                  ))}
-                </div>
-                <p className={styles.testimonialText}>&ldquo;{testimonial.text}&rdquo;</p>
-                <div className={styles.testimonialAuthor}>
-                  <strong>{testimonial.name}</strong>
-                  <span>{testimonial.role} • {testimonial.company}</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
+      <Comentarios
+        testimonials={testimonials}
+        title="O que nossos usuários dizem"
+        subtitle="Depoimentos de quem já transformou sua gestão de tempo com o Hora Certa."
+        desktopColumns={5}
+        tabletColumns={3}
+        mobileColumns={2}
+        speed={1.2}
+      />
 
         {/* CTA Section */}
         <section className={styles.ctaSection}>

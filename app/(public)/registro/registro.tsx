@@ -68,12 +68,12 @@ const Register = () => {
 
   return (
     <div className={styles.container}>
+      <div className={styles.backgroundImage} />
       <Link href="/" className={styles.backButton}>
         <AiOutlineArrowLeft size={20} />
         <span>{CONSTANTES.TEXT_VOLTAR}</span>
       </Link>
       
-      <div className={styles.gradient} />
       <motion.div
         className={styles.formContainer}
         initial={{ opacity: 0, y: 20 }}
